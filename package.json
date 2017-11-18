@@ -1,0 +1,42 @@
+{
+  "name": "dimensions",
+  "version": "0.1.0",
+  "description": "Playground for forces & n-dimensional geometry",
+  "author": "aburner",
+  "license": "mit",
+  "main": "src/index.tsx",
+  "engine": {
+    "node": "9.1.0",
+    "npm": "5.5.1"
+  },
+  "scripts": {
+    "clean": "rm -rf docs .awcache node_modules",
+    "build": "rm -rf docs/* && webpack -p",
+    "watch": "webpack-dev-server",
+    "prettier": "prettier --write 'src/**/*.+(ts|tsx|js|json)'",
+    "tslint": "tslint --fix -p tsconfig.json --exclude 'node_modules/*'",
+    "style": "npm run tslint && npm run prettier"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "parser": "typescript"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexburner/dimensions.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "awesome-typescript-loader": "3.3.0",
+    "copy-webpack-plugin": "4.2.0",
+    "html-webpack-plugin": "2.30.1",
+    "prettier": "1.4.4",
+    "source-map-loader": "0.2.3",
+    "typescript": "2.6.1",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4",
+    "worker-loader": "1.1.0"
+  }
+}
