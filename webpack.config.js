@@ -1,38 +1,46 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 module.exports = {
-
-    entry: './src/index.tsx',
-    output: {
-        filename: 'bundle.[hash].js',
-        path: path.resolve(__dirname, 'docs'),
-    },
-
-    devtool: 'cheap-module-source-map',
-
-    resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.json'],
-        modules: [
-            path.resolve(__dirname),
-            'node_modules',
-        ],
-    },
-
-    plugins: [
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'src/static/index.html',
-        }),
+  devtool: 'cheap-module-source-map',
+  entry: './src/index.tsx',
+  output: {
+    filename: 'bundle.[hash].js',
+    path: path.resolve(__dirname, 'docs'),
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+    modules: [
+      path.resolve(__dirname),
+      'node_modules',
     ],
-
-    module: {
-        rules: [
-            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
-        ],
-    },
-
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader'
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader'
+      },
+    ],
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: 'src/static/', to: '' },
+    ]),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'src/static/index.html',
+    }),
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: ['style.css'],
+      append: false, // prepend
+      // hash: true, // cache busting // doesn't work with gh-pages ???
+    }),
+  ],
 };

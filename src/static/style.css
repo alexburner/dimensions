@@ -6,4 +6,5 @@ html, body, #root {
   overflow: hidden;
   font-family: sans-serif;
   font-size: 12px;
+  background: #333;
 }
