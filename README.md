@@ -1,5 +1,4 @@
 # dimensions
-
 Playground for forces & n-dimensional geometry
 
 ## install
@@ -15,9 +14,15 @@ npm run watch
 ```
 
 ## build
-Clean out `docs` + run webpack build with production optimizations
+Clean out built folder + run webpack build with production optimizations
 ```
 npm run build
+```
+
+## clean
+Clean out built folder, loader cache, node modules
+```
+npm run clean
 ```
 
 ## style
