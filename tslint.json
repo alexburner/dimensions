@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-eslint-rules",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "curly": false,
+    "interface-name": false,
+    "no-console": ["error", {"allow": ["warn", "error"]}],
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
+    "object-literal-sort-keys": false
+  }
+}

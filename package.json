@@ -13,9 +13,7 @@
     "clean": "rm -rf docs .awcache node_modules",
     "build": "rm -rf docs/* && webpack -p",
     "watch": "webpack-dev-server",
-    "prettier": "prettier --write 'src/**/*.+(ts|tsx|js|json)'",
-    "tslint": "tslint --fix -p tsconfig.json --exclude 'node_modules/*'",
-    "style": "npm run tslint && npm run prettier"
+    "prettier": "prettier --write 'src/**/*.+(ts|tsx|js|json)'"
   },
   "prettier": {
     "semi": false,
@@ -46,6 +44,7 @@
     "tslint": "5.8.0",
     "tslint-config-prettier": "1.6.0",
     "tslint-eslint-rules": "4.1.1",
+    "tslint-loader": "3.5.3",
     "tslint-react": "3.2.0",
     "typescript": "2.6.1",
     "webpack": "3.8.1",

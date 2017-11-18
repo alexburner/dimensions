@@ -1,3 +1,3 @@
 import Main from 'src/Main'
 
-new Main()
+console.log(new Main())

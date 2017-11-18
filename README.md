@@ -25,8 +25,8 @@ Clean out built folder, loader cache, node modules
 npm run clean
 ```
 
-## style
-Apply `prettier` and `tslint --fix` formatting to `src` files
+## prettier
+Apply `prettier` to `src` files
 ```
-npm run style
+npm run prettier
 ```

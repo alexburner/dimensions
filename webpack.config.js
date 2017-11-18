@@ -20,6 +20,13 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
+        enforce: 'pre',
+        loader: 'tslint-loader',
+        options: { fix: true },
+      },
+      {
+        test: /\.tsx?$/,
         loader: 'awesome-typescript-loader'
       },
       {
