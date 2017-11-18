@@ -1,16 +1,16 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "jsx": "react",
-        "jsxFactory": "createElement",
-        "lib": ["dom", "es2015"],
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "target": "es6"
-    },
-    "exclude": [
-        "node_modules"
-    ]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "lib": ["dom", "es2015"],
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
