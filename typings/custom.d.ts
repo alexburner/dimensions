@@ -1,7 +1,20 @@
-declare module "worker-loader!*" {
+declare module 'worker-loader!*' {
   class WebpackWorker extends Worker {
-    constructor();
+    constructor()
   }
 
-  export = WebpackWorker;
+  export = WebpackWorker
+}
+
+declare module 'three-trackballcontrols' {
+  class TrackballControls extends Worker {
+    constructor(
+      camera: THREE.Camera,
+      canvas: HTMLCanvasElement,
+    )
+    handleResize(): void
+    update(): void
+  }
+
+  export = TrackballControls
 }

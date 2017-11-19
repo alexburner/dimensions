@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import TrackballControls from 'three-trackballcontrols'
 
 const NEAR = 1
 const FAR = 5000
@@ -13,6 +14,7 @@ export default class Drawing {
   private renderer: THREE.Renderer
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera
+  private controls: TrackballControls
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
@@ -30,19 +32,22 @@ export default class Drawing {
       NEAR,
       FAR,
     )
+    this.controls = new TrackballControls(this.camera, this.canvas)
+    this.camera.position.z = 900
+    this.loop()
 
-    this.camera.position.z = 300
-
+    // TEMP HELLO WORLD
     {
       const light = new THREE.PointLight(0xffffff)
       light.position.x = 200
       light.position.y = 200
       light.position.z = 200
       this.scene.add(light)
+
       const geometry = new THREE.SphereGeometry(
-        16, // radius
-        32, // segments
-        32, // rings
+        100, // radius
+        30, // segments
+        30, // rings
       )
       const material = new THREE.MeshLambertMaterial({
         transparent: true,
@@ -52,8 +57,6 @@ export default class Drawing {
       const mesh = new THREE.Mesh(geometry, material)
       this.scene.add(mesh)
     }
-
-    this.loop()
   }
 
   public destroy() {
@@ -65,12 +68,14 @@ export default class Drawing {
     this.updateSize()
     this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
+    this.controls.handleResize()
   }
 
   private loop() {
     if (this.isDestroyed) return
     this.renderer.render(this.scene, this.camera)
     this.rafId = window.requestAnimationFrame(() => this.loop())
+    this.controls.update()
   }
 
   private updateSize() {
