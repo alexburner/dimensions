@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import Manager from 'src/Manager'
+import Manager from 'src/drawing/Manager'
 
 export default class Frame extends React.Component {
   private canvas: HTMLCanvasElement | void

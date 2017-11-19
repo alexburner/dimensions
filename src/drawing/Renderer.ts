@@ -1,11 +1,14 @@
+import { random } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
+
+import Sphere from 'src/drawing/elements/Sphere'
 
 const NEAR = 1
 const FAR = 5000
 const VIEWANGLE = 45
 
-export default class Drawing {
+export default class Renderer {
   private isDestroyed: boolean = false
   private rafId: number
   private canvas: HTMLCanvasElement
@@ -32,30 +35,35 @@ export default class Drawing {
       NEAR,
       FAR,
     )
-    this.controls = new TrackballControls(this.camera, this.canvas)
     this.camera.position.z = 900
-    this.loop()
-
-    // TEMP HELLO WORLD
+    this.controls = new TrackballControls(this.camera, this.canvas)
+    this.controls.panSpeed = 1.6
     {
       const light = new THREE.PointLight(0xffffff)
-      light.position.x = 200
-      light.position.y = 200
-      light.position.z = 200
+      light.position.x = 600
+      light.position.y = 0
+      light.position.z = 0
       this.scene.add(light)
+    }
+    {
+      const light = new THREE.PointLight(0xffffff)
+      light.position.x = 0
+      light.position.y = 300
+      light.position.z = 0
+      this.scene.add(light)
+    }
+    this.loop()
 
-      const geometry = new THREE.SphereGeometry(
-        100, // radius
-        30, // segments
-        30, // rings
-      )
-      const material = new THREE.MeshLambertMaterial({
-        transparent: true,
-        opacity: 0.88,
-        color: 0xffffff,
-      })
-      const mesh = new THREE.Mesh(geometry, material)
-      this.scene.add(mesh)
+    {
+      // TEMP HELLO WORLD
+      const D = 300
+      for (let i = 0; i < 100; i++) {
+        const x = random(-D, D)
+        const y = random(-D, D)
+        const z = random(-D, D)
+        const sphere = new Sphere({ position: new THREE.Vector3(x, y, z) })
+        this.scene.add(sphere.mesh)
+      }
     }
   }
 

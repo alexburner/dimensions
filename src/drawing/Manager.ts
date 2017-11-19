@@ -1,13 +1,13 @@
-import Drawing from 'src/Drawing'
-import WorkerLoader from 'worker-loader!src/worker'
+import Renderer from 'src/drawing/Renderer'
+import WorkerLoader from 'worker-loader!src/drawing/worker'
 
 export default class Manager {
   private isDestroyed: boolean = false
-  private drawing: Drawing
+  private renderer: Renderer
   private worker: Worker
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
-    this.drawing = new Drawing({ canvas })
+    this.renderer = new Renderer({ canvas })
     this.worker = new WorkerLoader()
     this.worker.addEventListener('message', e => {
       console.log('Main worker message', e)
@@ -17,10 +17,10 @@ export default class Manager {
 
   public destroy() {
     this.isDestroyed = true
-    this.drawing.destroy()
+    this.renderer.destroy()
   }
 
   public resize() {
-    this.drawing.resize()
+    this.renderer.resize()
   }
 }
