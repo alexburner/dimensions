@@ -9,7 +9,7 @@ export default class Sphere {
   public mesh: THREE.Mesh
 
   constructor({
-    radius = 100,
+    radius = 60,
     position = new THREE.Vector3()
   }: {
     radius?: number,
