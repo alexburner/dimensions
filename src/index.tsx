@@ -1,3 +1,6 @@
-import Main from 'src/Main'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
-console.log(new Main())
+import Frame from 'src/components/Frame'
+
+ReactDOM.render(<Frame />, document.getElementById('root'))
