@@ -10,10 +10,10 @@ export default class Sphere {
 
   constructor({
     radius = 60,
-    position = new THREE.Vector3()
+    position = new THREE.Vector3(),
   }: {
-    radius?: number,
-    position?: THREE.Vector3,
+    radius?: number
+    position?: THREE.Vector3
   }) {
     this.geometry = new THREE.SphereGeometry(radius, SEGMENTS, RINGS)
     this.material = new THREE.MeshLambertMaterial({

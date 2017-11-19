@@ -57,8 +57,8 @@ export default class Renderer {
     //   }
     // }
 
-    const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0)})
-    const circle = new Circle({ position: new THREE.Vector3(0, 0, 0)})
+    const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
+    const circle = new Circle({ position: new THREE.Vector3(0, 0, 0) })
     this.scene.add(sphere.mesh)
     this.scene.add(circle.lines)
   }
