@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 
+const DIVISIONS = 64
+
 export default class Circle {
   public object: THREE.Object3D
 
@@ -14,7 +16,7 @@ export default class Circle {
     shape.arc(0, 0, radius, 0, 2 * Math.PI, false)
     shape.autoClose = true
 
-    const points2 = shape.getSpacedPoints()
+    const points2 = shape.getSpacedPoints(DIVISIONS)
     const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
 
     const geometry = new THREE.BufferGeometry()

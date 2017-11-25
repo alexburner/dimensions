@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 const getTexture = (): THREE.Texture => {
-  const SIZE = 512
+  const SIZE = 256
   const PAD = 4
   const radius = SIZE / 2 - PAD
   const center = SIZE / 2
@@ -13,9 +13,7 @@ const getTexture = (): THREE.Texture => {
   context!.arc(center, center, radius, 0, 2 * Math.PI)
   context!.fillStyle = 'rgba(255, 255, 255, 1)'
   context!.fill()
-  const texture = new THREE.Texture(canvas)
-  texture.needsUpdate = true
-  return texture
+  return new THREE.CanvasTexture(canvas)
 }
 
 export default class Point {
@@ -32,6 +30,7 @@ export default class Point {
 
     const material = new THREE.PointsMaterial({
       map: Point.texture,
+      transparent: true,
       size: 20,
     })
 
