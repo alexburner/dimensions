@@ -3,6 +3,8 @@ import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
 import Circle from 'src/drawing/elements/Circle'
+import Line from 'src/drawing/elements/Line'
+import Point from 'src/drawing/elements/Point'
 import Sphere from 'src/drawing/elements/Sphere'
 
 const NEAR = 1
@@ -57,10 +59,15 @@ export default class Renderer {
     //   }
     // }
 
-    const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
+    const point = new Point({ position: new THREE.Vector3(0, 0, 0) })
+    const line = new Line({ position: new THREE.Vector3(0, 0, 0) })
     const circle = new Circle({ position: new THREE.Vector3(0, 0, 0) })
-    this.scene.add(sphere.object)
+    const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
+
+    this.scene.add(point.object)
+    this.scene.add(line.object)
     this.scene.add(circle.object)
+    this.scene.add(sphere.object)
   }
 
   public destroy() {
