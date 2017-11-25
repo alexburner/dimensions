@@ -26,6 +26,6 @@ export default class Sphere {
     mesh.position.y = position.y
     mesh.position.z = position.z
 
-    this.object = mesh;
+    this.object = mesh
   }
 }
