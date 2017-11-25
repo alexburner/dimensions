@@ -38,7 +38,7 @@ export default class Renderer {
     )
     this.camera.position.z = 900
     this.controls = new TrackballControls(this.camera, this.canvas)
-    this.controls.panSpeed = 1.6
+    this.controls.rotateSpeed = 2.8
     const light = new THREE.PointLight(0xffffff)
     light.position.x = 600
     light.position.y = 600
