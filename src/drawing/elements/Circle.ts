@@ -1,12 +1,7 @@
 import * as THREE from 'three'
 
-const SEGMENTS = 32
-
 export default class Circle {
-  public geometry: THREE.BufferGeometry
-  public material: THREE.LineBasicMaterial
-  public edges: THREE.EdgesGeometry
-  public lines: THREE.LineSegments
+  public object: THREE.Object3D
 
   constructor({
     radius = 60,
@@ -15,18 +10,23 @@ export default class Circle {
     radius?: number
     position?: THREE.Vector3
   }) {
-    /**
-     * TODO probably need something like
-     * https://threejs.org/docs/#api/extras/core/Shape
-     * https://www.packtpub.com/mapt/book/all_books/9781782166283/5/ch05lvl1sec29/the-basic-geometries-provided-by-three.js
-     */
+     const shape = new THREE.Shape()
+     shape.arc(0, 0, radius, 0, 2 * Math.PI, false)
+     shape.autoClose = true
 
-    this.geometry = new THREE.CircleBufferGeometry(radius, SEGMENTS)
-    this.material = new THREE.LineBasicMaterial({ color: 0xffffff })
-    this.edges = new THREE.EdgesGeometry(this.geometry, 1)
-    this.lines = new THREE.LineSegments(this.geometry, this.material)
-    this.lines.position.x = position.x
-    this.lines.position.y = position.y
-    this.lines.position.z = position.z
+     const points2 = shape.getSpacedPoints()
+     const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
+
+     const geometry = new THREE.BufferGeometry()
+     geometry.setFromPoints(points3)
+
+     const material = new THREE.LineBasicMaterial({ color: 0xffffff })
+
+     const line = new THREE.Line(geometry, material)
+     line.position.x = position.x
+     line.position.y = position.y
+     line.position.z = position.z
+
+     this.object = line;
   }
 }
