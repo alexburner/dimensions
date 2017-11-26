@@ -1,6 +1,7 @@
-import { random } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
+
+import { WorkerResponse } from 'src/interfaces'
 
 import Circle from 'src/drawing/elements/Circle'
 import Line from 'src/drawing/elements/Line'
@@ -48,26 +49,15 @@ export default class Renderer {
     this.scene.add(light)
     this.loop()
 
-    // {
-    //   const D = 300
-    //   for (let i = 0; i < 100; i++) {
-    //     const x = random(-D, D)
-    //     const y = random(-D, D)
-    //     const z = random(-D, D)
-    //     const sphere = new Sphere({ position: new THREE.Vector3(x, y, z) })
-    //     this.scene.add(sphere.mesh)
-    //   }
-    // }
+    // const point = new Point({ position: new THREE.Vector3(0, 0, 0) })
+    // const line = new Line({ position: new THREE.Vector3(0, 0, 0) })
+    // const circle = new Circle({ position: new THREE.Vector3(0, 0, 0) })
+    // const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
 
-    const point = new Point({ position: new THREE.Vector3(0, 0, 0) })
-    const line = new Line({ position: new THREE.Vector3(0, 0, 0) })
-    const circle = new Circle({ position: new THREE.Vector3(0, 0, 0) })
-    const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
-
-    this.scene.add(point.object)
-    this.scene.add(line.object)
-    this.scene.add(circle.object)
-    this.scene.add(sphere.object)
+    // this.scene.add(point.object)
+    // this.scene.add(line.object)
+    // this.scene.add(circle.object)
+    // this.scene.add(sphere.object)
   }
 
   public destroy() {
@@ -80,6 +70,10 @@ export default class Renderer {
     this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
     this.controls.handleResize()
+  }
+
+  public tick(response: WorkerResponse) {
+    console.log(response)
   }
 
   private loop() {

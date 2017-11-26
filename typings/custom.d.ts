@@ -1,9 +1,9 @@
 declare module 'worker-loader!*' {
-  class WebpackWorker extends Worker {
+  class WorkerLoader extends Worker {
     constructor()
   }
 
-  export = WebpackWorker
+  export = WorkerLoader
 }
 
 declare module 'three-trackballcontrols' {
