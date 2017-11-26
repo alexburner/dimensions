@@ -1,33 +1,31 @@
 import { isNumber, reduce, times } from 'lodash'
 
 /**
- * We support n dimensions by using lists to hold our scalars
+ * Supports n dimensions, by using lists to hold scalars
+ *  Vector2 { x, y }     ->  VectorN [ x, y ]
+ *  Vector3 { x, y, z }  ->  VectorN [ x, y, z ]
  */
 export type VectorN = number[]
 
 /**
- * Make a new vector, optionally pre-populated with constant
+ * Make a new vector, optionally pre-populated with a constant
  */
-export const make = (
-  dimensions: number,
-  n: number = 0
-): VectorN => times(dimensions, () => n)
+export const make = (dimensions: number, n: number = 0): VectorN =>
+  times(dimensions, () => n)
 
 /**
- * Make a new vector, pre-populated with a random number
+ * Make a new vector, pre-populated with random numbers
  */
-export const makeRandom = (
-  dimensions: number,
-  k: number = 1
-): VectorN => times(dimensions, () => Math.random() * k)
+export const makeRandom = (dimensions: number, k: number = 1): VectorN =>
+  times(dimensions, () => Math.random() * k)
 
 /**
- * Get the length of a vector
+ * Get the length of a vector (more expensive)
  */
 export const getLength = (v: VectorN): number => Math.sqrt(getLengthSq(v))
 
 /**
- * Get the squared length of a vector
+ * Get the squared length of a vector (cheaper)
  */
 export const getLengthSq = (v: VectorN): number =>
   reduce(v, (memo: number, n: number) => memo + n * n, 0)
@@ -44,27 +42,26 @@ export const setLength = (v: VectorN, length: number): VectorN =>
 export const normalize = (v: VectorN): VectorN => setLength(v, 1)
 
 /**
- * Add basic algebra support, such as:
+ * Add basic algebra methods, such as:
  * > const vectorC = math.add(vectorA, vectorB)
  *
  * Also support math with constants, such as:
- * > const vectorC = math.add(vectorA, 10)
+ * > const vectorC = math.multiply(vectorA, 10)
  * by converting the second argument into a vector of itself, if needed
  */
 
 type Action = (a: number, b: number) => number
 
-export const merge = (
-  a: VectorN,
-  b: VectorN,
-  action: Action,
-): VectorN => times(a.length, i => action(a[i], b[i]))
+export const merge = (a: VectorN, b: VectorN, action: Action): VectorN =>
+  times(a.length, i => action(a[i], b[i]))
 
-const makeMath = (action: Action) =>
-  (a: VectorN, b: VectorN | number): VectorN => {
-    if (isNumber(b)) b = make(a.length, b)
-    return merge(a, b, action);
-  }
+const makeMath = (action: Action) => (
+  a: VectorN,
+  b: VectorN | number,
+): VectorN => {
+  if (isNumber(b)) b = make(a.length, b)
+  return merge(a, b, action)
+}
 
 export const math = {
   add: makeMath((n1: number, n2: number): number => n1 + n2),

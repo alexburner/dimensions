@@ -9,8 +9,8 @@ export interface Particle {
 
 export type ForceName = 'flock' | 'diffusion' | 'gravity' | 'wander'
 export type NeighborName = 'all' | 'nearest' | 'minimum' | 'proximity'
-export type LayerName = 'points' | 'lines'| 'circles' | 'spheres'
-export type LayerDict = { [ name in LayerName ]: boolean }
+export type LayerName = 'points' | 'lines' | 'circles' | 'spheres'
+export type LayerDict = { [name in LayerName]: boolean }
 
 export interface Force {
   name: ForceName
@@ -43,18 +43,6 @@ export interface WanderForce extends Force {
 
 export interface Neighbor {
   name: NeighborName
-}
-
-export interface AllNeightbor {
-  name: 'all'
-}
-
-export interface NearestNeighbor {
-  name: 'nearest'
-}
-
-export interface MinimumNeigbor {
-  name: 'minimum'
 }
 
 export interface ProximityNeigbor {

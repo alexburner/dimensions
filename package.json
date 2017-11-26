@@ -13,7 +13,8 @@
     "clean": "rm -rf docs .awcache node_modules",
     "build": "rm -rf docs/* && webpack -p",
     "watch": "webpack-dev-server",
-    "prettier": "prettier --write 'src/**/*.+(ts|tsx|js|json)'"
+    "style": "npm run prettier 'src/**/*.+(ts|tsx|js|json)'",
+    "prettier": "prettier --write"
   },
   "prettier": {
     "semi": false,

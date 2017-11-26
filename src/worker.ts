@@ -1,7 +1,11 @@
 import { makeParticles } from 'src/geometry/particles'
 import { Force, Neighbor, Particle, WorkerRequest } from 'src/interfaces'
 
-const context: Worker = self as any
+// XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
+// type definitions (in the tsconfig "lib" field), so we are sadly falling back
+// to weird partial types hacked out of the desired definitions file. Actual:
+// https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope
+const context = (self as any) as DedicatedWorkerGlobalScope
 let currRequest: WorkerRequest | undefined
 let particles: Particle[] = []
 
@@ -17,9 +21,11 @@ context.addEventListener('message', e => {
         particles,
       )
       currRequest = e.data.request
+      tick()
     }
     case 'destroy': {
       currRequest = undefined
+      self.close()
     }
   }
 })

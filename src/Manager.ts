@@ -24,6 +24,7 @@ export default class Manager {
 
   public destroy() {
     this.isDestroyed = true
+    this.worker.postMessage({ type: 'destroy' })
     this.renderer.destroy()
   }
 

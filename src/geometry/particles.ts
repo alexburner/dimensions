@@ -11,12 +11,14 @@ export const makeParticles = (
   dimensionCount: number,
   particleCount: number,
   prevParticles: Particle[] = [],
-): Particle[] => times(
-  particleCount,
-  i => prevParticles[i]
-    ? makeParticleFromPrev(dimensionCount, prevParticles[i])
-    : makeParticle(dimensionCount),
-)
+): Particle[] =>
+  times(
+    particleCount,
+    i =>
+      prevParticles[i]
+        ? makeParticleFromPrev(dimensionCount, prevParticles[i])
+        : makeParticle(dimensionCount),
+  )
 
 /**
  * Make a new particle from a previous particle
@@ -36,9 +38,7 @@ export const makeParticleFromPrev = (
 /**
  * Make a new particle (seeded with random 0-1 values)
  */
-export const makeParticle = (
-  dimensions: number,
-): Particle => ({
+export const makeParticle = (dimensions: number): Particle => ({
   location: vectorN.makeRandom(dimensions),
   velocity: vectorN.makeRandom(dimensions),
   acceleration: vectorN.makeRandom(dimensions),
