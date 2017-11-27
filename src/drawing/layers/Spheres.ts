@@ -31,10 +31,9 @@ export default class Spheres extends Layer<SphereSpec> {
 
   protected makeObject(): THREE.Object3D {
     const geometry = new THREE.SphereGeometry(1, SEGMENTS, RINGS)
-    const material = new THREE.MeshLambertMaterial({
+    const material = new THREE.MeshNormalMaterial({
       transparent: true,
       opacity: 0.5,
-      color: 0xffffff,
     })
     const mesh = new THREE.Mesh(geometry, material)
     return mesh

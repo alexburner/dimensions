@@ -59,13 +59,6 @@ export default class Renderer {
     this.controls = new TrackballControls(this.camera, this.canvas)
     this.controls.rotateSpeed = 2.8
 
-    // Add light to scene
-    const light = new THREE.PointLight(0xffffff)
-    light.position.x = 600
-    light.position.y = 600
-    light.position.z = 600
-    this.scene.add(light)
-
     // Start render loop
     this.loop()
 

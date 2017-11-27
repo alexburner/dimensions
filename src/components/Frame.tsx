@@ -8,7 +8,7 @@ const CONTROL_WIDTH = 180
 
 const initialRequest: WorkerRequest = {
   dimensions: 3,
-  particles: 20,
+  particles: 10,
   force: {
     name: 'wander',
     maxForce: 10,
