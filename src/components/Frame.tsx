@@ -1,8 +1,32 @@
 import * as React from 'react'
 
+import Controls from 'src/components/Controls'
+import { WorkerRequest } from 'src/interfaces'
 import Manager from 'src/Manager'
 
-export default class Frame extends React.Component {
+const CONTROL_WIDTH = 200
+
+const initialRequest: WorkerRequest = {
+  dimensions: 3,
+  particles: 20,
+  force: {
+    name: 'wander',
+    maxForce: 10,
+    maxSpeed: 10,
+    jitter: 10,
+  },
+  neighbor: {
+    name: 'nearest',
+  },
+  layers: {
+    points: true,
+    lines: true,
+    circles: true,
+    spheres: true,
+  },
+}
+
+export default class Frame extends React.Component<{}, {}> {
   private canvas: HTMLCanvasElement | void
   private container: HTMLDivElement | void
   private manager: Manager
@@ -10,7 +34,6 @@ export default class Frame extends React.Component {
   public render() {
     return (
       <div
-        ref={el => el && (this.container = el)}
         style={{
           position: 'fixed',
           top: 0,
@@ -19,14 +42,42 @@ export default class Frame extends React.Component {
           bottom: 0,
         }}
       >
-        <canvas
-          ref={el => el && (this.canvas = el)}
+        <div
+          ref={el => el && (this.container = el)}
           style={{
-            display: 'block',
-            width: '100%',
-            height: '100%',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: CONTROL_WIDTH + 'px',
+            bottom: 0,
+            backgroundColor: '#333',
           }}
-        />
+        >
+          <canvas
+            ref={el => el && (this.canvas = el)}
+            style={{
+              display: 'block',
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </div>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: CONTROL_WIDTH + 'px',
+            backgroundColor: '#292929',
+            borderLeft: '1px solid #444',
+          }}
+        >
+          <Controls
+            onChange={this.handleRequestChange}
+            request={initialRequest}
+          />
+        </div>
       </div>
     )
   }
@@ -35,28 +86,8 @@ export default class Frame extends React.Component {
     if (!this.canvas) throw new Error('DOM failed to mount')
     const bounds = this.updateCanvasSize()
     this.manager = new Manager({ canvas: this.canvas, bounds })
+    this.manager.draw(initialRequest)
     window.addEventListener('resize', this.handleResize)
-
-    // TEMP TODO make form
-    this.manager.draw({
-      dimensions: 3,
-      particles: 20,
-      force: {
-        name: 'wander',
-        maxForce: 10,
-        maxSpeed: 10,
-        jitter: 10,
-      },
-      neighbor: {
-        name: 'nearest',
-      },
-      layers: {
-        points: true,
-        lines: true,
-        circles: true,
-        spheres: true,
-      },
-    })
   }
 
   public componentWillUnmount() {
@@ -78,5 +109,9 @@ export default class Frame extends React.Component {
     if (!this.manager) return
     const bounds = this.updateCanvasSize()
     this.manager.resize(bounds)
+  }
+
+  private handleRequestChange = (request: WorkerRequest) => {
+    this.manager.draw(request)
   }
 }
