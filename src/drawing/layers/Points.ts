@@ -2,11 +2,10 @@ import { each, map } from 'lodash'
 import * as THREE from 'three'
 
 import Point from 'src/drawing/elements/Point'
-import { math, toVector3, VectorN } from 'src/geometry/vector-n'
-import { Particle } from 'src/interfaces'
+import { RenderParticle } from 'src/interfaces'
 
 interface PointSpec {
-  position: VectorN
+  position: THREE.Vector3
 }
 
 export default class Points {
@@ -17,12 +16,10 @@ export default class Points {
     this.scene = scene
   }
 
-  public tick(particles: Particle[], width: number, height: number) {
-    const size = Math.min(width, height)
-
+  public tick(particles: RenderParticle[]) {
     // 1. generate fresh list of specs
-    const specs = map(particles, particle => ({
-      position: toVector3(math.multiply(particle.location, size / 2)),
+    const specs: PointSpec[] = map(particles, particle => ({
+      position: particle.location,
     }))
 
     // 2. add/remove current objects to match

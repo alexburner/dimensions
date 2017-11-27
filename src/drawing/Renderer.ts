@@ -1,8 +1,11 @@
+import { map } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { WorkerResponse } from 'src/interfaces'
+import { math, toVector3 } from 'src/geometry/vector-n'
+import { RenderParticle, WorkerResponse } from 'src/interfaces'
 
+import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 
 import Circle from 'src/drawing/elements/Circle'
@@ -25,6 +28,7 @@ export default class Renderer {
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
   private points: Points
+  private lines: Lines
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
@@ -63,6 +67,7 @@ export default class Renderer {
     // this.scene.add(sphere.object)
 
     this.points = new Points(this.scene)
+    this.lines = new Lines(this.scene)
   }
 
   public destroy() {
@@ -78,9 +83,24 @@ export default class Renderer {
   }
 
   public tick(response: WorkerResponse) {
+
+    // TODO move this into worker
+    // and/or remove distinction...
+    // use absolute values throughout?
+    const size = Math.min(this.width, this.height)
+    const renderParticles: RenderParticle[] = map(response.particles, p => ({
+      location: toVector3(math.multiply(p.location, size / 2)),
+      velocity: toVector3(math.multiply(p.velocity, size / 2)),
+      acceleration: toVector3(math.multiply(p.acceleration, size / 2)),
+      neighborIndices: p.neighborIndices,
+    }))
+
     response.layers.points
-      ? this.points.tick(response.particles, this.width, this.height)
+      ? this.points.tick(renderParticles)
       : this.points.clear()
+    response.layers.lines
+      ? this.lines.tick(renderParticles)
+      : this.lines.clear()
   }
 
   private loop() {

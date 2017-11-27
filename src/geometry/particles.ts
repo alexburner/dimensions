@@ -24,7 +24,7 @@ export const makeParticle = (d: number): Particle => ({
   location: vectorN.makeRandom(d),
   velocity: vectorN.makeRandom(d),
   acceleration: vectorN.makeRandom(d),
-  neighbors: [],
+  neighborIndices: [],
 })
 
 /**
@@ -38,6 +38,6 @@ export const makeParticleFromPrev = (d: number, prev: Particle): Particle => {
     location: times(d, i => prev.location[i] || next.location[i]),
     velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
     acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
-    neighbors: [],
+    neighborIndices: [],
   }
 }

@@ -51,7 +51,7 @@ export default class Frame extends React.Component {
       },
       layers: {
         points: true,
-        lines: false,
+        lines: true,
         circles: false,
         spheres: false,
       },

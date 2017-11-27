@@ -26,15 +26,29 @@ export const makeRandom = (dimensions: number, k: number = 1): VectorN =>
   times(dimensions, () => random(k))
 
 /**
- * Get the length of a vector (more expensive)
+ * Get the length of a vector
  */
 export const getLength = (v: VectorN): number => Math.sqrt(getLengthSq(v))
 
 /**
- * Get the squared length of a vector (cheaper)
+ * Get the squared length of a vector
  */
 export const getLengthSq = (v: VectorN): number =>
   reduce(v, (memo: number, n: number) => memo + n * n, 0)
+
+/**
+ * Get the squared distance between two vectors
+ */
+export const getDistanceSq = (a: VectorN, b: VectorN): number => {
+  const delta = math.subtract(a, b)
+  return getLengthSq(delta)
+}
+
+/**
+ * Get the distance between two vectors
+ */
+export const getDistance = (a: VectorN, b: VectorN): number =>
+  Math.sqrt(getDistanceSq(a, b))
 
 /**
  * Set the length of a vector

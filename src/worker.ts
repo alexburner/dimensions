@@ -1,3 +1,4 @@
+import neighbors from 'src/geometry/neighbors'
 import { makeParticles } from 'src/geometry/particles'
 import { Force, Neighbor, Particle, WorkerRequest } from 'src/interfaces'
 
@@ -35,6 +36,11 @@ const loop = () => {
 
   // TODO run force here
 
+  // TODO find neighbors here
+  neighbors.nearest(particles)
+
+  // TODO centering & scaling
+
   // Update main thread
   context.postMessage({
     type: 'tick',
@@ -45,5 +51,5 @@ const loop = () => {
   })
 
   // Async to allow interrupt
-  setTimeout(loop, 100)
+  setTimeout(loop, 1000)
 }

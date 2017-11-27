@@ -2,6 +2,7 @@ import * as THREE from 'three'
 
 export default class Line {
   public object: THREE.Object3D
+  private geometry: THREE.BufferGeometry
 
   constructor({
     radius = 60,
@@ -24,5 +25,10 @@ export default class Line {
     line.position.z = position.z
 
     this.object = line
+    this.geometry = geometry
+  }
+
+  public setPosition(source: THREE.Vector3, target: THREE.Vector3) {
+    this.geometry.setFromPoints([source, target])
   }
 }
