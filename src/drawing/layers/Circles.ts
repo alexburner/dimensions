@@ -16,13 +16,10 @@ export default class Circles extends Layer<CircleSpec> {
     return reduce(
       particles,
       (memo, particle) => {
-        each(particle.neighborIndices, i => {
-          const neighbor = particles[i]
-          // TODO store this data in neighbor list
-          const delta = particle.location.clone().sub(neighbor.location)
+        each(particle.neighbors, neighbor => {
           memo.push({
             position: particle.location,
-            radius: delta.length(),
+            radius: neighbor.distance,
           })
         })
         return memo

@@ -14,11 +14,10 @@ export default class Lines extends Layer<LineSpec> {
     return reduce(
       particles,
       (memo, particle) => {
-        each(particle.neighborIndices, i => {
-          const neighbor = particles[i]
+        each(particle.neighbors, neighbor => {
           memo.push({
             source: particle.location,
-            target: neighbor.location,
+            target: particles[neighbor.index].location,
           })
         })
         return memo

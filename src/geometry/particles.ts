@@ -29,7 +29,7 @@ export const makeParticle = (d: number, k: number): Particle => ({
   location: makeRandom(d, k),
   velocity: makeRandom(d, k),
   acceleration: makeRandom(d, k),
-  neighborIndices: [],
+  neighbors: [],
 })
 
 /**
@@ -47,7 +47,7 @@ export const makeParticleFromPrev = (
     location: times(d, i => prev.location[i] || next.location[i]),
     velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
     acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
-    neighborIndices: [],
+    neighbors: [],
   }
 }
 
@@ -58,7 +58,7 @@ export const toRenderParticle = (p: Particle): RenderParticle => ({
   location: toVector3(p.location),
   velocity: toVector3(p.velocity),
   acceleration: toVector3(p.acceleration),
-  neighborIndices: p.neighborIndices,
+  neighbors: p.neighbors,
 })
 const toVector3 = (v: VectorN): THREE.Vector3 =>
   new THREE.Vector3(v[0] || 0, v[1] || 0, v[2] || 0)

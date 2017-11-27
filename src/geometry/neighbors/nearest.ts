@@ -1,6 +1,6 @@
 import { each } from 'lodash'
 
-import { getDistanceSq } from 'src/geometry/vector-n'
+import { getDistance } from 'src/geometry/vector-n'
 import { Particle } from 'src/interfaces'
 
 export default (particles: Particle[]) => {
@@ -10,13 +10,16 @@ export default (particles: Particle[]) => {
     let minIndex: number = indexA
     each(particles, (particleB, indexB) => {
       if (indexA === indexB) return
-      const distance = getDistanceSq(particleA.location, particleB.location)
+      const distance = getDistance(particleA.location, particleB.location)
       if (distance < minDistance) {
         minDistance = distance
         minIndex = indexB
       }
     })
-    // store nearest neighbor index
-    particleA.neighborIndices = [minIndex]
+    // store nearest neighbor
+    particleA.neighbors = [{
+      distance: minDistance,
+      index: minIndex,
+    }]
   })
 }
