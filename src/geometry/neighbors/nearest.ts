@@ -17,9 +17,11 @@ export default (particles: Particle[]) => {
       }
     })
     // store nearest neighbor
-    particleA.neighbors = [{
-      distance: minDistance,
-      index: minIndex,
-    }]
+    particleA.neighbors = [
+      {
+        distance: minDistance,
+        index: minIndex,
+      },
+    ]
   })
 }

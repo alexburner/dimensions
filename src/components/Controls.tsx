@@ -21,8 +21,7 @@ export default class Controls extends React.Component<Props, State> {
     return (
       <div className="controls">
         <label>
-          Dimensions
-          &nbsp;
+          Dimensions &nbsp;
           <input
             type="number"
             style={{
@@ -36,8 +35,7 @@ export default class Controls extends React.Component<Props, State> {
           />
         </label>
         <label>
-          Particles
-          &nbsp;
+          Particles &nbsp;
           <input
             type="number"
             style={{
