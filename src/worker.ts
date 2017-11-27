@@ -1,6 +1,11 @@
 import neighbors from 'src/geometry/neighbors'
 import { makeParticles } from 'src/geometry/particles'
-import { Force, Neighbor, Particle, WorkerRequest } from 'src/interfaces'
+import {
+  ForceRule,
+  NeighborRule,
+  Particle,
+  WorkerRequest,
+} from 'src/interfaces'
 
 // XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
 // type definitions (in the tsconfig "lib" field), so we are sadly falling back
@@ -47,7 +52,7 @@ const loop = () => {
     response: {
       layers: currRequest.layers,
       particles,
-    }
+    },
   })
 
   // Async to allow interrupt

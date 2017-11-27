@@ -2,9 +2,8 @@ import { isNumber, reduce, times } from 'lodash'
 import * as THREE from 'three'
 
 const coinFlip = (): boolean => Math.random() < 0.5
-const random = (k: number = 1) => coinFlip()
-  ? Math.random() * k * -1
-  : Math.random() * k
+const random = (k: number = 1) =>
+  coinFlip() ? Math.random() * k * -1 : Math.random() * k
 
 /**
  * Supports n dimensions, by using lists to hold scalars

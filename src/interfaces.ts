@@ -1,5 +1,12 @@
 import { VectorN } from 'src/geometry/vector-n'
 
+// TODO
+// - prereq: absolute distance
+export interface Neighbor {
+  index: number
+  distance: number
+}
+
 export interface Particle {
   location: VectorN
   velocity: VectorN
@@ -14,18 +21,18 @@ export interface RenderParticle {
   neighborIndices: number[]
 }
 
-export type ForceName = 'flock' | 'diffusion' | 'gravity' | 'wander'
-export type NeighborName = 'all' | 'nearest' | 'minimum' | 'proximity'
+export type ForceRuleName = 'flock' | 'diffusion' | 'gravity' | 'wander'
+export type NeighborRuleName = 'all' | 'nearest' | 'minimum' | 'proximity'
 export type LayerName = 'points' | 'lines' | 'circles' | 'spheres'
 export type LayerDict = { [name in LayerName]: boolean }
 
-export interface Force {
-  name: ForceName
+export interface ForceRule {
+  name: ForceRuleName
   maxSpeed: number
   maxForce: number
 }
 
-export interface FlockForce extends Force {
+export interface FlockForceRule extends ForceRule {
   name: 'flock'
   awareness: number
   separation: number
@@ -33,61 +40,60 @@ export interface FlockForce extends Force {
   cohesion: number
 }
 
-export interface DiffusionForce extends Force {
+export interface DiffusionForceRule extends ForceRule {
   name: 'diffusion'
   charge: number
 }
 
-export interface GravityForce extends Force {
+export interface GravityForceRule extends ForceRule {
   name: 'gravity'
   mass: number
 }
 
-export interface WanderForce extends Force {
+export interface WanderForceRule extends ForceRule {
   name: 'wander'
   jitter: number
 }
 
-export interface Neighbor {
-  name: NeighborName
+export interface NeighborRule {
+  name: NeighborRuleName
 }
 
-
-export interface AllNeightbor extends Neighbor {
+export interface AllNeightbor extends NeighborRule {
   name: 'all'
 }
 
-export interface NearestNeighbor extends Neighbor {
+export interface NearestNeighborRule extends NeighborRule {
   name: 'nearest'
 }
 
-export interface MinimumNeigbor extends Neighbor {
+export interface MinimumNeigbor extends NeighborRule {
   name: 'minimum'
 }
 
-export interface ProximityNeigbor extends Neighbor {
+export interface ProximityNeigbor extends NeighborRule {
   name: 'proximity'
   min: number
   max: number
 }
 
-export type ForceUnion =
-  | FlockForce
-  | DiffusionForce
-  | GravityForce
-  | WanderForce
+export type ForceRules =
+  | FlockForceRule
+  | DiffusionForceRule
+  | GravityForceRule
+  | WanderForceRule
 
-export type NeighborUnion =
+export type NeighborRules =
   | AllNeightbor
-  | NearestNeighbor
+  | NearestNeighborRule
   | MinimumNeigbor
   | ProximityNeigbor
 
 export interface WorkerRequest {
   dimensions: number
   particles: number
-  force: ForceUnion
-  neighbor: NeighborUnion
+  force: ForceRules
+  neighbor: NeighborRules
   layers: LayerDict
 }
 

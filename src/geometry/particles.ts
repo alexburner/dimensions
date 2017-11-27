@@ -12,9 +12,12 @@ export const makeParticles = (
   particles: number,
   prev: Particle[] = [],
 ): Particle[] =>
-  times(particles, i => prev[i]
-    ? makeParticleFromPrev(dimensions, prev[i])
-    : makeParticle(dimensions),
+  times(
+    particles,
+    i =>
+      prev[i]
+        ? makeParticleFromPrev(dimensions, prev[i])
+        : makeParticle(dimensions),
   )
 
 /**

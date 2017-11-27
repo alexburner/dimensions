@@ -36,10 +36,9 @@ export default class Frame extends React.Component {
     this.manager = new Manager({ canvas: this.canvas })
     window.addEventListener('resize', this.handleResize)
 
-
     this.manager.draw({
-      dimensions: 3,
-      particles: 100,
+      dimensions: 2,
+      particles: 20,
       force: {
         name: 'wander',
         maxForce: 10,
@@ -52,8 +51,8 @@ export default class Frame extends React.Component {
       layers: {
         points: true,
         lines: true,
-        circles: false,
-        spheres: false,
+        circles: true,
+        spheres: true,
       },
     })
   }
@@ -65,6 +64,9 @@ export default class Frame extends React.Component {
 
   private handleResize = () => {
     if (!this.canvas || !this.manager) return
+
+    // TODO set canvas size
+
     this.manager.resize()
   }
 }

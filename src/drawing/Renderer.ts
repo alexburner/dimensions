@@ -5,13 +5,10 @@ import TrackballControls from 'three-trackballcontrols'
 import { math, toVector3 } from 'src/geometry/vector-n'
 import { RenderParticle, WorkerResponse } from 'src/interfaces'
 
+import Circles from 'src/drawing/layers/Circles'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
-
-import Circle from 'src/drawing/elements/Circle'
-import Line from 'src/drawing/elements/Line'
-import Point from 'src/drawing/elements/Point'
-import Sphere from 'src/drawing/elements/Sphere'
+import Spheres from 'src/drawing/layers/Spheres'
 
 const NEAR = 1
 const FAR = 5000
@@ -29,17 +26,30 @@ export default class Renderer {
   private controls: TrackballControls
   private points: Points
   private lines: Lines
+  private circles: Circles
+  private spheres: Spheres
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
-    this.updateSize()
+
+    // Measure canvas size
+    const bounds = this.canvas.getBoundingClientRect()
+    this.width = bounds.width
+    this.height = bounds.height
+
+    // Set up renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
       alpha: true,
     })
+    // TODO force canvas size, let THREE use that
     this.renderer.setSize(this.width, this.height)
+
+    // Set up scene
     this.scene = new THREE.Scene()
+
+    // Set up camera
     this.camera = new THREE.PerspectiveCamera(
       VIEWANGLE,
       this.width / this.height,
@@ -47,27 +57,26 @@ export default class Renderer {
       FAR,
     )
     this.camera.position.z = 900
+
+    // Set up camera controls
     this.controls = new TrackballControls(this.camera, this.canvas)
     this.controls.rotateSpeed = 2.8
+
+    // Add light to scene
     const light = new THREE.PointLight(0xffffff)
     light.position.x = 600
     light.position.y = 600
     light.position.z = 600
     this.scene.add(light)
+
+    // Start render loop
     this.loop()
 
-    // const point = new Point({ position: new THREE.Vector3(0, 0, 0) })
-    // const line = new Line({ position: new THREE.Vector3(0, 0, 0) })
-    // const circle = new Circle({ position: new THREE.Vector3(0, 0, 0) })
-    // const sphere = new Sphere({ position: new THREE.Vector3(60, 0, 0) })
-
-    // this.scene.add(point.object)
-    // this.scene.add(line.object)
-    // this.scene.add(circle.object)
-    // this.scene.add(sphere.object)
-
+    // Set up layers
     this.points = new Points(this.scene)
     this.lines = new Lines(this.scene)
+    this.circles = new Circles(this.scene)
+    this.spheres = new Spheres(this.scene)
   }
 
   public destroy() {
@@ -76,14 +85,15 @@ export default class Renderer {
   }
 
   public resize() {
-    this.updateSize()
+    const bounds = this.canvas.getBoundingClientRect()
+    this.width = bounds.width
+    this.height = bounds.height
     this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
     this.controls.handleResize()
   }
 
   public tick(response: WorkerResponse) {
-
     // TODO move this into worker
     // and/or remove distinction...
     // use absolute values throughout?
@@ -96,11 +106,17 @@ export default class Renderer {
     }))
 
     response.layers.points
-      ? this.points.tick(renderParticles)
+      ? this.points.update(renderParticles)
       : this.points.clear()
     response.layers.lines
-      ? this.lines.tick(renderParticles)
+      ? this.lines.update(renderParticles)
       : this.lines.clear()
+    response.layers.circles
+      ? this.circles.update(renderParticles)
+      : this.circles.clear()
+    response.layers.spheres
+      ? this.spheres.update(renderParticles)
+      : this.spheres.clear()
   }
 
   private loop() {
@@ -108,11 +124,5 @@ export default class Renderer {
     this.renderer.render(this.scene, this.camera)
     this.rafId = window.requestAnimationFrame(() => this.loop())
     this.controls.update()
-  }
-
-  private updateSize() {
-    const bounds = this.canvas.getBoundingClientRect()
-    this.width = bounds.width
-    this.height = bounds.height
   }
 }
