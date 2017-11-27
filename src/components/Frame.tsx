@@ -4,7 +4,7 @@ import Controls from 'src/components/Controls'
 import { WorkerRequest } from 'src/interfaces'
 import Manager from 'src/Manager'
 
-const CONTROL_WIDTH = 200
+const CONTROL_WIDTH = 180
 
 const initialRequest: WorkerRequest = {
   dimensions: 3,
