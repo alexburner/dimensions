@@ -51,7 +51,7 @@ export default class Controls extends React.Component<Props, State> {
         <div>
           Layers
           <label>
-            Points
+            Points &nbsp;
             <input
               type="checkbox"
               name="points"
@@ -60,7 +60,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Lines
+            Lines &nbsp;
             <input
               type="checkbox"
               name="lines"
@@ -69,7 +69,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Circles
+            Circles &nbsp;
             <input
               type="checkbox"
               name="circles"
@@ -78,7 +78,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Spheres
+            Spheres &nbsp;
             <input
               type="checkbox"
               name="spheres"
