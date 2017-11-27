@@ -1,4 +1,4 @@
-import { each, map } from 'lodash'
+import { each } from 'lodash'
 
 import { RenderParticle } from 'src/interfaces'
 

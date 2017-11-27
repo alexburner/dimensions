@@ -1,4 +1,4 @@
-import { each, map, reduce } from 'lodash'
+import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import Layer from 'src/drawing/layers/Layer'

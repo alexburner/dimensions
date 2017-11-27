@@ -1,8 +1,6 @@
 import neighbors from 'src/geometry/neighbors'
 import { makeParticles } from 'src/geometry/particles'
 import {
-  ForceRule,
-  NeighborRule,
   Particle,
   WorkerRequest,
 } from 'src/interfaces'

@@ -18,8 +18,6 @@ export default class Renderer {
   private isDestroyed: boolean = false
   private rafId: number
   private canvas: HTMLCanvasElement
-  private width: number
-  private height: number
   private renderer: THREE.Renderer
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera

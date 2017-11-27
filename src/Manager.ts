@@ -17,6 +17,7 @@ export default class Manager {
     this.renderer = new Renderer({ canvas, bounds })
     this.worker = new WorkerLoader()
     this.worker.addEventListener('message', e => {
+      if (this.isDestroyed) return
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
         case 'tick': {

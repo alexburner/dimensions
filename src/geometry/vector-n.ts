@@ -1,5 +1,4 @@
 import { isNumber, reduce, times } from 'lodash'
-import * as THREE from 'three'
 
 const coinFlip = (): boolean => Math.random() < 0.5
 const random = (k: number = 1) =>

@@ -23,7 +23,10 @@ module.exports = {
         exclude: /node_modules/,
         enforce: 'pre',
         loader: 'tslint-loader',
-        options: { fix: true },
+        options: {
+          fix: true,
+          typeCheck: true,
+        },
       },
       {
         test: /\.tsx?$/,
