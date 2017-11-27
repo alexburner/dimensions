@@ -32,12 +32,14 @@ export default class Frame extends React.Component {
   }
 
   public componentDidMount() {
-    if (!this.container || !this.canvas) throw new Error('DOM failed to mount')
-    this.manager = new Manager({ canvas: this.canvas })
+    if (!this.canvas) throw new Error('DOM failed to mount')
+    const bounds = this.updateCanvasSize()
+    this.manager = new Manager({ canvas: this.canvas, bounds })
     window.addEventListener('resize', this.handleResize)
 
+    // TEMP TODO make form
     this.manager.draw({
-      dimensions: 2,
+      dimensions: 3,
       particles: 20,
       force: {
         name: 'wander',
@@ -62,11 +64,19 @@ export default class Frame extends React.Component {
     if (this.manager) this.manager.destroy()
   }
 
+  private updateCanvasSize(): ClientRect {
+    if (!this.container || !this.canvas) throw new Error('DOM failed to mount')
+    const bounds = this.container.getBoundingClientRect()
+    this.canvas.style.width = bounds.width + 'px'
+    this.canvas.style.height = bounds.height + 'px'
+    this.canvas.width = bounds.width
+    this.canvas.height = bounds.height
+    return bounds
+  }
+
   private handleResize = () => {
-    if (!this.canvas || !this.manager) return
-
-    // TODO set canvas size
-
-    this.manager.resize()
+    if (!this.manager) return
+    const bounds = this.updateCanvasSize()
+    this.manager.resize(bounds)
   }
 }

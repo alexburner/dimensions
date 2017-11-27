@@ -7,8 +7,14 @@ export default class Manager {
   private renderer: Renderer
   private worker: Worker
 
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
-    this.renderer = new Renderer({ canvas })
+  constructor({
+    canvas,
+    bounds,
+  }: {
+    canvas: HTMLCanvasElement
+    bounds: ClientRect
+  }) {
+    this.renderer = new Renderer({ canvas, bounds })
     this.worker = new WorkerLoader()
     this.worker.addEventListener('message', e => {
       if (!(e && e.data && e.data.type)) return
@@ -27,8 +33,8 @@ export default class Manager {
     this.renderer.destroy()
   }
 
-  public resize() {
-    this.renderer.resize()
+  public resize(bounds: ClientRect) {
+    this.renderer.resize(bounds)
   }
 
   public draw(request: WorkerRequest) {

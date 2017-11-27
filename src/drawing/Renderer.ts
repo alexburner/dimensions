@@ -29,13 +29,14 @@ export default class Renderer {
   private circles: Circles
   private spheres: Spheres
 
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
+  constructor({
+    canvas,
+    bounds,
+  }: {
+    canvas: HTMLCanvasElement
+    bounds: ClientRect
+  }) {
     this.canvas = canvas
-
-    // Measure canvas size
-    const bounds = this.canvas.getBoundingClientRect()
-    this.width = bounds.width
-    this.height = bounds.height
 
     // Set up renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -43,8 +44,6 @@ export default class Renderer {
       antialias: true,
       alpha: true,
     })
-    // TODO force canvas size, let THREE use that
-    this.renderer.setSize(this.width, this.height)
 
     // Set up scene
     this.scene = new THREE.Scene()
@@ -52,7 +51,7 @@ export default class Renderer {
     // Set up camera
     this.camera = new THREE.PerspectiveCamera(
       VIEWANGLE,
-      this.width / this.height,
+      bounds.width / bounds.height,
       NEAR,
       FAR,
     )
@@ -84,11 +83,9 @@ export default class Renderer {
     window.cancelAnimationFrame(this.rafId)
   }
 
-  public resize() {
-    const bounds = this.canvas.getBoundingClientRect()
-    this.width = bounds.width
-    this.height = bounds.height
-    this.camera.aspect = this.width / this.height
+  public resize(bounds: ClientRect) {
+    this.renderer.setSize(bounds.width, bounds.height)
+    this.camera.aspect = bounds.width / bounds.height
     this.camera.updateProjectionMatrix()
     this.controls.handleResize()
   }
@@ -97,11 +94,10 @@ export default class Renderer {
     // TODO move this into worker
     // and/or remove distinction...
     // use absolute values throughout?
-    const size = Math.min(this.width, this.height)
     const renderParticles: RenderParticle[] = map(response.particles, p => ({
-      location: toVector3(math.multiply(p.location, size / 2)),
-      velocity: toVector3(math.multiply(p.velocity, size / 2)),
-      acceleration: toVector3(math.multiply(p.acceleration, size / 2)),
+      location: toVector3(p.location),
+      velocity: toVector3(p.velocity),
+      acceleration: toVector3(p.acceleration),
       neighborIndices: p.neighborIndices,
     }))
 

@@ -12,6 +12,9 @@ import {
 // to weird partial types hacked out of the desired definitions file. Actual:
 // https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope
 const context = (self as any) as DedicatedWorkerGlobalScope
+
+const FIELD_SIZE = 200
+
 let currRequest: WorkerRequest | undefined
 let particles: Particle[] = []
 
@@ -20,6 +23,7 @@ context.addEventListener('message', e => {
   switch (e.data.type) {
     case 'request': {
       particles = makeParticles(
+        FIELD_SIZE,
         e.data.request.dimensions,
         e.data.request.particles,
         particles,
@@ -41,10 +45,10 @@ const loop = () => {
 
   // TODO run force here
 
-  // TODO find neighbors here
-  neighbors.nearest(particles)
-
   // TODO centering & scaling
+
+  // TODO better neighbor rule handling
+  neighbors.nearest(particles)
 
   // Update main thread
   context.postMessage({
