@@ -10,26 +10,40 @@ let currRequest: WorkerRequest | undefined
 let particles: Particle[] = []
 
 context.addEventListener('message', e => {
-  console.log('Worker message', e)
-  context.postMessage({ bar: 'foo' })
   if (!(e && e.data && e.data.type)) return
   switch (e.data.type) {
     case 'request': {
       particles = makeParticles(
-        e.data.request.dimensionCount,
-        e.data.request.particleCount,
+        e.data.request.dimensions,
+        e.data.request.particles,
         particles,
       )
       currRequest = e.data.request
-      tick()
+      loop()
+      break
     }
     case 'destroy': {
       currRequest = undefined
-      self.close()
+      break
     }
   }
 })
 
-const tick = () => {
+const loop = () => {
+  // Abort if no request
   if (!currRequest) return
+
+  // TODO run force here
+
+  // Update main thread
+  context.postMessage({
+    type: 'tick',
+    response: {
+      layers: currRequest.layers,
+      particles,
+    }
+  })
+
+  // Async to allow interrupt
+  setTimeout(loop, 100)
 }

@@ -11,15 +11,14 @@ export default class Manager {
     this.renderer = new Renderer({ canvas })
     this.worker = new WorkerLoader()
     this.worker.addEventListener('message', e => {
-      console.log('Main worker message', e)
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
         case 'tick': {
           this.renderer.tick(e.data.response)
+          break
         }
       }
     })
-    this.worker.postMessage({ foo: 'bar' })
   }
 
   public destroy() {
@@ -33,9 +32,6 @@ export default class Manager {
   }
 
   public draw(request: WorkerRequest) {
-    this.worker.postMessage({
-      type: 'request',
-      request,
-    })
+    this.worker.postMessage({ type: 'request', request })
   }
 }

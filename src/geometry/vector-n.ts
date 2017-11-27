@@ -1,4 +1,10 @@
 import { isNumber, reduce, times } from 'lodash'
+import * as THREE from 'three'
+
+const coinFlip = (): boolean => Math.random() < 0.5
+const random = (k: number = 1) => coinFlip()
+  ? Math.random() * k * -1
+  : Math.random() * k
 
 /**
  * Supports n dimensions, by using lists to hold scalars
@@ -17,7 +23,7 @@ export const make = (dimensions: number, n: number = 0): VectorN =>
  * Make a new vector, pre-populated with random numbers
  */
 export const makeRandom = (dimensions: number, k: number = 1): VectorN =>
-  times(dimensions, () => Math.random() * k)
+  times(dimensions, () => random(k))
 
 /**
  * Get the length of a vector (more expensive)
@@ -69,3 +75,9 @@ export const math = {
   multiply: makeMath((n1: number, n2: number): number => n1 * n2),
   divide: makeMath((n1: number, n2: number): number => n1 / n2),
 }
+
+/**
+ * Convert VectorN to THREE.Vector3
+ */
+export const toVector3 = (v: VectorN): THREE.Vector3 =>
+  new THREE.Vector3(v[0] || 0, v[1] || 0, v[2] || 0)

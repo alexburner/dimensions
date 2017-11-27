@@ -45,21 +45,46 @@ export interface Neighbor {
   name: NeighborName
 }
 
-export interface ProximityNeigbor {
+
+export interface AllNeightbor extends Neighbor {
+  name: 'all'
+}
+
+export interface NearestNeighbor extends Neighbor {
+  name: 'nearest'
+}
+
+export interface MinimumNeigbor extends Neighbor {
+  name: 'minimum'
+}
+
+export interface ProximityNeigbor extends Neighbor {
   name: 'proximity'
   min: number
   max: number
 }
 
+export type ForceUnion =
+  | FlockForce
+  | DiffusionForce
+  | GravityForce
+  | WanderForce
+
+export type NeighborUnion =
+  | AllNeightbor
+  | NearestNeighbor
+  | MinimumNeigbor
+  | ProximityNeigbor
+
 export interface WorkerRequest {
-  dimensionCount: number
-  particleCount: number
-  force: Force
-  neighbor: Neighbor
-  layerDict: LayerDict
+  dimensions: number
+  particles: number
+  force: ForceUnion
+  neighbor: NeighborUnion
+  layers: LayerDict
 }
 
 export interface WorkerResponse {
   particles: Particle[]
-  layerDict: LayerDict
+  layers: LayerDict
 }

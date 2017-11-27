@@ -12,7 +12,7 @@ export default class Sphere {
   }: {
     radius?: number
     position?: THREE.Vector3
-  }) {
+  } = {}) {
     const geometry = new THREE.SphereGeometry(radius, SEGMENTS, RINGS)
 
     const material = new THREE.MeshLambertMaterial({

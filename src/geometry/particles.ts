@@ -8,39 +8,36 @@ import { Particle } from 'src/interfaces'
  * (expanding/contracting old particle count & dimesionality as needed)
  */
 export const makeParticles = (
-  dimensionCount: number,
-  particleCount: number,
-  prevParticles: Particle[] = [],
+  dimensions: number,
+  particles: number,
+  prev: Particle[] = [],
 ): Particle[] =>
-  times(
-    particleCount,
-    i =>
-      prevParticles[i]
-        ? makeParticleFromPrev(dimensionCount, prevParticles[i])
-        : makeParticle(dimensionCount),
+  times(particles, i => prev[i]
+    ? makeParticleFromPrev(dimensions, prev[i])
+    : makeParticle(dimensions),
   )
+
+/**
+ * Make a new particle (seeded with random 0-1 values)
+ */
+export const makeParticle = (d: number): Particle => ({
+  location: vectorN.makeRandom(d),
+  velocity: vectorN.makeRandom(d),
+  acceleration: vectorN.makeRandom(d),
+  neighbors: [],
+})
 
 /**
  * Make a new particle from a previous particle
  * (expanding/contracting dimensionality as needed)
  * (expansions seeded with random 0-1 values)
  */
-export const makeParticleFromPrev = (
-  dimensions: number,
-  prev: Particle,
-): Particle => ({
-  location: times(dimensions, i => prev.location[i] || Math.random()),
-  velocity: times(dimensions, i => prev.velocity[i] || Math.random()),
-  acceleration: times(dimensions, i => prev.acceleration[i] || Math.random()),
-  neighbors: [],
-})
-
-/**
- * Make a new particle (seeded with random 0-1 values)
- */
-export const makeParticle = (dimensions: number): Particle => ({
-  location: vectorN.makeRandom(dimensions),
-  velocity: vectorN.makeRandom(dimensions),
-  acceleration: vectorN.makeRandom(dimensions),
-  neighbors: [],
-})
+export const makeParticleFromPrev = (d: number, prev: Particle): Particle => {
+  const next = makeParticle(d)
+  return {
+    location: times(d, i => prev.location[i] || next.location[i]),
+    velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
+    acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
+    neighbors: [],
+  }
+}

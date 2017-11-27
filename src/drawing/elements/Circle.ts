@@ -11,7 +11,7 @@ export default class Circle {
   }: {
     radius?: number
     position?: THREE.Vector3
-  }) {
+  } = {}) {
     const shape = new THREE.Shape()
     shape.arc(0, 0, radius, 0, 2 * Math.PI, false)
     shape.autoClose = true

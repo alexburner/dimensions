@@ -9,7 +9,7 @@ export default class Line {
   }: {
     radius?: number
     position?: THREE.Vector3
-  }) {
+  } = {}) {
     const pointA = new THREE.Vector3(0, -radius, 0)
     const pointB = new THREE.Vector3(0, radius, 0)
 

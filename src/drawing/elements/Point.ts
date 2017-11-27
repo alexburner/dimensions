@@ -24,7 +24,7 @@ export default class Point {
     position = new THREE.Vector3(),
   }: {
     position?: THREE.Vector3
-  }) {
+  } = {}) {
     const geometry = new THREE.BufferGeometry()
     geometry.setFromPoints([new THREE.Vector3()])
 
@@ -35,10 +35,15 @@ export default class Point {
     })
 
     const point = new THREE.Points(geometry, material)
-    point.position.x = position.x
-    point.position.y = position.y
-    point.position.z = position.z
 
     this.object = point
+
+    this.setPosition(position)
+  }
+
+  public setPosition(position: THREE.Vector3) {
+    this.object.position.x = position.x
+    this.object.position.y = position.y
+    this.object.position.z = position.z
   }
 }

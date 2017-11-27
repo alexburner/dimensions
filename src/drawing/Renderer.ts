@@ -3,6 +3,8 @@ import TrackballControls from 'three-trackballcontrols'
 
 import { WorkerResponse } from 'src/interfaces'
 
+import Points from 'src/drawing/layers/Points'
+
 import Circle from 'src/drawing/elements/Circle'
 import Line from 'src/drawing/elements/Line'
 import Point from 'src/drawing/elements/Point'
@@ -22,6 +24,7 @@ export default class Renderer {
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
+  private points: Points
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
@@ -58,6 +61,8 @@ export default class Renderer {
     // this.scene.add(line.object)
     // this.scene.add(circle.object)
     // this.scene.add(sphere.object)
+
+    this.points = new Points(this.scene)
   }
 
   public destroy() {
@@ -73,7 +78,9 @@ export default class Renderer {
   }
 
   public tick(response: WorkerResponse) {
-    console.log(response)
+    response.layers.points
+      ? this.points.tick(response.particles, this.width, this.height)
+      : this.points.clear()
   }
 
   private loop() {

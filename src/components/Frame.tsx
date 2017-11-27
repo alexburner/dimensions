@@ -35,6 +35,27 @@ export default class Frame extends React.Component {
     if (!this.container || !this.canvas) throw new Error('DOM failed to mount')
     this.manager = new Manager({ canvas: this.canvas })
     window.addEventListener('resize', this.handleResize)
+
+
+    this.manager.draw({
+      dimensions: 3,
+      particles: 100,
+      force: {
+        name: 'wander',
+        maxForce: 10,
+        maxSpeed: 10,
+        jitter: 10,
+      },
+      neighbor: {
+        name: 'nearest',
+      },
+      layers: {
+        points: true,
+        lines: false,
+        circles: false,
+        spheres: false,
+      },
+    })
   }
 
   public componentWillUnmount() {
