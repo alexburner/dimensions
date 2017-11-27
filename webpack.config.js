@@ -29,13 +29,35 @@ module.exports = {
         },
       },
       {
-        test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader'
-      },
-      {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader'
+      },
+      {
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          use: [
+              {
+                  loader: 'babel-loader',
+                  options: {
+                      cacheDirectory: true,
+                      presets: ['env'],
+                      plugins: [[
+                          require('babel-plugin-transform-runtime'),
+                          { regenerator: true, polyfill: false },
+                      ]],
+                  },
+              },
+              {
+                  loader: 'awesome-typescript-loader',
+                  options: {
+                      transpileOnly: false,
+                      logLevel: 'info',
+                      useBabel: true,
+                      useCache: true,
+                  },
+              },
+          ],
       },
     ],
   },
