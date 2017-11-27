@@ -1,9 +1,6 @@
 import neighbors from 'src/geometry/neighbors'
 import { makeParticles } from 'src/geometry/particles'
-import {
-  Particle,
-  WorkerRequest,
-} from 'src/interfaces'
+import { Particle, WorkerRequest } from 'src/interfaces'
 
 // XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
 // type definitions (in the tsconfig "lib" field), so we are sadly falling back
