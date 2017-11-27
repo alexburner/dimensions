@@ -2,8 +2,8 @@ import { map } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { math, toVector3 } from 'src/geometry/vector-n'
-import { RenderParticle, WorkerResponse } from 'src/interfaces'
+import { toRenderParticle } from 'src/geometry/particles'
+import { WorkerResponse } from 'src/interfaces'
 
 import Circles from 'src/drawing/layers/Circles'
 import Lines from 'src/drawing/layers/Lines'
@@ -91,16 +91,7 @@ export default class Renderer {
   }
 
   public tick(response: WorkerResponse) {
-    // TODO move this into worker
-    // and/or remove distinction...
-    // use absolute values throughout?
-    const renderParticles: RenderParticle[] = map(response.particles, p => ({
-      location: toVector3(p.location),
-      velocity: toVector3(p.velocity),
-      acceleration: toVector3(p.acceleration),
-      neighborIndices: p.neighborIndices,
-    }))
-
+    const renderParticles = map(response.particles, toRenderParticle)
     response.layers.points
       ? this.points.update(renderParticles)
       : this.points.clear()

@@ -88,9 +88,3 @@ export const math = {
   multiply: makeMath((n1: number, n2: number): number => n1 * n2),
   divide: makeMath((n1: number, n2: number): number => n1 / n2),
 }
-
-/**
- * Convert VectorN to THREE.Vector3
- */
-export const toVector3 = (v: VectorN): THREE.Vector3 =>
-  new THREE.Vector3(v[0] || 0, v[1] || 0, v[2] || 0)
