@@ -19,7 +19,6 @@ export default abstract class Layer<Spec> {
     const currCount = this.objects.length
     const nextCount = specs.length
     const nextDiff = nextCount - currCount
-
     if (nextDiff < 0) {
       // Remove extra objects from list & scene
       for (let i = nextCount; i < currCount; i++) {
