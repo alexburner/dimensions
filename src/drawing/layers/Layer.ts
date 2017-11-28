@@ -18,20 +18,20 @@ export default abstract class Layer<Spec> {
     // 2. Add/remove objects to match
     const currCount = this.objects.length
     const nextCount = specs.length
-    const diffCount = nextCount - currCount
-    if (diffCount < 0) {
-      // Remove extra objects from scene
-      for (let i = nextCount - 1; i < currCount; i++) {
-        this.scene.remove(this.objects[i])
+    const nextDiff = nextCount - currCount
+
+    if (nextDiff < 0) {
+      // Remove extra objects from list & scene
+      for (let i = nextCount; i < currCount; i++) {
+        const object = this.objects.pop()
+        this.scene.remove(object!)
       }
-      // Remove extra objects from list
-      this.objects.splice(currCount - 1, diffCount)
-    } else if (diffCount > 0) {
-      // Add missing objects to scene & list
+    } else if (nextDiff > 0) {
+      // Add missing objects to list & scene
       for (let i = currCount; i < nextCount; i++) {
         const object = this.makeObject()
-        this.scene.add(object)
         this.objects.push(object)
+        this.scene.add(object)
       }
     }
 
