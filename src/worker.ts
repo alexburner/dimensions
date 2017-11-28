@@ -55,5 +55,5 @@ const loop = () => {
   })
 
   // Async to allow interrupt
-  setTimeout(loop, 1000)
+  // setTimeout(loop, 10000)
 }
