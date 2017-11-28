@@ -9,8 +9,13 @@ interface SphereSpec {
   radius: number
 }
 
+const OPACITY_MAX = 0.5
+const OPACITY_MIN = 0.2
 const SEGMENTS = 40
 const RINGS = 40
+
+const getOpacity = (count: number): number =>
+  Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
 
 export default class Spheres extends Layer<SphereSpec> {
   protected makeSpecs(particles: RenderParticle[]): SphereSpec[] {
@@ -32,20 +37,25 @@ export default class Spheres extends Layer<SphereSpec> {
   protected makeObject(): THREE.Object3D {
     const geometry = new THREE.SphereGeometry(1, SEGMENTS, RINGS)
     const material = new THREE.MeshNormalMaterial({
+      blending: THREE.AdditiveBlending,
+      depthTest: false,
+      opacity: OPACITY_MAX,
       transparent: true,
-      opacity: 0.5,
     })
     const mesh = new THREE.Mesh(geometry, material)
     return mesh
   }
 
   protected updateObjects(specs: SphereSpec[]) {
+    const opacity = getOpacity(specs.length)
     each(specs, (spec, i) => {
-      const object = this.objects[i]
+      const object = this.objects[i] as THREE.Mesh
       object.position.x = spec.position.x
       object.position.y = spec.position.y
       object.position.z = spec.position.z
       object.scale.set(spec.radius, spec.radius, spec.radius)
+      const material = object.material as THREE.MeshNormalMaterial
+      material.opacity = opacity
     })
   }
 }

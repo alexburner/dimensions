@@ -50,7 +50,7 @@ export default class Frame extends React.Component<{}, {}> {
             left: 0,
             right: CONTROL_WIDTH + 'px',
             bottom: 0,
-            backgroundColor: '#333',
+            backgroundColor: '#111',
           }}
         >
           <canvas
@@ -69,8 +69,8 @@ export default class Frame extends React.Component<{}, {}> {
             right: 0,
             bottom: 0,
             width: CONTROL_WIDTH + 'px',
-            backgroundColor: '#292929',
-            borderLeft: '1px solid #444',
+            backgroundColor: '#222',
+            borderLeft: '1px solid #333',
           }}
         >
           <Controls

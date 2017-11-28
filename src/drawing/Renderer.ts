@@ -11,7 +11,7 @@ import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
 
 const NEAR = 1
-const FAR = 5000
+const FAR = 10000
 const VIEWANGLE = 45
 
 export default class Renderer {
