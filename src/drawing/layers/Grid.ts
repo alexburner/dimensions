@@ -13,6 +13,7 @@ interface AxisSpec {
 const SIZE = FIELD_SIZE
 
 const specsByDimension: { [dimension: number]: AxisSpec[] } = {
+  0: [],
   1: [
     // x axis
     {
@@ -173,6 +174,7 @@ const specsByDimension: { [dimension: number]: AxisSpec[] } = {
 
 export default class Grid extends Layer<AxisSpec> {
   protected makeSpecs(_p: Particle3[], dimensions: number): AxisSpec[] {
+    if (dimensions > 3) dimensions = 3 // XXX human limits
     return specsByDimension[dimensions]
   }
 
