@@ -7,22 +7,16 @@ Install npm dependencies
 npm install
 ```
 
-## watch
+## watch (dev)
 Run webpack dev server with watch
 ```cmd
 npm run watch
 ```
 
-## build
+## build (prod)
 Clean out built folder + run webpack build with production optimizations
 ```cmd
 npm run build
-```
-
-## clean
-Clean out built folder, loader cache, node modules
-```cmd
-npm run clean
 ```
 
 ## style
