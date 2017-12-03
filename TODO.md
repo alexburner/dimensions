@@ -1,2 +1,2 @@
 ## tsc
-- how to type safety for web worker messages? (types, payloads)
+- better type safety for web worker messages (types, payloads)
