@@ -14,7 +14,7 @@ npm run watch
 ```
 
 ## build (prod)
-Clean out built folder + run webpack build with production optimizations
+Clean out built folder & run webpack build with production optimizations
 ```cmd
 npm run build
 ```
