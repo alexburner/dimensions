@@ -2,7 +2,7 @@ import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import Layer from 'src/drawing/layers/Layer'
-import { RenderParticle } from 'src/interfaces'
+import { Particle3 } from 'src/geometry/particles'
 
 interface CircleSpec {
   position: THREE.Vector3
@@ -12,7 +12,7 @@ interface CircleSpec {
 const DIVISIONS = 64
 
 export default class Circles extends Layer<CircleSpec> {
-  protected makeSpecs(particles: RenderParticle[]): CircleSpec[] {
+  protected makeSpecs(particles: Particle3[]): CircleSpec[] {
     return reduce(
       particles,
       (memo, particle) => {

@@ -2,7 +2,7 @@ import { map } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { toRenderParticle } from 'src/geometry/particles'
+import { toParticle3 } from 'src/geometry/particles'
 import { WorkerResponse } from 'src/interfaces'
 
 import Circles from 'src/drawing/layers/Circles'
@@ -82,7 +82,7 @@ export default class Renderer {
   }
 
   public tick(response: WorkerResponse) {
-    const renderParticles = map(response.particles, toRenderParticle)
+    const renderParticles = map(response.particles, toParticle3)
     response.layers.points
       ? this.points.update(renderParticles)
       : this.points.clear()

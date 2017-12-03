@@ -1,6 +1,6 @@
 import { each } from 'lodash'
 
-import { RenderParticle } from 'src/interfaces'
+import { Particle3 } from 'src/geometry/particles'
 
 export default abstract class Layer<Spec> {
   protected scene: THREE.Scene
@@ -11,7 +11,7 @@ export default abstract class Layer<Spec> {
     this.objects = []
   }
 
-  public update(particles: RenderParticle[]) {
+  public update(particles: Particle3[]) {
     // 1. Generate fresh list of specs
     const specs = this.makeSpecs(particles)
 
@@ -43,7 +43,7 @@ export default abstract class Layer<Spec> {
     this.objects = []
   }
 
-  protected abstract makeSpecs(particles: RenderParticle[]): Spec[]
+  protected abstract makeSpecs(particles: Particle3[]): Spec[]
 
   protected abstract makeObject(): THREE.Object3D
 

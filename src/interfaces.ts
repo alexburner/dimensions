@@ -1,23 +1,5 @@
 import { VectorN } from 'src/geometry/vector-n'
-
-export interface Neighbor {
-  index: number
-  distance: number
-}
-
-export interface Particle {
-  location: VectorN
-  velocity: VectorN
-  acceleration: VectorN
-  neighbors: Neighbor[]
-}
-
-export interface RenderParticle {
-  location: THREE.Vector3
-  velocity: THREE.Vector3
-  acceleration: THREE.Vector3
-  neighbors: Neighbor[]
-}
+import { Particle } from 'src/geometry/particles'
 
 export type ForceRuleName = 'flock' | 'diffusion' | 'gravity' | 'wander'
 export type NeighborRuleName = 'all' | 'nearest' | 'minimum' | 'proximity'

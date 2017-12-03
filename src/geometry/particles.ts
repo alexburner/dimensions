@@ -2,7 +2,25 @@ import { times } from 'lodash'
 import * as THREE from 'three'
 
 import { makeRandom, VectorN } from 'src/geometry/vector-n'
-import { Particle, RenderParticle } from 'src/interfaces'
+
+export interface Neighbor {
+  index: number
+  distance: number
+}
+
+export interface Particle {
+  location: VectorN
+  velocity: VectorN
+  acceleration: VectorN
+  neighbors: Neighbor[]
+}
+
+export interface Particle3 {
+  location: THREE.Vector3
+  velocity: THREE.Vector3
+  acceleration: THREE.Vector3
+  neighbors: Neighbor[]
+}
 
 /**
  * Make new particles, optionally using old particles
@@ -54,11 +72,12 @@ export const makeParticleFromPrev = (
 /**
  * Convert a VectorN particle to a Vector3 particle
  */
-export const toRenderParticle = (p: Particle): RenderParticle => ({
+export const toParticle3 = (p: Particle): Particle3 => ({
   location: toVector3(p.location),
   velocity: toVector3(p.velocity),
   acceleration: toVector3(p.acceleration),
   neighbors: p.neighbors,
 })
+
 const toVector3 = (v: VectorN): THREE.Vector3 =>
   new THREE.Vector3(v[0] || 0, v[1] || 0, v[2] || 0)

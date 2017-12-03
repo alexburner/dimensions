@@ -2,7 +2,7 @@ import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import Layer from 'src/drawing/layers/Layer'
-import { RenderParticle } from 'src/interfaces'
+import { Particle3 } from 'src/geometry/particles'
 
 interface LineSpec {
   source: THREE.Vector3
@@ -10,7 +10,7 @@ interface LineSpec {
 }
 
 export default class Lines extends Layer<LineSpec> {
-  protected makeSpecs(particles: RenderParticle[]): LineSpec[] {
+  protected makeSpecs(particles: Particle3[]): LineSpec[] {
     return reduce(
       particles,
       (memo, particle) => {

@@ -2,7 +2,7 @@ import { each, map } from 'lodash'
 import * as THREE from 'three'
 
 import Layer from 'src/drawing/layers/Layer'
-import { RenderParticle } from 'src/interfaces'
+import { Particle3 } from 'src/geometry/particles'
 
 interface PointSpec {
   position: THREE.Vector3
@@ -27,7 +27,7 @@ const getTexture = (): THREE.Texture => {
 export default class Points extends Layer<PointSpec> {
   private static texture = getTexture()
 
-  protected makeSpecs(particles: RenderParticle[]): PointSpec[] {
+  protected makeSpecs(particles: Particle3[]): PointSpec[] {
     return map(particles, particle => ({
       position: particle.location,
     }))

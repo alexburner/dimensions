@@ -2,7 +2,7 @@ import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import Layer from 'src/drawing/layers/Layer'
-import { RenderParticle } from 'src/interfaces'
+import { Particle3 } from 'src/geometry/particles'
 
 interface SphereSpec {
   position: THREE.Vector3
@@ -18,7 +18,7 @@ const getOpacity = (count: number): number =>
   Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
 
 export default class Spheres extends Layer<SphereSpec> {
-  protected makeSpecs(particles: RenderParticle[]): SphereSpec[] {
+  protected makeSpecs(particles: Particle3[]): SphereSpec[] {
     return reduce(
       particles,
       (memo, particle) => {
