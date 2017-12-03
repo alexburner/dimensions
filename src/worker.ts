@@ -23,13 +23,13 @@ context.addEventListener('message', e => {
   switch (e.data.type) {
     case 'request': {
       const request: WorkerRequest = e.data.request
+      curr.request = request
       curr.particles = makeParticles(
         FIELD_SIZE,
         request.dimensions,
         request.particles,
         curr.particles,
       )
-      curr.request = request
       loop()
       break
     }

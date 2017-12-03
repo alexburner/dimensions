@@ -12,7 +12,7 @@ import { toParticle3 } from 'src/geometry/particles'
 import { WorkerResponse } from 'src/interfaces'
 
 const NEAR = 1
-const FAR = 10000
+const FAR = 5000
 const VIEWANGLE = 45
 
 export default class Renderer {
@@ -51,11 +51,13 @@ export default class Renderer {
       NEAR,
       FAR,
     )
-    this.camera.position.z = 900
+    this.camera.position.z = 600
 
     // Set up camera controls
     this.controls = new TrackballControls(this.camera, this.canvas)
     this.controls.rotateSpeed = 2.8
+    this.controls.minDistance = NEAR
+    this.controls.maxDistance = FAR * 0.9
 
     // Set up layers
     this.layers = {

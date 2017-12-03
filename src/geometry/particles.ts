@@ -36,8 +36,8 @@ export const makeParticles = (
     particles,
     i =>
       prev[i]
-        ? makeParticleFromPrev(dimensions, fieldSize, prev[i])
-        : makeParticle(dimensions, fieldSize),
+        ? makeParticleFromPrev(dimensions, fieldSize / 2, prev[i])
+        : makeParticle(dimensions, fieldSize / 2),
   )
 
 /**
