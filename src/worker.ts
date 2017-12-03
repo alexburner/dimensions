@@ -1,21 +1,48 @@
 import { FIELD_SIZE } from 'src/constants'
-import { neighborhoods } from 'src/geometry/neighborhoods'
+import { LayerVisibility } from 'src/drawing/layers'
+import { neighborhoods, NeighborhoodSpec } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
-import { simulations } from 'src/geometry/simulations'
-import { WorkerRequest, WorkerResponse } from 'src/interfaces'
+import { simulations, SimulationSpec } from 'src/geometry/simulations'
 
-// XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
-// type definitions (in the tsconfig "lib" field), so we are sadly falling back
-// to weird partial types hacked out of the desired definitions file. Actual:
-// https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope
+export interface WorkerRequest {
+  dimensions: number
+  particles: number
+  simulation: SimulationSpec
+  neighborhood: NeighborhoodSpec
+  layerVisibility: LayerVisibility
+}
+
+export interface WorkerResponse {
+  dimensions: number
+  particles: Particle[]
+  layerVisibility: LayerVisibility
+}
+
+/**
+ * TypeScript currently does not support loading both "DOM" and "WebWorker"
+ * type definitions (in the tsconfig "lib" field), so we are falling back
+ * to weird partial types hacked out of the desired definitions file
+ *
+ * Hack:
+ * node_modules/typescript/lib/lib.webworker.d.ts -> typings/custom.d.ts
+ *
+ * Actual:
+ * https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope
+ */
 const context = (self as any) as DedicatedWorkerGlobalScope
 
-const curr: {
+/**
+ * State stored as global singleton due to the nature of web workers
+ * (think of this as a class instantiated on `new WebpackWorkerLoader()`)
+ */
+const state: {
   particles: Particle[]
   request: WorkerRequest | undefined
+  stopped: boolean
 } = {
   particles: [],
   request: undefined,
+  stopped: false,
 }
 
 context.addEventListener('message', e => {
@@ -23,37 +50,54 @@ context.addEventListener('message', e => {
   switch (e.data.type) {
     case 'request': {
       const request: WorkerRequest = e.data.request
-      curr.request = request
-      curr.particles = makeParticles(
+      state.request = request
+      state.particles = makeParticles(
         FIELD_SIZE,
         request.dimensions,
         request.particles,
-        curr.particles,
+        state.particles,
       )
       loop()
       break
     }
+    case 'pause': {
+      state.stopped = true
+      break
+    }
+    case 'resume': {
+      state.stopped = false
+      loop()
+      break
+    }
     case 'destroy': {
-      curr.request = undefined
+      state.stopped = true
+      context.close()
       break
     }
   }
 })
 
 const loop = () => {
-  // Abort if no request
-  if (!curr.request) return
+  if (!state.request) return
+  if (state.stopped) return
 
-  // TODO better simulation handling
-  curr.particles = simulations.wandering(curr.particles, {
-    speed: { min: 0, max: 100 },
-    force: { min: 0, max: 100 },
-  })
+  {
+    // Run simulation
+    const spec = state.request.simulation
+    const simulation = simulations[spec.name]
+    const config = spec.config
+    state.particles = simulation(state.particles, config)
+  }
 
   // TODO wrapping, centering, scaling
 
-  // TODO better neighbor rule handling
-  curr.particles = neighborhoods.nearest(curr.particles, {})
+  {
+    // Run neighborhood
+    const spec = state.request.neighborhood
+    const neighborhood = neighborhoods[spec.name]
+    const config = spec.config
+    state.particles = neighborhood(state.particles, config)
+  }
 
   // Update main thread
   context.postMessage<{
@@ -62,12 +106,12 @@ const loop = () => {
   }>({
     type: 'tick',
     response: {
-      particles: curr.particles,
-      dimensions: curr.request.dimensions,
-      layerVisibility: curr.request.layerVisibility,
+      particles: state.particles,
+      dimensions: state.request.dimensions,
+      layerVisibility: state.request.layerVisibility,
     },
   })
 
   // Async to allow interrupt
-  setTimeout(loop, 0)
+  setTimeout(loop, 1000 / 60)
 }

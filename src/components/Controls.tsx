@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { LayerName } from 'src/drawing/layers'
-import { WorkerRequest } from 'src/interfaces'
+import { WorkerRequest } from 'src/worker'
 
 interface Props {
   request: WorkerRequest

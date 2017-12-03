@@ -1,5 +1,5 @@
 import Renderer from 'src/drawing/Renderer'
-import { WorkerRequest } from 'src/interfaces'
+import { WorkerRequest } from 'src/worker'
 import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
@@ -40,5 +40,13 @@ export default class Manager {
 
   public draw(request: WorkerRequest) {
     this.worker.postMessage({ type: 'request', request })
+  }
+
+  public pause() {
+    this.worker.postMessage({ type: 'pause' })
+  }
+
+  public resume() {
+    this.worker.postMessage({ type: 'resume' })
   }
 }

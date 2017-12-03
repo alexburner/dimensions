@@ -20,3 +20,38 @@ export const neighborhoods: {
 } = {
   nearest,
 }
+
+/**
+ * TODO: simulations for these deprecated types
+ */
+
+export type ForceRuleName = 'flock' | 'diffusion' | 'gravity' | 'wander'
+
+export interface ForceRule {
+  name: ForceRuleName
+  maxSpeed: number
+  maxForce: number
+}
+
+export interface FlockForceRule extends ForceRule {
+  name: 'flock'
+  awareness: number
+  separation: number
+  alignment: number
+  cohesion: number
+}
+
+export interface DiffusionForceRule extends ForceRule {
+  name: 'diffusion'
+  charge: number
+}
+
+export interface GravityForceRule extends ForceRule {
+  name: 'gravity'
+  mass: number
+}
+
+export interface WanderForceRule extends ForceRule {
+  name: 'wander'
+  jitter: number
+}

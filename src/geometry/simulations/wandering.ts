@@ -5,11 +5,13 @@ import { SharedConfig, Simulation } from 'src/geometry/simulations'
 import { math } from 'src/geometry/vector-n'
 import { random } from 'src/util'
 
-export interface WanderingConfig {}
+export interface WanderingConfig {
+  jitter: number
+}
 
 export const wandering: Simulation<SharedConfig & WanderingConfig> = (
   particles: Particle[],
-  _config: WanderingConfig,
+  config: WanderingConfig,
 ): Particle[] => {
   // 1. clear accelerations
   // 2. accumulate accelerations
@@ -17,6 +19,6 @@ export const wandering: Simulation<SharedConfig & WanderingConfig> = (
 
   return map(particles, particle => ({
     ...particle,
-    location: math.add(particle.location, random()),
+    location: math.add(particle.location, random(config.jitter)),
   }))
 }

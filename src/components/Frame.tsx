@@ -1,22 +1,25 @@
 import * as React from 'react'
 
 import Controls from 'src/components/Controls'
-import { WorkerRequest } from 'src/interfaces'
 import Manager from 'src/Manager'
+import { WorkerRequest } from 'src/worker'
 
 const CONTROL_WIDTH = 180
 
 const initialRequest: WorkerRequest = {
   dimensions: 3,
   particles: 9,
-  force: {
-    name: 'wander',
-    maxForce: 10,
-    maxSpeed: 10,
-    jitter: 10,
+  simulation: {
+    name: 'wandering',
+    config: {
+      maxForce: 10,
+      maxSpeed: 10,
+      jitter: 1,
+    },
   },
-  neighbor: {
+  neighborhood: {
     name: 'nearest',
+    config: {},
   },
   layerVisibility: {
     grid: false,
@@ -89,10 +92,12 @@ export default class Frame extends React.Component<{}, {}> {
     this.manager = new Manager({ canvas: this.canvas, bounds })
     this.manager.draw(initialRequest)
     window.addEventListener('resize', this.handleResize)
+    document.addEventListener('visibilitychange', this.handleVisibility)
   }
 
   public componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
+    document.removeEventListener('visibilitychange', this.handleVisibility)
     if (this.manager) this.manager.destroy()
   }
 
@@ -110,6 +115,11 @@ export default class Frame extends React.Component<{}, {}> {
     if (!this.manager) return
     const bounds = this.updateCanvasSize()
     this.manager.resize(bounds)
+  }
+
+  private handleVisibility = () => {
+    if (!this.manager) return
+    document.hidden ? this.manager.pause() : this.manager.resume()
   }
 
   private handleRequestChange = (request: WorkerRequest) => {

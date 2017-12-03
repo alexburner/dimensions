@@ -10,7 +10,7 @@ import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
 import { toParticle3 } from 'src/geometry/particles'
-import { WorkerResponse } from 'src/interfaces'
+import { WorkerResponse } from 'src/worker'
 
 const NEAR = 1
 const FAR = 5000

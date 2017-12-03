@@ -2,14 +2,8 @@ import { Particle } from 'src/geometry/particles'
 import { wandering, WanderingConfig } from 'src/geometry/simulations/wandering'
 
 export interface SharedConfig {
-  speed: {
-    min: number
-    max: number
-  }
-  force: {
-    min: number
-    max: number
-  }
+  maxSpeed: number
+  maxForce: number
 }
 
 export type Simulation<Config> = (
