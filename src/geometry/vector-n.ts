@@ -1,8 +1,6 @@
 import { isNumber, reduce, times } from 'lodash'
 
-const coinFlip = (): boolean => Math.random() < 0.5
-const random = (k: number = 1) =>
-  coinFlip() ? Math.random() * k * -1 : Math.random() * k
+import { random } from 'src/util'
 
 /**
  * Supports n dimensions, by using lists to hold scalars

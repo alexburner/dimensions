@@ -1,5 +1,6 @@
 import { FIELD_SIZE } from 'src/constants'
 import neighbors from 'src/geometry/neighbors'
+import simulations from 'src/geometry/simulations'
 import { makeParticles, Particle } from 'src/geometry/particles'
 import { WorkerRequest, WorkerResponse } from 'src/interfaces'
 
@@ -43,9 +44,10 @@ const loop = () => {
   // Abort if no request
   if (!curr.request) return
 
-  // TODO run force here
+  // TODO better simulation handling
+  curr.particles = simulations.wandering(curr.particles)
 
-  // TODO centering & scaling
+  // TODO wrapping, centering, scaling
 
   // TODO better neighbor rule handling
   curr.particles = neighbors.nearest(curr.particles)
@@ -64,5 +66,5 @@ const loop = () => {
   })
 
   // Async to allow interrupt
-  // setTimeout(loop, 0)
+  setTimeout(loop, 0)
 }
