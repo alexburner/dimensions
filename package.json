@@ -10,10 +10,11 @@
     "npm": "5.5.1"
   },
   "scripts": {
+    "watch": "webpack-dev-server",
     "build": "rm -rf docs/* && webpack -p",
-    "prettier": "prettier --write",
-    "style": "npm run prettier 'src/**/*.+(ts|tsx|js|json)'",
-    "watch": "webpack-dev-server"
+    "prettier": "prettier --write 'src/**/*.+(ts|tsx|js|json)'",
+    "tslint": "tslint --fix -p tsconfig.json --exclude 'node_modules/*'",
+    "style": "npm run tslint && npm run prettier"
   },
   "prettier": {
     "semi": false,

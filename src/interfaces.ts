@@ -1,4 +1,3 @@
-import { VectorN } from 'src/geometry/vector-n'
 import { Particle } from 'src/geometry/particles'
 
 export type ForceRuleName = 'flock' | 'diffusion' | 'gravity' | 'wander'

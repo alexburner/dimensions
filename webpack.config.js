@@ -19,16 +19,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        enforce: 'pre',
-        loader: 'tslint-loader',
-        options: {
-          fix: true,
-          typeCheck: true,
-        },
-      },
-      {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader'

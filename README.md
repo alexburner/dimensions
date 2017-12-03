@@ -20,13 +20,7 @@ npm run build
 ```
 
 ## style
-Apply `prettier` to `src` files
+Auto-format code with `prettier` and `tslint --fix`
 ```cmd
 npm run style
-```
-
-## prettier
-Apply `prettier` to file of your choice
-```cmd
-npm run prettier "path/to/file"
 ```
