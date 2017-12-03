@@ -1,11 +1,10 @@
-import { each } from 'lodash'
+import { each, map } from 'lodash'
 
 import { Particle } from 'src/geometry/particles'
 import { getDistance } from 'src/geometry/vector-n'
 
-export default (particles: Particle[]) => {
-  each(particles, (particleA, indexA) => {
-    // Walk through each other particle
+export default (particles: Particle[]): Particle[] => {
+  return map(particles, (particleA, indexA) => {
     let minDistance: number = Infinity
     let minIndex: number = indexA
     each(particles, (particleB, indexB) => {
@@ -16,12 +15,9 @@ export default (particles: Particle[]) => {
         minIndex = indexB
       }
     })
-    // Store nearest neighbor
-    particleA.neighbors = [
-      {
-        distance: minDistance,
-        index: minIndex,
-      },
-    ]
+    return {
+      ...particleA,
+      neighbors: [{ index: minIndex, distance: minDistance }],
+    }
   })
 }

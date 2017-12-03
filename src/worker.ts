@@ -48,7 +48,7 @@ const loop = () => {
   // TODO centering & scaling
 
   // TODO better neighbor rule handling
-  neighbors.nearest(curr.particles)
+  curr.particles = neighbors.nearest(curr.particles)
 
   // Update main thread
   context.postMessage<{
