@@ -1,7 +1,33 @@
-import wandering from 'src/geometry/simulations/wandering'
+import { Particle } from 'src/geometry/particles'
+import { wandering, WanderingConfig } from 'src/geometry/simulations/wandering'
 
-const simulations = {
-  wandering,
+export interface SharedConfig {
+  speed: {
+    min: number
+    max: number
+  }
+  force: {
+    min: number
+    max: number
+  }
 }
 
-export default simulations
+export type Simulation<Config> = (
+  particles: Particle[],
+  config: Config,
+) => Particle[]
+
+export type SimulationNames = 'wandering'
+
+export type SimulationConfigs = SharedConfig & (WanderingConfig)
+
+export interface SimulationSpec {
+  name: SimulationNames
+  config: SimulationConfigs
+}
+
+export const simulations: {
+  [name in SimulationNames]: Simulation<SimulationConfigs>
+} = {
+  wandering,
+}

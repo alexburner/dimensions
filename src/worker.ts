@@ -1,7 +1,7 @@
 import { FIELD_SIZE } from 'src/constants'
-import neighbors from 'src/geometry/neighbors'
-import simulations from 'src/geometry/simulations'
+import { neighborhoods } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
+import { simulations } from 'src/geometry/simulations'
 import { WorkerRequest, WorkerResponse } from 'src/interfaces'
 
 // XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
@@ -45,12 +45,15 @@ const loop = () => {
   if (!curr.request) return
 
   // TODO better simulation handling
-  curr.particles = simulations.wandering(curr.particles)
+  curr.particles = simulations.wandering(curr.particles, {
+    speed: { min: 0, max: 100 },
+    force: { min: 0, max: 100 },
+  })
 
   // TODO wrapping, centering, scaling
 
   // TODO better neighbor rule handling
-  curr.particles = neighbors.nearest(curr.particles)
+  curr.particles = neighborhoods.nearest(curr.particles, {})
 
   // Update main thread
   context.postMessage<{
