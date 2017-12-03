@@ -21,7 +21,7 @@ export default class Manager {
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
         case 'tick': {
-          this.renderer.tick(e.data.response)
+          this.renderer.update(e.data.response)
           break
         }
       }

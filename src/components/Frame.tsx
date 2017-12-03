@@ -18,7 +18,7 @@ const initialRequest: WorkerRequest = {
   neighbor: {
     name: 'nearest',
   },
-  layers: {
+  layerVisibility: {
     points: true,
     lines: true,
     circles: true,

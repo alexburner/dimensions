@@ -1,14 +1,15 @@
-import { map } from 'lodash'
+import { each, map } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { toParticle3 } from 'src/geometry/particles'
-import { WorkerResponse } from 'src/interfaces'
-
+import { LayerName } from 'src/drawing/layers'
 import Circles from 'src/drawing/layers/Circles'
+import Layer from 'src/drawing/layers/Layer'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
+import { toParticle3 } from 'src/geometry/particles'
+import { WorkerResponse } from 'src/interfaces'
 
 const NEAR = 1
 const FAR = 10000
@@ -22,10 +23,7 @@ export default class Renderer {
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
-  private points: Points
-  private lines: Lines
-  private circles: Circles
-  private spheres: Spheres
+  private layers: { [name in LayerName]: Layer<any> }
 
   constructor({
     canvas,
@@ -59,14 +57,16 @@ export default class Renderer {
     this.controls = new TrackballControls(this.camera, this.canvas)
     this.controls.rotateSpeed = 2.8
 
+    // Set up layers
+    this.layers = {
+      points: new Points(this.scene),
+      lines: new Lines(this.scene),
+      circles: new Circles(this.scene),
+      spheres: new Spheres(this.scene),
+    }
+
     // Start render loop
     this.loop()
-
-    // Set up layers
-    this.points = new Points(this.scene)
-    this.lines = new Lines(this.scene)
-    this.circles = new Circles(this.scene)
-    this.spheres = new Spheres(this.scene)
   }
 
   public destroy() {
@@ -81,20 +81,12 @@ export default class Renderer {
     this.controls.handleResize()
   }
 
-  public tick(response: WorkerResponse) {
+  public update(response: WorkerResponse) {
     const renderParticles = map(response.particles, toParticle3)
-    response.layers.points
-      ? this.points.update(renderParticles)
-      : this.points.clear()
-    response.layers.lines
-      ? this.lines.update(renderParticles)
-      : this.lines.clear()
-    response.layers.circles
-      ? this.circles.update(renderParticles)
-      : this.circles.clear()
-    response.layers.spheres
-      ? this.spheres.update(renderParticles)
-      : this.spheres.clear()
+    each(response.layerVisibility, (isLayerVisible, layerName) => {
+      const layer = this.layers[layerName as LayerName] // XXX lodash type bug?
+      isLayerVisible ? layer.update(renderParticles) : layer.clear()
+    })
   }
 
   private loop() {

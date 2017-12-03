@@ -1,6 +1,7 @@
 import * as React from 'react'
 
-import { LayerName, WorkerRequest } from 'src/interfaces'
+import { LayerName } from 'src/drawing/layers'
+import { WorkerRequest } from 'src/interfaces'
 
 interface Props {
   request: WorkerRequest
@@ -55,7 +56,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="points"
-              checked={this.state.request.layers.points}
+              checked={this.state.request.layerVisibility.points}
               onChange={this.handleLayers}
             />
           </label>
@@ -64,7 +65,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="lines"
-              checked={this.state.request.layers.lines}
+              checked={this.state.request.layerVisibility.lines}
               onChange={this.handleLayers}
             />
           </label>
@@ -73,7 +74,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="circles"
-              checked={this.state.request.layers.circles}
+              checked={this.state.request.layerVisibility.circles}
               onChange={this.handleLayers}
             />
           </label>
@@ -82,7 +83,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="spheres"
-              checked={this.state.request.layers.spheres}
+              checked={this.state.request.layerVisibility.spheres}
               onChange={this.handleLayers}
             />
           </label>
@@ -109,7 +110,7 @@ export default class Controls extends React.Component<Props, State> {
     const request = { ...this.state.request }
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
-    request.layers[name] = value
+    request.layerVisibility[name] = value
     this.props.onChange(request)
     this.setState({ request })
   }

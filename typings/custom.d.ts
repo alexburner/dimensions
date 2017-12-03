@@ -75,7 +75,7 @@ interface DedicatedWorkerGlobalScopeEventMap extends WorkerGlobalScopeEventMap {
 interface DedicatedWorkerGlobalScope extends WorkerGlobalScope {
   onmessage: (this: DedicatedWorkerGlobalScope, ev: MessageEvent) => any
   close(): void
-  postMessage(message: any, transfer?: any[]): void
+  postMessage<T>(message: T, transfer?: any[]): void
   addEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(
     type: K,
     listener: (

@@ -1,9 +1,8 @@
+import { LayerVisibility } from 'src/drawing/layers'
 import { Particle } from 'src/geometry/particles'
 
 export type ForceRuleName = 'flock' | 'diffusion' | 'gravity' | 'wander'
 export type NeighborRuleName = 'all' | 'nearest' | 'minimum' | 'proximity'
-export type LayerName = 'points' | 'lines' | 'circles' | 'spheres'
-export type LayerDict = { [name in LayerName]: boolean }
 
 export interface ForceRule {
   name: ForceRuleName
@@ -73,10 +72,10 @@ export interface WorkerRequest {
   particles: number
   force: ForceRules
   neighbor: NeighborRules
-  layers: LayerDict
+  layerVisibility: LayerVisibility
 }
 
 export interface WorkerResponse {
   particles: Particle[]
-  layers: LayerDict
+  layerVisibility: LayerVisibility
 }

@@ -1,6 +1,6 @@
 import neighbors from 'src/geometry/neighbors'
 import { makeParticles, Particle } from 'src/geometry/particles'
-import { WorkerRequest } from 'src/interfaces'
+import { WorkerRequest, WorkerResponse } from 'src/interfaces'
 
 // XXX: TypeScript currently does not support loading both "DOM" and "WebWorker"
 // type definitions (in the tsconfig "lib" field), so we are sadly falling back
@@ -10,25 +10,31 @@ const context = (self as any) as DedicatedWorkerGlobalScope
 
 const FIELD_SIZE = 200
 
-let currRequest: WorkerRequest | undefined
-let particles: Particle[] = []
+const curr: {
+  particles: Particle[]
+  request: WorkerRequest | undefined
+} = {
+  particles: [],
+  request: undefined,
+}
 
 context.addEventListener('message', e => {
   if (!(e && e.data && e.data.type)) return
   switch (e.data.type) {
     case 'request': {
-      particles = makeParticles(
+      const request: WorkerRequest = e.data.request
+      curr.particles = makeParticles(
         FIELD_SIZE,
-        e.data.request.dimensions,
-        e.data.request.particles,
-        particles,
+        request.dimensions,
+        request.particles,
+        curr.particles,
       )
-      currRequest = e.data.request
+      curr.request = request
       loop()
       break
     }
     case 'destroy': {
-      currRequest = undefined
+      curr.request = undefined
       break
     }
   }
@@ -36,24 +42,27 @@ context.addEventListener('message', e => {
 
 const loop = () => {
   // Abort if no request
-  if (!currRequest) return
+  if (!curr.request) return
 
   // TODO run force here
 
   // TODO centering & scaling
 
   // TODO better neighbor rule handling
-  neighbors.nearest(particles)
+  neighbors.nearest(curr.particles)
 
   // Update main thread
-  context.postMessage({
+  context.postMessage<{
+    type: 'tick'
+    response: WorkerResponse
+  }>({
     type: 'tick',
     response: {
-      layers: currRequest.layers,
-      particles,
+      layerVisibility: curr.request.layerVisibility,
+      particles: curr.particles,
     },
   })
 
   // Async to allow interrupt
-  // setTimeout(loop, 10000)
+  // setTimeout(loop, 0)
 }
