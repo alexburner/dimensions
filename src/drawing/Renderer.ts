@@ -4,6 +4,7 @@ import TrackballControls from 'three-trackballcontrols'
 
 import { LayerName } from 'src/drawing/layers'
 import Circles from 'src/drawing/layers/Circles'
+import Grid from 'src/drawing/layers/Grid'
 import Layer from 'src/drawing/layers/Layer'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
@@ -61,6 +62,7 @@ export default class Renderer {
 
     // Set up layers
     this.layers = {
+      grid: new Grid(this.scene),
       points: new Points(this.scene),
       lines: new Lines(this.scene),
       circles: new Circles(this.scene),
@@ -84,10 +86,11 @@ export default class Renderer {
   }
 
   public update(response: WorkerResponse) {
-    const renderParticles = map(response.particles, toParticle3)
+    const dimensions = response.dimensions
+    const particles = map(response.particles, toParticle3)
     each(response.layerVisibility, (isLayerVisible, layerName) => {
       const layer = this.layers[layerName as LayerName] // XXX lodash type bug?
-      isLayerVisible ? layer.update(renderParticles) : layer.clear()
+      isLayerVisible ? layer.update(particles, dimensions) : layer.clear()
     })
   }
 

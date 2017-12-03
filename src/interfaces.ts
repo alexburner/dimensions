@@ -76,6 +76,7 @@ export interface WorkerRequest {
 }
 
 export interface WorkerResponse {
+  dimensions: number
   particles: Particle[]
   layerVisibility: LayerVisibility
 }

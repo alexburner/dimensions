@@ -87,6 +87,15 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleLayers}
             />
           </label>
+          <label>
+            Grid &nbsp;
+            <input
+              type="checkbox"
+              name="grid"
+              checked={this.state.request.layerVisibility.grid}
+              onChange={this.handleLayers}
+            />
+          </label>
         </div>
       </div>
     )

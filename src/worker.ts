@@ -1,3 +1,4 @@
+import { FIELD_SIZE } from 'src/constants'
 import neighbors from 'src/geometry/neighbors'
 import { makeParticles, Particle } from 'src/geometry/particles'
 import { WorkerRequest, WorkerResponse } from 'src/interfaces'
@@ -7,8 +8,6 @@ import { WorkerRequest, WorkerResponse } from 'src/interfaces'
 // to weird partial types hacked out of the desired definitions file. Actual:
 // https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope
 const context = (self as any) as DedicatedWorkerGlobalScope
-
-const FIELD_SIZE = 200
 
 const curr: {
   particles: Particle[]
@@ -58,8 +57,9 @@ const loop = () => {
   }>({
     type: 'tick',
     response: {
-      layerVisibility: curr.request.layerVisibility,
       particles: curr.particles,
+      dimensions: curr.request.dimensions,
+      layerVisibility: curr.request.layerVisibility,
     },
   })
 

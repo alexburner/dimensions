@@ -8,7 +8,7 @@ const CONTROL_WIDTH = 180
 
 const initialRequest: WorkerRequest = {
   dimensions: 3,
-  particles: 10,
+  particles: 9,
   force: {
     name: 'wander',
     maxForce: 10,
@@ -19,6 +19,7 @@ const initialRequest: WorkerRequest = {
     name: 'nearest',
   },
   layerVisibility: {
+    grid: false,
     points: true,
     lines: true,
     circles: true,

@@ -11,9 +11,9 @@ export default abstract class Layer<Spec> {
     this.objects = []
   }
 
-  public update(particles: Particle3[]) {
+  public update(particles: Particle3[], dimensions: number) {
     // 1. Generate fresh list of specs
-    const specs = this.makeSpecs(particles)
+    const specs = this.makeSpecs(particles, dimensions)
 
     // 2. Add/remove objects to match
     const currCount = this.objects.length
@@ -43,9 +43,9 @@ export default abstract class Layer<Spec> {
     this.objects = []
   }
 
-  protected abstract makeSpecs(particles: Particle3[]): Spec[]
+  protected abstract makeSpecs(p: Particle3[], d?: number): Spec[]
 
   protected abstract makeObject(): THREE.Object3D
 
-  protected abstract updateObjects(specs: Spec[]): void
+  protected abstract updateObjects(s: Spec[]): void
 }
