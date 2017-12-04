@@ -7,15 +7,15 @@ import {
   boundingNameList,
   boundings,
 } from 'src/geometry/boundings'
-import { neighborhoods, NeighborhoodSpec } from 'src/geometry/neighborhoods'
+import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
-import { simulations, SimulationSpec } from 'src/geometry/simulations'
+import { simulations, SimulationSpecs } from 'src/geometry/simulations'
 
 export interface WorkerRequest {
   dimensions: number
   particles: number
-  simulation: SimulationSpec
-  neighborhood: NeighborhoodSpec
+  simulation: SimulationSpecs
+  neighborhood: NeighborhoodSpecs
   boundings: BoundingEnabled
   layers: LayerEnabled
 }

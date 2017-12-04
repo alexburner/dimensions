@@ -4,11 +4,16 @@ import { Neighborhood } from 'src/geometry/neighborhoods'
 import { Particle } from 'src/geometry/particles'
 import { getDistance } from 'src/geometry/vector-n'
 
-export interface NearestConfig {}
+interface Config {}
 
-export const nearest: Neighborhood<NearestConfig> = (
+export interface Spec {
+  name: 'nearest'
+  config: Config
+}
+
+export const nearest: Neighborhood<Config> = (
   particles: Particle[],
-  _config: NearestConfig,
+  _config: Config,
 ): Particle[] => {
   return map(particles, (particleA, indexA) => {
     let minDistance: number = Infinity

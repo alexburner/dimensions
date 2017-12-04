@@ -1,3 +1,10 @@
+/**
+ *
+ * XXX TODO TEMP
+ * just here to proof out multiple specs
+ *
+ */
+
 import { map } from 'lodash'
 
 import { Particle } from 'src/geometry/particles'
@@ -5,23 +12,23 @@ import { SharedConfig, Simulation } from 'src/geometry/simulations'
 import { math } from 'src/geometry/vector-n'
 import { random } from 'src/util'
 
-export interface Config extends SharedConfig {
-  jitter: number
+interface Config extends SharedConfig {
+  jitter2: number
 }
 
 export interface Spec {
-  name: 'wandering'
+  name: 'wandering2'
   config: Config
 }
 
-export const wandering: Simulation<Config> = (
+export const wandering2: Simulation<Config> = (
   particles: Particle[],
   config: Config,
 ): Particle[] => {
   // Generate random accelerations
   particles = map(particles, particle => ({
     ...particle,
-    acceleration: map(particle.acceleration, () => random(config.jitter)),
+    acceleration: map(particle.acceleration, () => random(config.jitter2)),
   }))
 
   // Add accelerations to velocities
