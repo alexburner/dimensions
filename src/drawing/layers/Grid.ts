@@ -189,8 +189,8 @@ export default class Grid extends Layer<AxisSpec> {
       color: 0xffffff,
       transparent: true,
       opacity: 0.2,
-      dashSize: 2.5,
-      gapSize: 2.5,
+      dashSize: 1.25,
+      gapSize: 1.25,
     })
     const line = new THREE.Line(geometry, material)
     return line
