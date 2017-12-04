@@ -21,7 +21,7 @@ export interface SimulationSpec {
 }
 
 export const simulations: {
-  [name in SimulationNames]: Simulation<SimulationConfigs>
+  [name in SimulationNames]: Simulation<any> // TODO
 } = {
   wandering,
 }
