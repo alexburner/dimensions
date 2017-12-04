@@ -65,7 +65,7 @@ export const makeParticleFromPrev = (
     position: times(d, i => prev.position[i] || next.position[i]),
     velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
     acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
-    neighbors: [],
+    neighbors: prev.neighbors,
   }
 }
 

@@ -53,18 +53,77 @@ const state: {
   stopped: false,
 }
 
+/**
+ * Updates run in asynchronous loop
+ * to allow external interruptions
+ */
+const loop = () => {
+  if (!state.request) return
+  if (state.stopped) return
+
+  {
+    // Run simulation
+    const spec = state.request.simulation
+    const simulation = simulations[spec.name]
+    const config = spec.config
+    state.particles = simulation(state.particles, config)
+  }
+
+  // Run boundings
+  each(boundings, (bounding, name) => {
+    if (!state.request) return // XXX tsc bug
+    if (!state.request.boundings[name as BoundingNames]) return
+    state.particles = bounding(state.particles)
+  })
+
+  {
+    // Run neighborhood
+    const spec = state.request.neighborhood
+    const neighborhood = neighborhoods[spec.name]
+    const config = spec.config
+    state.particles = neighborhood(state.particles, config)
+  }
+
+  // Update main thread
+  sendUpdate()
+
+  // Async to allow interrupt
+  setTimeout(loop, 1000 / 60)
+}
+
+/**
+ * Send WorkerResponse back to main browser thread
+ */
+const sendUpdate = () => {
+  if (!state.request) return
+  context.postMessage<{
+    type: 'update'
+    response: WorkerResponse
+  }>({
+    type: 'update',
+    response: {
+      particles: state.particles,
+      dimensions: state.request.dimensions,
+      layers: state.request.layers,
+    },
+  })
+}
+
+/**
+ * Handle messages from main browser thread
+ */
 context.addEventListener('message', e => {
   if (!(e && e.data && e.data.type)) return
   switch (e.data.type) {
     case 'request': {
-      const request: WorkerRequest = e.data.request
-      state.request = request
+      state.request = e.data.request as WorkerRequest
       state.particles = makeParticles(
         FIELD_SIZE,
-        request.dimensions,
-        request.particles,
+        state.request.dimensions,
+        state.request.particles,
         state.particles,
       )
+      sendUpdate()
       loop()
       break
     }
@@ -84,47 +143,3 @@ context.addEventListener('message', e => {
     }
   }
 })
-
-const loop = () => {
-  if (!state.request) return
-  if (state.stopped) return
-
-  {
-    // Run simulation
-    const spec = state.request.simulation
-    const simulation = simulations[spec.name]
-    const config = spec.config
-    state.particles = simulation(state.particles, config)
-  }
-
-  // Run boundings (in order)
-  each(boundings, (bounding, name) => {
-    if (!state.request) return // XXX tsc bug
-    if (!state.request.boundings[name as BoundingNames]) return
-    state.particles = bounding(state.particles)
-  })
-
-  {
-    // Run neighborhood
-    const spec = state.request.neighborhood
-    const neighborhood = neighborhoods[spec.name]
-    const config = spec.config
-    state.particles = neighborhood(state.particles, config)
-  }
-
-  // Update main thread
-  context.postMessage<{
-    type: 'tick'
-    response: WorkerResponse
-  }>({
-    type: 'tick',
-    response: {
-      particles: state.particles,
-      dimensions: state.request.dimensions,
-      layers: state.request.layers,
-    },
-  })
-
-  // Async to allow interrupt
-  setTimeout(loop, 1000 / 60)
-}

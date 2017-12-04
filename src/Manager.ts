@@ -20,7 +20,7 @@ export default class Manager {
       if (this.isDestroyed) return
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
-        case 'tick': {
+        case 'update': {
           this.renderer.update(e.data.response)
           break
         }
