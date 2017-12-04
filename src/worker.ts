@@ -4,7 +4,7 @@ import { FIELD_SIZE } from 'src/constants'
 import { LayerEnabled } from 'src/drawing/layers'
 import {
   BoundingEnabled,
-  boundingNameList,
+  BoundingNames,
   boundings,
 } from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
@@ -98,10 +98,10 @@ const loop = () => {
   }
 
   // Run boundings (in order)
-  each(boundingNameList, name => {
+  each(boundings, (bounding, name) => {
     if (!state.request) return // XXX tsc bug
-    if (!state.request.boundings[name]) return
-    state.particles = boundings[name](state.particles)
+    if (!state.request.boundings[name as BoundingNames]) return
+    state.particles = bounding(state.particles)
   })
 
   {
