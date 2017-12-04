@@ -21,7 +21,12 @@ const initialRequest: WorkerRequest = {
     name: 'nearest',
     config: {},
   },
-  layerVisibility: {
+  boundings: {
+    wrapping: false,
+    centering: true,
+    scaling: true,
+  },
+  layers: {
     grid: false,
     points: true,
     lines: true,

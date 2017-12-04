@@ -88,7 +88,7 @@ export default class Renderer {
   public update(response: WorkerResponse) {
     const dimensions = response.dimensions
     const particles = map(response.particles, toParticle3)
-    each(response.layerVisibility, (isLayerVisible, layerName) => {
+    each(response.layers, (isLayerVisible, layerName) => {
       const layer = this.layers[layerName as LayerName] // XXX lodash type bug?
       isLayerVisible ? layer.update(particles, dimensions) : layer.clear()
     })

@@ -1,5 +1,12 @@
+import { each } from 'lodash'
+
 import { FIELD_SIZE } from 'src/constants'
-import { LayerVisibility } from 'src/drawing/layers'
+import { LayerEnabled } from 'src/drawing/layers'
+import {
+  BoundingEnabled,
+  boundingNameList,
+  boundings,
+} from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpec } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
 import { simulations, SimulationSpec } from 'src/geometry/simulations'
@@ -9,13 +16,14 @@ export interface WorkerRequest {
   particles: number
   simulation: SimulationSpec
   neighborhood: NeighborhoodSpec
-  layerVisibility: LayerVisibility
+  boundings: BoundingEnabled
+  layers: LayerEnabled
 }
 
 export interface WorkerResponse {
   dimensions: number
   particles: Particle[]
-  layerVisibility: LayerVisibility
+  layers: LayerEnabled
 }
 
 /**
@@ -89,7 +97,12 @@ const loop = () => {
     state.particles = simulation(state.particles, config)
   }
 
-  // TODO wrapping, centering, scaling
+  // Run boundings (in order)
+  each(boundingNameList, name => {
+    if (!state.request) return // XXX tsc bug
+    if (!state.request.boundings[name]) return
+    state.particles = boundings[name](state.particles)
+  })
 
   {
     // Run neighborhood
@@ -108,7 +121,7 @@ const loop = () => {
     response: {
       particles: state.particles,
       dimensions: state.request.dimensions,
-      layerVisibility: state.request.layerVisibility,
+      layers: state.request.layers,
     },
   })
 

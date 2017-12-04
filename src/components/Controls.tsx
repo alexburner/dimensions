@@ -56,7 +56,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="points"
-              checked={this.state.request.layerVisibility.points}
+              checked={this.state.request.layers.points}
               onChange={this.handleLayers}
             />
           </label>
@@ -65,7 +65,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="lines"
-              checked={this.state.request.layerVisibility.lines}
+              checked={this.state.request.layers.lines}
               onChange={this.handleLayers}
             />
           </label>
@@ -74,7 +74,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="circles"
-              checked={this.state.request.layerVisibility.circles}
+              checked={this.state.request.layers.circles}
               onChange={this.handleLayers}
             />
           </label>
@@ -83,7 +83,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="spheres"
-              checked={this.state.request.layerVisibility.spheres}
+              checked={this.state.request.layers.spheres}
               onChange={this.handleLayers}
             />
           </label>
@@ -92,7 +92,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="grid"
-              checked={this.state.request.layerVisibility.grid}
+              checked={this.state.request.layers.grid}
               onChange={this.handleLayers}
             />
           </label>
@@ -119,7 +119,7 @@ export default class Controls extends React.Component<Props, State> {
     const request = { ...this.state.request }
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
-    request.layerVisibility[name] = value
+    request.layers[name] = value
     this.props.onChange(request)
     this.setState({ request })
   }
