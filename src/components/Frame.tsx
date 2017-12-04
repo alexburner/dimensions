@@ -39,6 +39,7 @@ export default class Frame extends React.Component<{}, {}> {
   private canvas: HTMLCanvasElement | void
   private container: HTMLDivElement | void
   private manager: Manager
+  private running: boolean = false
 
   public render() {
     return (
@@ -83,8 +84,10 @@ export default class Frame extends React.Component<{}, {}> {
           }}
         >
           <Controls
-            onChange={this.handleRequestChange}
+            onRequestChange={this.handleRequestChange}
+            onRunningChange={this.handleRunningChange}
             request={initialRequest}
+            running={this.running}
           />
         </div>
       </div>
@@ -96,6 +99,7 @@ export default class Frame extends React.Component<{}, {}> {
     const bounds = this.updateCanvasSize()
     this.manager = new Manager({ canvas: this.canvas, bounds })
     this.manager.draw(initialRequest)
+    this.running ? this.manager.resume() : this.manager.pause()
     window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
   }
@@ -124,10 +128,17 @@ export default class Frame extends React.Component<{}, {}> {
 
   private handleVisibility = () => {
     if (!this.manager) return
+    if (!this.running) return
     document.hidden ? this.manager.pause() : this.manager.resume()
   }
 
   private handleRequestChange = (request: WorkerRequest) => {
     this.manager.draw(request)
+  }
+
+  private handleRunningChange = (running: boolean) => {
+    if (!this.manager) return
+    this.running = running
+    this.running ? this.manager.resume() : this.manager.pause()
   }
 }

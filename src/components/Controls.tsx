@@ -4,23 +4,38 @@ import { LayerName } from 'src/drawing/layers'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {
+  running: boolean
   request: WorkerRequest
-  onChange: (request: WorkerRequest) => void
+  onRequestChange: (request: WorkerRequest) => void
+  onRunningChange: (running: boolean) => void
 }
 
 interface State {
+  running: boolean
   request: WorkerRequest
 }
 
 export default class Controls extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { request: { ...props.request } }
+    this.state = {
+      running: props.running,
+      request: { ...props.request },
+    }
   }
 
   public render() {
     return (
       <div className="controls">
+        <label>
+          Running &nbsp;
+          <input
+            type="checkbox"
+            name="run"
+            checked={this.state.running}
+            onChange={this.handleRun}
+          />
+        </label>
         <label>
           Dimensions &nbsp;
           <input
@@ -104,14 +119,14 @@ export default class Controls extends React.Component<Props, State> {
   private handleDimensions = (e: React.FormEvent<HTMLInputElement>) => {
     const request = { ...this.state.request }
     request.dimensions = Number(e.currentTarget.value)
-    this.props.onChange(request)
+    this.props.onRequestChange(request)
     this.setState({ request })
   }
 
   private handleParticles = (e: React.FormEvent<HTMLInputElement>) => {
     const request = { ...this.state.request }
     request.particles = Number(e.currentTarget.value)
-    this.props.onChange(request)
+    this.props.onRequestChange(request)
     this.setState({ request })
   }
 
@@ -120,7 +135,13 @@ export default class Controls extends React.Component<Props, State> {
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
     request.layers[name] = value
-    this.props.onChange(request)
+    this.props.onRequestChange(request)
     this.setState({ request })
+  }
+
+  private handleRun = (e: React.FormEvent<HTMLInputElement>) => {
+    const running = e.currentTarget.checked
+    this.props.onRunningChange(running)
+    this.setState({ running })
   }
 }
