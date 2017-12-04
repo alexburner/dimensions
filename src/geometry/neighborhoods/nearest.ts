@@ -15,7 +15,7 @@ export const nearest: Neighborhood<NearestConfig> = (
     let minIndex: number = indexA
     each(particles, (particleB, indexB) => {
       if (indexA === indexB) return
-      const distance = getDistance(particleA.location, particleB.location)
+      const distance = getDistance(particleA.position, particleB.position)
       if (distance < minDistance) {
         minDistance = distance
         minIndex = indexB

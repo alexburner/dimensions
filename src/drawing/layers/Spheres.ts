@@ -24,7 +24,7 @@ export default class Spheres extends Layer<SphereSpec> {
       (memo, particle) => {
         each(particle.neighbors, neighbor => {
           memo.push({
-            position: particle.location,
+            position: particle.position,
             radius: neighbor.distance,
           })
         })

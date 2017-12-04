@@ -29,7 +29,7 @@ export default class Points extends Layer<PointSpec> {
 
   protected makeSpecs(particles: Particle3[]): PointSpec[] {
     return map(particles, particle => ({
-      position: particle.location,
+      position: particle.position,
     }))
   }
 

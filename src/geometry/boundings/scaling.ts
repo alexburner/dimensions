@@ -11,16 +11,16 @@ export const scaling: Bounding = (particles: Particle[]): Particle[] => {
   // Only works for 2 or more particles
   if (particles.length < 2) return particles
 
-  // Find the longest distance between any two particle locations
-  const locations = map(particles, particle => particle.location)
+  // Find the longest distance between any two particle positions
+  const positions = map(particles, particle => particle.position)
   const maxLength = reduce(
-    locations,
-    (memo, location) =>
+    positions,
+    (memo, position) =>
       reduce(
-        locations,
-        (memo2, location2) => {
-          if (location === location2) return memo2
-          const delta = math.sub(location, location2)
+        positions,
+        (memo2, position2) => {
+          if (position === position2) return memo2
+          const delta = math.sub(position, position2)
           const length = getLengthSq(delta)
           return Math.max(length, memo2)
         },
@@ -36,6 +36,6 @@ export const scaling: Bounding = (particles: Particle[]): Particle[] => {
   const factor = LIMIT / maxLength
   return map(particles, particle => ({
     ...particle,
-    location: math.mul(particle.location, factor),
+    position: math.mul(particle.position, factor),
   }))
 }

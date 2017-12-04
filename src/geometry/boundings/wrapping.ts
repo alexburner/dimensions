@@ -20,5 +20,5 @@ const wrap = (n: number): number => {
 export const wrapping: Bounding = (particles: Particle[]): Particle[] =>
   map(particles, particle => ({
     ...particle,
-    location: map(particle.location, wrap),
+    position: map(particle.position, wrap),
   }))

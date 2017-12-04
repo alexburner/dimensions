@@ -28,7 +28,7 @@ export const wandering: Simulation<SharedConfig & WanderingConfig> = (
   // Add velocities to positions
   particles = map(particles, particle => ({
     ...particle,
-    location: math.add(particle.location, particle.velocity),
+    position: math.add(particle.position, particle.velocity),
   }))
 
   return particles

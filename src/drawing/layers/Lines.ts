@@ -16,8 +16,8 @@ export default class Lines extends Layer<LineSpec> {
       (memo, particle) => {
         each(particle.neighbors, neighbor => {
           memo.push({
-            source: particle.location,
-            target: particles[neighbor.index].location,
+            source: particle.position,
+            target: particles[neighbor.index].position,
           })
         })
         return memo

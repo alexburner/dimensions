@@ -9,14 +9,14 @@ export interface Neighbor {
 }
 
 export interface Particle {
-  location: VectorN
+  position: VectorN
   velocity: VectorN
   acceleration: VectorN
   neighbors: Neighbor[]
 }
 
 export interface Particle3 {
-  location: THREE.Vector3
+  position: THREE.Vector3
   velocity: THREE.Vector3
   acceleration: THREE.Vector3
   neighbors: Neighbor[]
@@ -44,7 +44,7 @@ export const makeParticles = (
  * Make a new particle (seeded with random 0-1 values)
  */
 export const makeParticle = (d: number, k: number): Particle => ({
-  location: makeRandom(d, k),
+  position: makeRandom(d, k),
   velocity: makeRandom(d, k),
   acceleration: makeRandom(d, k),
   neighbors: [],
@@ -62,7 +62,7 @@ export const makeParticleFromPrev = (
 ): Particle => {
   const next = makeParticle(d, k)
   return {
-    location: times(d, i => prev.location[i] || next.location[i]),
+    position: times(d, i => prev.position[i] || next.position[i]),
     velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
     acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
     neighbors: [],
@@ -73,7 +73,7 @@ export const makeParticleFromPrev = (
  * Convert a VectorN particle to a Vector3 particle
  */
 export const toParticle3 = (p: Particle): Particle3 => ({
-  location: toVector3(p.location),
+  position: toVector3(p.position),
   velocity: toVector3(p.velocity),
   acceleration: toVector3(p.acceleration),
   neighbors: p.neighbors,
