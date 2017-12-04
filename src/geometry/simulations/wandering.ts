@@ -13,12 +13,23 @@ export const wandering: Simulation<SharedConfig & WanderingConfig> = (
   particles: Particle[],
   config: WanderingConfig,
 ): Particle[] => {
-  // 1. clear accelerations
-  // 2. accumulate accelerations
-  // 3. apply accelerations
-
-  return map(particles, particle => ({
+  // Generate random accelerations
+  particles = map(particles, particle => ({
     ...particle,
-    location: math.add(particle.location, random(config.jitter)),
+    acceleration: map(particle.acceleration, () => random(config.jitter)),
   }))
+
+  // Add accelerations to velocities
+  particles = map(particles, particle => ({
+    ...particle,
+    velocity: math.add(particle.velocity, particle.acceleration),
+  }))
+
+  // Add velocities to positions
+  particles = map(particles, particle => ({
+    ...particle,
+    location: math.add(particle.location, particle.velocity),
+  }))
+
+  return particles
 }
