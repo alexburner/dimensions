@@ -8,19 +8,22 @@ interface PointSpec {
   position: THREE.Vector3
 }
 
+const SIZE = 12
+
 const getTexture = (): THREE.Texture => {
-  const SIZE = 256
-  const PAD = 4
-  const radius = SIZE / 2 - PAD
-  const center = SIZE / 2
+  const size = 256
+  const padding = 4
+  const radius = size / 2 - padding
+  const center = size / 2
   const canvas = document.createElement('canvas')
-  canvas.width = SIZE
-  canvas.height = SIZE
+  canvas.width = size
+  canvas.height = size
   const context = canvas.getContext('2d')
-  context!.beginPath()
-  context!.arc(center, center, radius, 0, 2 * Math.PI)
-  context!.fillStyle = 'rgba(255, 255, 255, 1)'
-  context!.fill()
+  if (!context) throw new Error('Failed to get 2d canvas context')
+  context.beginPath()
+  context.arc(center, center, radius, 0, 2 * Math.PI)
+  context.fillStyle = 'rgba(255, 255, 255, 1)'
+  context.fill()
   return new THREE.CanvasTexture(canvas)
 }
 
@@ -39,7 +42,7 @@ export default class Points extends Layer<PointSpec> {
     const material = new THREE.PointsMaterial({
       map: Points.texture,
       transparent: true,
-      size: 20,
+      size: SIZE,
     })
     const point = new THREE.Points(geometry, material)
     return point
