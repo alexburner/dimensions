@@ -6,40 +6,39 @@ import { WorkerRequest } from 'src/worker'
 
 const CONTROL_WIDTH = 180
 
-const initialRequest: WorkerRequest = {
-  dimensions: 3,
-  particles: 9,
-  simulation: {
-    name: 'wandering',
-    config: {
-      maxForce: 10,
-      maxSpeed: 10,
-      jitter: 1,
-    },
-  },
-  neighborhood: {
-    name: 'nearest',
-    config: {},
-  },
-  boundings: {
-    wrapping: false,
-    centering: true,
-    scaling: true,
-  },
-  layers: {
-    grid: false,
-    points: true,
-    lines: true,
-    circles: true,
-    spheres: true,
-  },
-}
-
 export default class Frame extends React.Component<{}, {}> {
   private canvas: HTMLCanvasElement | void
   private container: HTMLDivElement | void
   private manager: Manager
-  private running: boolean = false
+  private running: boolean = true
+  private request: WorkerRequest = {
+    dimensions: 3,
+    particles: 9,
+    simulation: {
+      name: 'wandering',
+      config: {
+        maxForce: 10,
+        maxSpeed: 10,
+        jitter: 1,
+      },
+    },
+    neighborhood: {
+      name: 'nearest',
+      config: {},
+    },
+    boundings: {
+      wrapping: false,
+      centering: true,
+      scaling: true,
+    },
+    layers: {
+      grid: false,
+      points: true,
+      lines: true,
+      circles: true,
+      spheres: true,
+    },
+  }
 
   public render() {
     return (
@@ -86,7 +85,7 @@ export default class Frame extends React.Component<{}, {}> {
           <Controls
             onRequestChange={this.handleRequestChange}
             onRunningChange={this.handleRunningChange}
-            request={initialRequest}
+            request={this.request}
             running={this.running}
           />
         </div>
@@ -98,7 +97,7 @@ export default class Frame extends React.Component<{}, {}> {
     if (!this.canvas) throw new Error('DOM failed to mount')
     const bounds = this.updateCanvasSize()
     this.manager = new Manager({ canvas: this.canvas, bounds })
-    this.manager.draw(initialRequest)
+    this.manager.draw(this.request)
     this.running ? this.manager.resume() : this.manager.pause()
     window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
@@ -133,6 +132,8 @@ export default class Frame extends React.Component<{}, {}> {
   }
 
   private handleRequestChange = (request: WorkerRequest) => {
+    if (!this.manager) return
+    this.request = request
     this.manager.draw(request)
   }
 
