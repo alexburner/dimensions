@@ -10,7 +10,7 @@ interface AxisSpec {
   target: THREE.Vector3
 }
 
-const SIZE = 2 * FIELD_SIZE / 3 // XXX reality is FIELD_SIZE / 2
+const SIZE = FIELD_SIZE * 3 / 4 // XXX reality is FIELD_SIZE / 2
 
 const specsByDimension: { [dimension: number]: AxisSpec[] } = {
   0: [],
@@ -173,8 +173,6 @@ const specsByDimension: { [dimension: number]: AxisSpec[] } = {
 }
 
 export default class Grid extends Layer<AxisSpec> {
-  private prevLength: number = 0
-
   protected makeSpecs(_p: Particle3[], dimensions: number): AxisSpec[] {
     if (dimensions > 3) dimensions = 3 // XXX human limits
     return specsByDimension[dimensions]
@@ -197,8 +195,6 @@ export default class Grid extends Layer<AxisSpec> {
   }
 
   protected updateObjects(specs: AxisSpec[]) {
-    if (this.prevLength === specs.length) return
-    else this.prevLength = specs.length
     each(specs, (spec, i) => {
       const object = this.objects[i] as THREE.Line
       const geometry = object.geometry as THREE.Geometry
