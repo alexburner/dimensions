@@ -35,7 +35,7 @@ export default class Spheres extends Layer<SphereSpec> {
   }
 
   protected makeObject(): THREE.Object3D {
-    const geometry = new THREE.SphereGeometry(1, SEGMENTS, RINGS)
+    const geometry = new THREE.SphereBufferGeometry(1, SEGMENTS, RINGS)
     const material = new THREE.MeshNormalMaterial({
       blending: THREE.AdditiveBlending,
       depthTest: false,
