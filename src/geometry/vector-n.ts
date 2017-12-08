@@ -10,13 +10,13 @@ import { random } from 'src/util'
 export type VectorN = number[]
 
 /**
- * VectorN "math" module
+ * VectorN math methods
  *
  * Supports basic algebra methods:
- * > const vectorC = math.add(vectorA, vectorB)
- * > const vectorC = math.sub(vectorA, vectorB)
- * > const vectorC = math.mul(vectorA, vectorB)
- * > const vectorC = math.div(vectorA, vectorB)
+ * > const vectorC = math.add(vectorA, vectorB) // +
+ * > const vectorC = math.sub(vectorA, vectorB) // -
+ * > const vectorC = math.mul(vectorA, vectorB) // *
+ * > const vectorC = math.div(vectorA, vectorB) // /
  *
  * Supports scalars as second argument:
  * > const vectorC = math.add(vectorA, 10)
