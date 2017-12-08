@@ -5,7 +5,8 @@ import { Bounding } from 'src/geometry/boundings'
 import { Particle } from 'src/geometry/particles'
 import { average, getLengthSq, math } from 'src/geometry/vector-n'
 
-const LIMIT = FIELD_SIZE * FIELD_SIZE // XXX to avoid Math.sqrt()
+const RADIUS = FIELD_SIZE / 2
+const LIMIT = RADIUS * RADIUS // XXX to avoid Math.sqrt()
 
 export const scaling: Bounding = (particles: Particle[]): Particle[] => {
   // Only works for 2 or more particles

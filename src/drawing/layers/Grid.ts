@@ -10,7 +10,7 @@ interface AxisSpec {
   target: THREE.Vector3
 }
 
-const SIZE = FIELD_SIZE // XXX reality is FIELD_SIZE / 2
+const SIZE = FIELD_SIZE / 2
 
 const specsByDimension: { [dimension: number]: AxisSpec[] } = {
   0: [],

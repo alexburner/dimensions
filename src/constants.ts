@@ -1,1 +1,1 @@
-export const FIELD_SIZE = 120
+export const FIELD_SIZE = 200
