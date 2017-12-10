@@ -1,7 +1,7 @@
 import { each, map } from 'lodash'
 
 import { Neighborhood } from 'src/geometry/neighborhoods'
-import { Particle } from 'src/geometry/particles'
+import { Neighbor, Particle } from 'src/geometry/particles'
 import { getDistance } from 'src/geometry/vector-n'
 
 interface Config {}
@@ -15,20 +15,31 @@ export const nearest: Neighborhood<Config> = (
   particles: Particle[],
   _config: Config,
 ): Particle[] => {
-  return map(particles, (particleA, indexA) => {
-    let minDistance: number = Infinity
-    let minIndex: number = indexA
-    each(particles, (particleB, indexB) => {
-      if (indexA === indexB) return
-      const distance = getDistance(particleA.position, particleB.position)
-      if (distance < minDistance) {
-        minDistance = distance
-        minIndex = indexB
-      }
-    })
+  return map(particles, particle => {
+    const neighbor = findNearestNeighbor(particle, particles)
     return {
-      ...particleA,
-      neighbors: [{ index: minIndex, distance: minDistance }],
+      ...particle,
+      neighbors: [neighbor],
     }
   })
+}
+
+export const findNearestNeighbor = (
+  particle: Particle,
+  particles: Particle[],
+): Neighbor => {
+  let minDistance: number = Infinity
+  let minIndex: number = -1
+  each(particles, (other, index) => {
+    if (particle === other) return
+    const distance = getDistance(particle.position, other.position)
+    if (distance < minDistance) {
+      minDistance = distance
+      minIndex = index
+    }
+  })
+  return {
+    distance: minDistance,
+    index: minIndex,
+  }
 }

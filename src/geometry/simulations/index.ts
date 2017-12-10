@@ -1,12 +1,12 @@
 import { Particle } from 'src/geometry/particles'
 import {
+  diffusion,
+  Spec as DiffusionSpec,
+} from 'src/geometry/simulations/diffusion'
+import {
   Spec as WanderingSpec,
   wandering,
 } from 'src/geometry/simulations/wandering'
-import {
-  Spec as Wandering2Spec,
-  wandering2,
-} from 'src/geometry/simulations/wandering2'
 
 export interface SharedConfig {
   maxSpeed: number
@@ -18,11 +18,11 @@ export type Simulation<Config> = (
   config: Config,
 ) => Particle[]
 
-export type SimulationSpecs = WanderingSpec | Wandering2Spec
+export type SimulationSpecs = WanderingSpec | DiffusionSpec
 
 export const simulations: {
   [name in SimulationSpecs['name']]: Simulation<any>
 } = {
   wandering,
-  wandering2,
+  diffusion,
 }
