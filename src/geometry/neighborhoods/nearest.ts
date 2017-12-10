@@ -13,8 +13,8 @@ export interface Spec {
 
 export const nearest: Neighborhood<Config> = (
   particles: Particle[],
-  _config: Config,
 ): Particle[] => {
+  if (particles.length < 2) return particles
   return map(particles, particle => {
     const neighbor = findNearestNeighbor(particle, particles)
     return {
