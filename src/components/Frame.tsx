@@ -19,7 +19,7 @@ export default class Frame extends React.Component<{}, {}> {
       config: {
         maxForce: 10,
         maxSpeed: 10,
-        jitter: 0.1,
+        jitter: 0.01,
       },
     },
     neighborhood: {

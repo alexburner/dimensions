@@ -33,7 +33,7 @@ const SIMULATION_PRESETS: {
     config: {
       maxForce: 10,
       maxSpeed: 10,
-      jitter: 0.1,
+      jitter: 0.01,
     },
   },
 }
