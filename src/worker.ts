@@ -63,6 +63,58 @@ const MAX_FORCE = 1
 const MAX_SPEED = 1
 
 /**
+ * Handle messages from main browser thread
+ */
+context.addEventListener('message', e => {
+  if (!(e && e.data && e.data.type)) return
+  switch (e.data.type) {
+    case 'request': {
+      state.request = e.data.request as WorkerRequest
+      state.particles = makeParticles(
+        FIELD_SIZE,
+        state.request.dimensions,
+        state.request.particles,
+        state.particles,
+      )
+      loop()
+      break
+    }
+    case 'pause': {
+      state.stopped = true
+      break
+    }
+    case 'resume': {
+      state.stopped = false
+      loop()
+      break
+    }
+    case 'destroy': {
+      state.stopped = true
+      context.close()
+      break
+    }
+  }
+})
+
+/**
+ * Send WorkerResponse back to main browser thread
+ */
+const sendUpdate = () => {
+  if (!state.request) return
+  context.postMessage<{
+    type: 'update'
+    response: WorkerResponse
+  }>({
+    type: 'update',
+    response: {
+      particles: state.particles,
+      dimensions: state.request.dimensions,
+      layers: state.request.layers,
+    },
+  })
+}
+
+/**
  * Particle physics loop
  * - runs chosen simulation
  * - runs chosen boundings
@@ -130,55 +182,3 @@ const loop = () => {
   // Async to allow interrupt
   setTimeout(loop, 1000 / 60)
 }
-
-/**
- * Send WorkerResponse back to main browser thread
- */
-const sendUpdate = () => {
-  if (!state.request) return
-  context.postMessage<{
-    type: 'update'
-    response: WorkerResponse
-  }>({
-    type: 'update',
-    response: {
-      particles: state.particles,
-      dimensions: state.request.dimensions,
-      layers: state.request.layers,
-    },
-  })
-}
-
-/**
- * Handle messages from main browser thread
- */
-context.addEventListener('message', e => {
-  if (!(e && e.data && e.data.type)) return
-  switch (e.data.type) {
-    case 'request': {
-      state.request = e.data.request as WorkerRequest
-      state.particles = makeParticles(
-        FIELD_SIZE,
-        state.request.dimensions,
-        state.request.particles,
-        state.particles,
-      )
-      loop()
-      break
-    }
-    case 'pause': {
-      state.stopped = true
-      break
-    }
-    case 'resume': {
-      state.stopped = false
-      loop()
-      break
-    }
-    case 'destroy': {
-      state.stopped = true
-      context.close()
-      break
-    }
-  }
-})

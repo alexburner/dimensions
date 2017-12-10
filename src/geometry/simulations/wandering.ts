@@ -13,11 +13,11 @@ export interface Spec {
   config: Config
 }
 
-// Generate random accelerations
 export const wandering: Simulation<Config> = (
   particles: Particle[],
   config: Config,
 ): Particle[] =>
+  // Generate random accelerations
   map(particles, particle => ({
     ...particle,
     acceleration: map(particle.acceleration, () => random(config.jitter)),
