@@ -1,46 +1,72 @@
 import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
-import Layer from 'src/drawing/layers/Layer'
+import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
 import { Particle3 } from 'src/geometry/particles'
 
-interface LineSpec {
+interface ObjectSpec {
   source: THREE.Vector3
   target: THREE.Vector3
 }
 
-export default class Lines extends Layer<LineSpec> {
-  protected makeSpecs(particles: Particle3[]): LineSpec[] {
-    return reduce(
-      particles,
-      (memo, particle) => {
-        each(particle.neighbors, neighbor => {
-          memo.push({
-            source: particle.position,
-            target: particles[neighbor.index].position,
-          })
-        })
-        return memo
-      },
-      [] as LineSpec[],
-    )
+export default class Lines implements Layer {
+  private scene: THREE.Scene
+  private objects: THREE.Object3D[]
+
+  constructor(scene: THREE.Scene) {
+    this.scene = scene
+    this.objects = []
   }
 
-  protected makeObject(): THREE.Object3D {
-    const geometry = new THREE.BufferGeometry()
-    const source = new THREE.Vector3(0, 0, 0)
-    const target = new THREE.Vector3(0, 0, 0)
-    geometry.setFromPoints([source, target])
-    const material = new THREE.LineBasicMaterial({ color: 0xffffff })
-    const line = new THREE.Line(geometry, material)
-    return line
-  }
+  public update(particles: Particle3[]) {
+    // 1. Generate fresh list of specs
+    const specs = makeObjectSpecs(particles)
 
-  protected updateObjects(specs: LineSpec[]) {
-    each(specs, (spec, i) => {
-      const object = this.objects[i] as THREE.Line
-      const geometry = object.geometry as THREE.BufferGeometry
-      geometry.setFromPoints([spec.source, spec.target])
+    // 2. Resize object list for new spec count
+    this.objects = resizeObjList({
+      scene: this.scene,
+      currList: this.objects,
+      newSize: specs.length,
+      createObj: makeObject,
     })
+
+    // 3. Update objects to match specs
+    updateObjects(specs, this.objects)
+  }
+
+  public clear() {
+    this.objects = clearObjList(this.scene, this.objects)
   }
 }
+
+const makeObjectSpecs = (particles: Particle3[]): ObjectSpec[] =>
+  reduce(
+    particles,
+    (memo, particle) => {
+      each(particle.neighbors, neighbor => {
+        memo.push({
+          source: particle.position,
+          target: particles[neighbor.index].position,
+        })
+      })
+      return memo
+    },
+    [] as ObjectSpec[],
+  )
+
+const makeObject = (): THREE.Object3D => {
+  const geometry = new THREE.BufferGeometry()
+  const source = new THREE.Vector3(0, 0, 0)
+  const target = new THREE.Vector3(0, 0, 0)
+  geometry.setFromPoints([source, target])
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff })
+  const line = new THREE.Line(geometry, material)
+  return line
+}
+
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
+  each(specs, (spec, i) => {
+    const object = objects[i] as THREE.Line
+    const geometry = object.geometry as THREE.BufferGeometry
+    geometry.setFromPoints([spec.source, spec.target])
+  })

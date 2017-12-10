@@ -1,16 +1,46 @@
 import { each, map } from 'lodash'
 import * as THREE from 'three'
 
-import Layer from 'src/drawing/layers/Layer'
+import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
 import { Particle3 } from 'src/geometry/particles'
 
-interface PointSpec {
+interface ObjectSpec {
   position: THREE.Vector3
+}
+
+export default class Points implements Layer {
+  private scene: THREE.Scene
+  private objects: THREE.Object3D[]
+
+  constructor(scene: THREE.Scene) {
+    this.scene = scene
+    this.objects = []
+  }
+
+  public update(particles: Particle3[]) {
+    // 1. Generate fresh list of specs
+    const specs = makeSpecs(particles)
+
+    // 2. Resize object list for new spec count
+    this.objects = resizeObjList({
+      scene: this.scene,
+      currList: this.objects,
+      newSize: specs.length,
+      createObj: makeObject,
+    })
+
+    // 3. Update objects to match specs
+    updateObjects(specs, this.objects)
+  }
+
+  public clear() {
+    this.objects = clearObjList(this.scene, this.objects)
+  }
 }
 
 const SIZE = 12
 
-const getTexture = (): THREE.Texture => {
+const texture = ((): THREE.Texture => {
   const size = 256
   const padding = 4
   const radius = size / 2 - padding
@@ -25,35 +55,29 @@ const getTexture = (): THREE.Texture => {
   context.fillStyle = 'rgba(255, 255, 255, 1)'
   context.fill()
   return new THREE.CanvasTexture(canvas)
+})()
+
+const makeSpecs = (particles: Particle3[]): ObjectSpec[] =>
+  map(particles, particle => ({
+    position: particle.position,
+  }))
+
+const makeObject = (): THREE.Object3D => {
+  const geometry = new THREE.BufferGeometry()
+  geometry.setFromPoints([new THREE.Vector3()])
+  const material = new THREE.PointsMaterial({
+    map: texture,
+    transparent: true,
+    size: SIZE,
+  })
+  const point = new THREE.Points(geometry, material)
+  return point
 }
 
-export default class Points extends Layer<PointSpec> {
-  private static texture = getTexture()
-
-  protected makeSpecs(particles: Particle3[]): PointSpec[] {
-    return map(particles, particle => ({
-      position: particle.position,
-    }))
-  }
-
-  protected makeObject(): THREE.Object3D {
-    const geometry = new THREE.BufferGeometry()
-    geometry.setFromPoints([new THREE.Vector3()])
-    const material = new THREE.PointsMaterial({
-      map: Points.texture,
-      transparent: true,
-      size: SIZE,
-    })
-    const point = new THREE.Points(geometry, material)
-    return point
-  }
-
-  protected updateObjects(specs: PointSpec[]) {
-    each(specs, (spec, i) => {
-      const object = this.objects[i]
-      object.position.x = spec.position.x
-      object.position.y = spec.position.y
-      object.position.z = spec.position.z
-    })
-  }
-}
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
+  each(specs, (spec, i) => {
+    const object = objects[i]
+    object.position.x = spec.position.x
+    object.position.y = spec.position.y
+    object.position.z = spec.position.z
+  })

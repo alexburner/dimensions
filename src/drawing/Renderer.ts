@@ -2,10 +2,9 @@ import { each, map } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { LayerName } from 'src/drawing/layers'
+import { Layer, LayerName } from 'src/drawing/layers'
 import Circles from 'src/drawing/layers/Circles'
 import Grid from 'src/drawing/layers/Grid'
-import Layer from 'src/drawing/layers/Layer'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
@@ -24,7 +23,7 @@ export default class Renderer {
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
-  private layers: { [name in LayerName]: Layer<any> }
+  private layers: { [name in LayerName]: Layer }
 
   constructor({
     canvas,

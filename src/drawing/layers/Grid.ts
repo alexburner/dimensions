@@ -2,17 +2,47 @@ import { each } from 'lodash'
 import * as THREE from 'three'
 
 import { FIELD_SIZE } from 'src/constants'
-import Layer from 'src/drawing/layers/Layer'
+import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
 import { Particle3 } from 'src/geometry/particles'
 
-interface AxisSpec {
+interface ObjectSpec {
   source: THREE.Vector3
   target: THREE.Vector3
 }
 
+export default class Grid implements Layer {
+  private scene: THREE.Scene
+  private objects: THREE.Object3D[]
+
+  constructor(scene: THREE.Scene) {
+    this.scene = scene
+    this.objects = []
+  }
+
+  public update(particles: Particle3[], dimensions: number) {
+    // 1. Generate fresh list of specs
+    const specs = makeObjectSpecs(dimensions)
+
+    // 2. Resize object list for new spec count
+    this.objects = resizeObjList({
+      scene: this.scene,
+      currList: this.objects,
+      newSize: specs.length,
+      createObj: makeObject,
+    })
+
+    // 3. Update objects to match specs
+    updateObjects(specs, this.objects)
+  }
+
+  public clear() {
+    this.objects = clearObjList(this.scene, this.objects)
+  }
+}
+
 const SIZE = FIELD_SIZE / 2
 
-const specsByDimension: { [dimension: number]: AxisSpec[] } = {
+const specsByDimension: { [dimension: number]: ObjectSpec[] } = {
   0: [],
   1: [
     // x axis
@@ -172,35 +202,32 @@ const specsByDimension: { [dimension: number]: AxisSpec[] } = {
   ],
 }
 
-export default class Grid extends Layer<AxisSpec> {
-  protected makeSpecs(_p: Particle3[], dimensions: number): AxisSpec[] {
-    if (dimensions > 3) dimensions = 3 // XXX human limits
-    return specsByDimension[dimensions]
-  }
-
-  protected makeObject(): THREE.Object3D {
-    const geometry = new THREE.Geometry()
-    const source = new THREE.Vector3(0, 0, 0)
-    const target = new THREE.Vector3(0, 0, 0)
-    geometry.vertices = [source, target]
-    const material = new THREE.LineDashedMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.2,
-      dashSize: 1.25,
-      gapSize: 1.25,
-    })
-    const line = new THREE.Line(geometry, material)
-    return line
-  }
-
-  protected updateObjects(specs: AxisSpec[]) {
-    each(specs, (spec, i) => {
-      const object = this.objects[i] as THREE.Line
-      const geometry = object.geometry as THREE.Geometry
-      geometry.vertices = [spec.source, spec.target]
-      geometry.verticesNeedUpdate = true
-      geometry.computeLineDistances()
-    })
-  }
+const makeObjectSpecs = (dimensions: number): ObjectSpec[] => {
+  if (dimensions > 3) dimensions = 3 // XXX human limits
+  return specsByDimension[dimensions]
 }
+
+const makeObject = (): THREE.Object3D => {
+  const geometry = new THREE.Geometry()
+  const source = new THREE.Vector3(0, 0, 0)
+  const target = new THREE.Vector3(0, 0, 0)
+  geometry.vertices = [source, target]
+  const material = new THREE.LineDashedMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.2,
+    dashSize: 1.25,
+    gapSize: 1.25,
+  })
+  const line = new THREE.Line(geometry, material)
+  return line
+}
+
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
+  each(specs, (spec, i) => {
+    const object = objects[i] as THREE.Line
+    const geometry = object.geometry as THREE.Geometry
+    geometry.vertices = [spec.source, spec.target]
+    geometry.verticesNeedUpdate = true
+    geometry.computeLineDistances()
+  })
