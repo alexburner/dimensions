@@ -15,11 +15,11 @@ export default class Frame extends React.Component<{}, {}> {
     dimensions: 3,
     particles: 9,
     simulation: {
-      name: 'diffusion',
+      name: 'wandering',
       config: {
         maxForce: 10,
         maxSpeed: 10,
-        charge: 1,
+        jitter: 0.1,
       },
     },
     neighborhood: {
@@ -32,7 +32,7 @@ export default class Frame extends React.Component<{}, {}> {
       scaling: true,
     },
     layers: {
-      grid: false,
+      grid: true,
       points: true,
       lines: true,
       circles: true,

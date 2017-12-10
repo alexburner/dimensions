@@ -40,7 +40,7 @@ export default class Grid implements Layer {
   }
 }
 
-const SIZE = FIELD_SIZE / 2
+const SIZE = FIELD_SIZE // reality is FIELD_SIZE / 2
 
 const specsByDimension: { [dimension: number]: ObjectSpec[] } = {
   0: [],
