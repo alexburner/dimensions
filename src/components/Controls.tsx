@@ -1,6 +1,8 @@
 import * as React from 'react'
 
 import { LayerName } from 'src/drawing/layers'
+import { NeighborhoodSpecs } from 'src/geometry/neighborhoods'
+import { SimulationSpecs } from 'src/geometry/simulations'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {
@@ -13,6 +15,44 @@ interface Props {
 interface State {
   running: boolean
   request: WorkerRequest
+}
+
+const SIMULATION_PRESETS: {
+  [name in SimulationSpecs['name']]: SimulationSpecs
+} = {
+  diffusion: {
+    name: 'diffusion',
+    config: {
+      maxForce: 10,
+      maxSpeed: 10,
+      charge: 0.1,
+    },
+  },
+  wandering: {
+    name: 'wandering',
+    config: {
+      maxForce: 10,
+      maxSpeed: 10,
+      jitter: 0.1,
+    },
+  },
+}
+
+const NEIGHBORHOOD_PRESETS: {
+  [name in NeighborhoodSpecs['name']]: NeighborhoodSpecs
+} = {
+  all: {
+    name: 'all',
+    config: {},
+  },
+  nearest: {
+    name: 'nearest',
+    config: {},
+  },
+  nextNearest: {
+    name: 'nextNearest',
+    config: {},
+  },
 }
 
 export default class Controls extends React.Component<Props, State> {
@@ -112,6 +152,48 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
         </div>
+        <div>
+          Simulation
+          <label>
+            Wandering &nbsp;
+            <input
+              type="radio"
+              name="wandering"
+              checked={this.state.request.simulation.name === 'wandering'}
+              onChange={this.handleSimulations}
+            />
+          </label>
+          <label>
+            Diffusion &nbsp;
+            <input
+              type="radio"
+              name="diffusion"
+              checked={this.state.request.simulation.name === 'diffusion'}
+              onChange={this.handleSimulations}
+            />
+          </label>
+        </div>
+        <div>
+          Neighbors
+          <label>
+            All &nbsp;
+            <input
+              type="radio"
+              name="all"
+              checked={this.state.request.neighborhood.name === 'all'}
+              onChange={this.handleNeighborhoods}
+            />
+          </label>
+          <label>
+            Nearest &nbsp;
+            <input
+              type="radio"
+              name="nearest"
+              checked={this.state.request.neighborhood.name === 'nearest'}
+              onChange={this.handleNeighborhoods}
+            />
+          </label>
+        </div>
       </div>
     )
   }
@@ -135,6 +217,24 @@ export default class Controls extends React.Component<Props, State> {
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
     request.layers[name] = value
+    this.props.onRequestChange(request)
+    this.setState({ request })
+  }
+
+  private handleSimulations = (e: React.FormEvent<HTMLInputElement>) => {
+    const request = { ...this.state.request }
+    const name = e.currentTarget.name as LayerName
+    const spec = SIMULATION_PRESETS[name as SimulationSpecs['name']]
+    request.simulation = spec
+    this.props.onRequestChange(request)
+    this.setState({ request })
+  }
+
+  private handleNeighborhoods = (e: React.FormEvent<HTMLInputElement>) => {
+    const request = { ...this.state.request }
+    const name = e.currentTarget.name as LayerName
+    const spec = NEIGHBORHOOD_PRESETS[name as NeighborhoodSpecs['name']]
+    request.neighborhood = spec
     this.props.onRequestChange(request)
     this.setState({ request })
   }

@@ -1,3 +1,4 @@
+import { all, Spec as AllSpec } from 'src/geometry/neighborhoods/all'
 import {
   nearest,
   Spec as NearestSpec,
@@ -13,11 +14,12 @@ export type Neighborhood<Config> = (
   config?: Config,
 ) => Particle[]
 
-export type NeighborhoodSpecs = NearestSpec | NextNearestSpec
+export type NeighborhoodSpecs = AllSpec | NearestSpec | NextNearestSpec
 
 export const neighborhoods: {
   [name in NeighborhoodSpecs['name']]: Neighborhood<any>
 } = {
+  all,
   nearest,
   nextNearest,
 }
