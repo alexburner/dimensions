@@ -73,7 +73,6 @@ const MAX_SPEED = 1
  */
 const loop = () => {
   if (!state.request) return
-  if (state.stopped) return
 
   // Reset particle accelerations
   each(
@@ -124,6 +123,10 @@ const loop = () => {
   // Update main thread
   sendUpdate()
 
+  // Bail if paused
+  // (first run allowed to get updates to main thread)
+  if (state.stopped) return
+
   // Async to allow interrupt
   setTimeout(loop, 1000 / 60)
 }
@@ -160,7 +163,6 @@ context.addEventListener('message', e => {
         state.request.particles,
         state.particles,
       )
-      sendUpdate() // send once to pipe request updates through, even if paused
       loop()
       break
     }

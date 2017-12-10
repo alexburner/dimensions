@@ -41,7 +41,7 @@ export const makeParticles = (
   )
 
 /**
- * Make a new particle (seeded with random 0-1 values)
+ * Make a new particle (seeded with random (-k, k) values)
  */
 export const makeParticle = (d: number, k: number): Particle => ({
   position: makeRandom(d, k),
@@ -53,7 +53,7 @@ export const makeParticle = (d: number, k: number): Particle => ({
 /**
  * Make a new particle from a previous particle
  * (expanding/contracting dimensionality as needed)
- * (expansions seeded with random 0-1 values)
+ * (expansions seeded with random (-k, k) values)
  */
 export const makeParticleFromPrev = (
   d: number,
@@ -65,7 +65,7 @@ export const makeParticleFromPrev = (
     position: times(d, i => prev.position[i] || next.position[i]),
     velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
     acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
-    neighbors: prev.neighbors,
+    neighbors: [],
   }
 }
 
