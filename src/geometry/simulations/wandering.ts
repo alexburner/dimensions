@@ -2,7 +2,6 @@ import { map } from 'lodash'
 
 import { Particle } from 'src/geometry/particles'
 import { SharedConfig, Simulation } from 'src/geometry/simulations'
-import { math } from 'src/geometry/vector-n'
 import { random } from 'src/util'
 
 export interface Config extends SharedConfig {
@@ -14,27 +13,12 @@ export interface Spec {
   config: Config
 }
 
+// Generate random accelerations
 export const wandering: Simulation<Config> = (
   particles: Particle[],
   config: Config,
-): Particle[] => {
-  // Generate random accelerations
-  particles = map(particles, particle => ({
+): Particle[] =>
+  map(particles, particle => ({
     ...particle,
     acceleration: map(particle.acceleration, () => random(config.jitter)),
   }))
-
-  // Add accelerations to velocities
-  particles = map(particles, particle => ({
-    ...particle,
-    velocity: math.add(particle.velocity, particle.acceleration),
-  }))
-
-  // Add velocities to positions
-  particles = map(particles, particle => ({
-    ...particle,
-    position: math.add(particle.position, particle.velocity),
-  }))
-
-  return particles
-}

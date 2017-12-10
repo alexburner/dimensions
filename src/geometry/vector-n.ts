@@ -92,6 +92,16 @@ export const setLength = (v: VectorN, length: number): VectorN =>
 export const normalize = (v: VectorN): VectorN => setLength(v, 1)
 
 /**
+ * Limit a vector's length to be within a value
+ */
+export const limit = (v: VectorN, length: number = 1): VectorN => {
+  const limitLengthSq = length * length
+  const currLengthSq = getLengthSq(v)
+  if (currLengthSq <= limitLengthSq) return v
+  else return math.mul(v, limitLengthSq / currLengthSq)
+}
+
+/**
  * Find the average of a list of vectors
  */
 export const average = (vectors: VectorN[]): VectorN => {

@@ -10,6 +10,7 @@ import {
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
 import { simulations, SimulationSpecs } from 'src/geometry/simulations'
+import { limit, makeNew, math } from 'src/geometry/vector-n'
 
 export interface WorkerRequest {
   dimensions: number
@@ -54,34 +55,70 @@ const state: {
 }
 
 /**
- * Updates run in asynchronous loop
- * to allow external interruptions
+ * TODO hook these into request object
+ * (currently they are on Simulation Specs)
+ * (but they should actually be more global)
+ */
+const MAX_FORCE = 1
+const MAX_SPEED = 1
+
+/**
+ * Particle physics loop
+ * - runs chosen simulation
+ * - runs chosen boundings
+ * - runs chosen neighborhood
+ * - posts message with updated particles
+ *
+ * Note: asynchronous loop, to allow external interruptions
  */
 const loop = () => {
   if (!state.request) return
   if (state.stopped) return
 
+  // Reset particle accelerations
+  each(
+    state.particles,
+    p => (p.acceleration = makeNew(p.acceleration.length, 0)),
+  )
+
   {
-    // Run simulation
+    // Accumulate acceleration from simulation
     const spec = state.request.simulation
     const simulation = simulations[spec.name]
-    const config = spec.config
-    state.particles = simulation(state.particles, config)
+    state.particles = simulation(state.particles, spec.config)
   }
 
-  // Run boundings
+  // Accumulate acceleration from boundings
   each(boundings, (bounding, name) => {
-    if (!state.request) return // XXX tsc bug
-    if (!state.request.boundings[name as BoundingNames]) return
+    if (!state.request!.boundings[name as BoundingNames]) return
     state.particles = bounding(state.particles)
   })
 
+  // Apply force limits to accelerations
+  each(
+    state.particles,
+    p => (p.acceleration = limit(p.acceleration, MAX_FORCE)),
+  )
+
+  // Apply accelerations to velocities
+  each(
+    state.particles,
+    p => (p.velocity = math.add(p.velocity, p.acceleration)),
+  )
+
+  // Apply speed limits to velocities
+  each(state.particles, p => (p.velocity = limit(p.velocity, MAX_SPEED)))
+
+  // Appliy velocities to positions
+  each(state.particles, p => (p.position = math.add(p.position, p.velocity)))
+
+  // [TODO] Apply wrapping
+
   {
-    // Run neighborhood
+    // Find & annotate particle neighbors
     const spec = state.request.neighborhood
     const neighborhood = neighborhoods[spec.name]
-    const config = spec.config
-    state.particles = neighborhood(state.particles, config)
+    state.particles = neighborhood(state.particles, spec.config)
   }
 
   // Update main thread
@@ -123,7 +160,7 @@ context.addEventListener('message', e => {
         state.request.particles,
         state.particles,
       )
-      sendUpdate()
+      sendUpdate() // send once to pipe request updates through, even if paused
       loop()
       break
     }
