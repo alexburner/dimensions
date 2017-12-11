@@ -107,6 +107,15 @@ export default class Controls extends React.Component<Props, State> {
         <div>
           Layers
           <label>
+            Grid &nbsp;
+            <input
+              type="checkbox"
+              name="grid"
+              checked={this.state.request.layers.grid}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
             Points &nbsp;
             <input
               type="checkbox"
@@ -142,15 +151,6 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleLayers}
             />
           </label>
-          <label>
-            Grid &nbsp;
-            <input
-              type="checkbox"
-              name="grid"
-              checked={this.state.request.layers.grid}
-              onChange={this.handleLayers}
-            />
-          </label>
         </div>
         <div>
           Simulation
@@ -176,20 +176,20 @@ export default class Controls extends React.Component<Props, State> {
         <div>
           Neighbors
           <label>
-            All &nbsp;
-            <input
-              type="radio"
-              name="all"
-              checked={this.state.request.neighborhood.name === 'all'}
-              onChange={this.handleNeighborhoods}
-            />
-          </label>
-          <label>
             Nearest &nbsp;
             <input
               type="radio"
               name="nearest"
               checked={this.state.request.neighborhood.name === 'nearest'}
+              onChange={this.handleNeighborhoods}
+            />
+          </label>
+          <label>
+            All &nbsp;
+            <input
+              type="radio"
+              name="all"
+              checked={this.state.request.neighborhood.name === 'all'}
               onChange={this.handleNeighborhoods}
             />
           </label>
