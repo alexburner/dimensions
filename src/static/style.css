@@ -25,6 +25,10 @@ html, body, #root {
   margin: 16px;
 }
 
+.controls div {
+  padding-top: 8px;
+}
+
 .controls label {
   display: block;
 }
