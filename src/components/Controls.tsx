@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { LayerName } from 'src/drawing/layers'
 import { BehaviorSpecs } from 'src/geometry/behaviors'
+import { BoundingName } from 'src/geometry/boundings'
 import { NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { WorkerRequest } from 'src/worker'
 
@@ -168,6 +169,36 @@ export default class Controls extends React.Component<Props, State> {
           </label>
         </div>
         <div>
+          Bounds
+          <label>
+            Centering &nbsp;
+            <input
+              type="checkbox"
+              name="centering"
+              checked={this.state.request.boundings.centering}
+              onChange={this.handleBoundings}
+            />
+          </label>
+          <label>
+            Scaling &nbsp;
+            <input
+              type="checkbox"
+              name="scaling"
+              checked={this.state.request.boundings.scaling}
+              onChange={this.handleBoundings}
+            />
+          </label>
+          <label>
+            Binding &nbsp;
+            <input
+              type="checkbox"
+              name="binding"
+              checked={this.state.request.boundings.binding}
+              onChange={this.handleBoundings}
+            />
+          </label>
+        </div>
+        <div>
           Neighbors
           <label>
             Nearest &nbsp;
@@ -211,6 +242,15 @@ export default class Controls extends React.Component<Props, State> {
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
     request.layers[name] = value
+    this.props.onRequestChange(request)
+    this.setState({ request })
+  }
+
+  private handleBoundings = (e: React.FormEvent<HTMLInputElement>) => {
+    const request = { ...this.state.request }
+    const name = e.currentTarget.name as BoundingName
+    const value = e.currentTarget.checked
+    request.boundings[name] = value
     this.props.onRequestChange(request)
     this.setState({ request })
   }

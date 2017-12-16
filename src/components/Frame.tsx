@@ -27,9 +27,10 @@ export default class Frame extends React.Component<{}, {}> {
       config: {},
     },
     boundings: {
-      wrapping: false,
       centering: true,
       scaling: true,
+      binding: false,
+      wrapping: false,
     },
     layers: {
       grid: true,
