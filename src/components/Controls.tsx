@@ -44,6 +44,10 @@ const NEIGHBORHOOD_PRESETS: {
     name: 'all',
     config: {},
   },
+  locals: {
+    name: 'locals',
+    config: {},
+  },
   nearest: {
     name: 'nearest',
     config: {},
@@ -206,6 +210,15 @@ export default class Controls extends React.Component<Props, State> {
               type="radio"
               name="nearest"
               checked={this.state.request.neighborhood.name === 'nearest'}
+              onChange={this.handleNeighborhoods}
+            />
+          </label>
+          <label>
+            Locals &nbsp;
+            <input
+              type="radio"
+              name="locals"
+              checked={this.state.request.neighborhood.name === 'locals'}
               onChange={this.handleNeighborhoods}
             />
           </label>

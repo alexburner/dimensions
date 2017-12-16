@@ -1,4 +1,5 @@
 import { all, Spec as AllSpec } from 'src/geometry/neighborhoods/all'
+import { locals, Spec as LocalsSpec } from 'src/geometry/neighborhoods/locals'
 import {
   nearest,
   Spec as NearestSpec,
@@ -10,11 +11,12 @@ export type Neighborhood<Config> = (
   config?: Config,
 ) => void
 
-export type NeighborhoodSpecs = AllSpec | NearestSpec
+export type NeighborhoodSpecs = AllSpec | LocalsSpec | NearestSpec
 
 export const neighborhoods: {
   [name in NeighborhoodSpecs['name']]: Neighborhood<any>
 } = {
   all,
+  locals,
   nearest,
 }
