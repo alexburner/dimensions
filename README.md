@@ -24,3 +24,9 @@ Auto-format code with `prettier` and `tslint --fix`
 ```cmd
 npm run style
 ```
+
+## clean
+Remove npm dependencies and build caches
+```cmd
+npm run clean
+```
