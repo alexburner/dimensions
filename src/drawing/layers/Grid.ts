@@ -1,4 +1,3 @@
-import { each } from 'lodash'
 import * as THREE from 'three'
 
 import { FIELD_SIZE } from 'src/constants'
@@ -224,7 +223,7 @@ const makeObject = (): THREE.Object3D => {
 }
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  each(specs, (spec, i) => {
+  specs.forEach((spec, i) => {
     const object = objects[i] as THREE.Line
     const geometry = object.geometry as THREE.Geometry
     geometry.vertices = [spec.source, spec.target]

@@ -1,4 +1,3 @@
-import { each } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
@@ -24,6 +23,7 @@ export default class Renderer {
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
   private layers: { [name in LayerName]: Layer }
+  private layerNames: LayerName[]
 
   constructor({
     canvas,
@@ -67,6 +67,7 @@ export default class Renderer {
       circles: new Circles(this.scene),
       spheres: new Spheres(this.scene),
     }
+    this.layerNames = Object.keys(this.layers) as LayerName[]
 
     // Start render loop
     this.loop()
@@ -87,9 +88,10 @@ export default class Renderer {
   public update(response: WorkerResponse) {
     const dimensions = response.dimensions
     const particles = response.particles.map(p => new Particle3(p))
-    each(response.layers, (isLayerVisible, layerName) => {
-      const layer = this.layers[layerName as LayerName] // XXX lodash type bug?
-      isLayerVisible ? layer.update(particles, dimensions) : layer.clear()
+    this.layerNames.forEach(layerName => {
+      const layer = this.layers[layerName]
+      const layerVisible = response.layers[layerName]
+      layerVisible ? layer.update(particles, dimensions) : layer.clear()
     })
   }
 

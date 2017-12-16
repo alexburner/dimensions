@@ -1,4 +1,3 @@
-import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
@@ -40,10 +39,9 @@ export default class Lines implements Layer {
 }
 
 const makeObjectSpecs = (particles: Particle3[]): ObjectSpec[] =>
-  reduce(
-    particles,
+  particles.reduce(
     (memo, particle) => {
-      each(particle.neighbors, neighbor => {
+      particle.neighbors.forEach(neighbor => {
         memo.push({
           source: particle.position,
           target: particles[neighbor.index].position,
@@ -65,7 +63,7 @@ const makeObject = (): THREE.Object3D => {
 }
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  each(specs, (spec, i) => {
+  specs.forEach((spec, i) => {
     const object = objects[i] as THREE.Line
     const geometry = object.geometry as THREE.BufferGeometry
     geometry.setFromPoints([spec.source, spec.target])

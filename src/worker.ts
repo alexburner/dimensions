@@ -1,10 +1,8 @@
-import { each } from 'lodash'
-
 import { FIELD_SIZE } from 'src/constants'
 import { LayerEnabled } from 'src/drawing/layers'
 import {
   BoundingEnabled,
-  BoundingNames,
+  boundingNames,
   boundings,
 } from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
@@ -136,9 +134,11 @@ const loop = () => {
   }
 
   // Accumulate acceleration from boundings
-  each(boundings, (bounding, name) => {
-    if (!state.request!.boundings[name as BoundingNames]) return
-    state.particles = bounding(state.particles)
+  boundingNames.forEach(boundingName => {
+    if (!state.request) return
+    const bounding = boundings[boundingName]
+    const boundingVisible = state.request.boundings[boundingName]
+    if (boundingVisible) bounding(state.particles)
   })
 
   // Apply force limits to accelerations

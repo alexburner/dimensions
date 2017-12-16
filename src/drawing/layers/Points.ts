@@ -1,4 +1,3 @@
-import { each, map } from 'lodash'
 import * as THREE from 'three'
 
 import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
@@ -58,7 +57,7 @@ const texture = ((): THREE.Texture => {
 })()
 
 const makeSpecs = (particles: Particle3[]): ObjectSpec[] =>
-  map(particles, particle => ({
+  particles.map(particle => ({
     position: particle.position,
   }))
 
@@ -75,7 +74,7 @@ const makeObject = (): THREE.Object3D => {
 }
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  each(specs, (spec, i) => {
+  specs.forEach((spec, i) => {
     const object = objects[i]
     object.position.x = spec.position.x
     object.position.y = spec.position.y

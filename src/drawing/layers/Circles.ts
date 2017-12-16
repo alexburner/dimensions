@@ -1,4 +1,3 @@
-import { each, reduce } from 'lodash'
 import * as THREE from 'three'
 
 import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
@@ -42,10 +41,9 @@ export default class Circles implements Layer {
 const DIVISIONS = 64
 
 const makeObjectSpecs = (particles: Particle3[]): ObjectSpec[] =>
-  reduce(
-    particles,
+  particles.reduce(
     (memo, particle) => {
-      each(particle.neighbors, neighbor => {
+      particle.neighbors.forEach(neighbor => {
         memo.push({
           position: particle.position,
           radius: neighbor.distance,
@@ -70,7 +68,7 @@ const makeObject = (): THREE.Object3D => {
 }
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  each(specs, (spec, i) => {
+  specs.forEach((spec, i) => {
     const object = objects[i]
     object.position.x = spec.position.x
     object.position.y = spec.position.y
