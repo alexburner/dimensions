@@ -36,11 +36,6 @@ const random = (k: number = 1) => {
  *  vectorA.add(vectorB)
  *  vectorA.add(10)
  *
- * VectorN instance length measurements are memoized (resets cache if needed):
- *  vectorA.multiply(10) // memo cache reset
- *  vectorA.getLength() // new length calculated
- *  vectorA.getLength() // memo cache hit
- *
  * VectorN instance methods are chainable (where reasonable):
  *  vectorA.add(10).multiply(11).limit(20) // yes
  *  vectorA.add(10).getLength().limit(20) // no
@@ -139,16 +134,6 @@ export default class VectorN {
   public values: Float32Array
 
   /**
-   * Memoized magnitude of vector
-   */
-  private length: number | undefined
-
-  /**
-   * Memoized squared magnitude of vector
-   */
-  private lengthSq: number | undefined
-
-  /**
    * Construct a new VectorN instance, with dimension count and optional fill
    */
   constructor(dimensions: number, fill?: number) {
@@ -177,20 +162,14 @@ export default class VectorN {
    * Find vector magnitude
    */
   public getLength(): number {
-    if (this.length === undefined) {
-      this.length = Math.sqrt(this.getLengthSq())
-    }
-    return this.length
+    return Math.sqrt(this.getLengthSq())
   }
 
   /**
    * Find squared vector magnitude
    */
   public getLengthSq(): number {
-    if (this.lengthSq === undefined) {
-      this.lengthSq = this.values.reduce((memo, n) => memo + n * n, 0)
-    }
-    return this.lengthSq
+    return this.values.reduce((memo, n) => memo + n * n, 0)
   }
 
   /**
@@ -198,8 +177,6 @@ export default class VectorN {
    */
   public setLength(length: number): VectorN {
     this.multiply(length / this.getLength())
-    this.length = length
-    this.lengthSq = length * length
     return this
   }
 
@@ -219,10 +196,7 @@ export default class VectorN {
    * Add another vector's values (or a constant) to this vector
    */
   public add(other: VectorN | number): VectorN {
-    const result = VectorN.add(this, other)
-    this.values = result.values
-    this.length = undefined
-    this.lengthSq = undefined
+    this.values = VectorN.add(this, other).values
     return this
   }
 
@@ -230,10 +204,7 @@ export default class VectorN {
    * Subtract another vector's values (or a constant) from this vector
    */
   public subtract(other: VectorN | number): VectorN {
-    const result = VectorN.subtract(this, other)
-    this.values = result.values
-    this.length = undefined
-    this.lengthSq = undefined
+    this.values = VectorN.subtract(this, other).values
     return this
   }
 
@@ -241,10 +212,7 @@ export default class VectorN {
    * Multiply another vector's values (or a constant) to this vector
    */
   public multiply(other: VectorN | number): VectorN {
-    const result = VectorN.multiply(this, other)
-    this.values = result.values
-    this.length = undefined
-    this.lengthSq = undefined
+    this.values = VectorN.multiply(this, other).values
     return this
   }
 
@@ -252,10 +220,7 @@ export default class VectorN {
    * Divide another vector's values (or a constant) from this vector
    */
   public divide(other: VectorN | number): VectorN {
-    const result = VectorN.divide(this, other)
-    this.values = result.values
-    this.length = undefined
-    this.lengthSq = undefined
+    this.values = VectorN.divide(this, other).values
     return this
   }
 }
