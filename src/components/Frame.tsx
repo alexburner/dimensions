@@ -14,7 +14,7 @@ export default class Frame extends React.Component<{}, {}> {
   private request: WorkerRequest = {
     dimensions: 3,
     particles: 9,
-    simulation: {
+    behavior: {
       name: 'wandering',
       config: {
         maxForce: 10,

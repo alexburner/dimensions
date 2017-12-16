@@ -1,8 +1,8 @@
 import * as React from 'react'
 
 import { LayerName } from 'src/drawing/layers'
+import { BehaviorSpecs } from 'src/geometry/behaviors'
 import { NeighborhoodSpecs } from 'src/geometry/neighborhoods'
-import { SimulationSpecs } from 'src/geometry/simulations'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {
@@ -17,9 +17,7 @@ interface State {
   request: WorkerRequest
 }
 
-const SIMULATION_PRESETS: {
-  [name in SimulationSpecs['name']]: SimulationSpecs
-} = {
+const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   diffusion: {
     name: 'diffusion',
     config: {
@@ -101,7 +99,7 @@ export default class Controls extends React.Component<Props, State> {
           />
         </label>
         <div>
-          Layers
+          Drawing
           <label>
             Grid &nbsp;
             <input
@@ -149,14 +147,14 @@ export default class Controls extends React.Component<Props, State> {
           </label>
         </div>
         <div>
-          Simulation
+          Behavior
           <label>
             Wandering &nbsp;
             <input
               type="radio"
               name="wandering"
-              checked={this.state.request.simulation.name === 'wandering'}
-              onChange={this.handleSimulations}
+              checked={this.state.request.behavior.name === 'wandering'}
+              onChange={this.handleBehaviors}
             />
           </label>
           <label>
@@ -164,8 +162,8 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="diffusion"
-              checked={this.state.request.simulation.name === 'diffusion'}
-              onChange={this.handleSimulations}
+              checked={this.state.request.behavior.name === 'diffusion'}
+              onChange={this.handleBehaviors}
             />
           </label>
         </div>
@@ -217,11 +215,11 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ request })
   }
 
-  private handleSimulations = (e: React.FormEvent<HTMLInputElement>) => {
+  private handleBehaviors = (e: React.FormEvent<HTMLInputElement>) => {
     const request = { ...this.state.request }
     const name = e.currentTarget.name as LayerName
-    const spec = SIMULATION_PRESETS[name as SimulationSpecs['name']]
-    request.simulation = spec
+    const spec = BEHAVIOR_PRESETS[name as BehaviorSpecs['name']]
+    request.behavior = spec
     this.props.onRequestChange(request)
     this.setState({ request })
   }

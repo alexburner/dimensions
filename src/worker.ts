@@ -1,5 +1,6 @@
 import { FIELD_SIZE } from 'src/constants'
 import { LayerEnabled } from 'src/drawing/layers'
+import { behaviors, BehaviorSpecs } from 'src/geometry/behaviors'
 import {
   BoundingEnabled,
   boundingNames,
@@ -7,12 +8,11 @@ import {
 } from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { makeParticles, ParticleN } from 'src/geometry/particles'
-import { simulations, SimulationSpecs } from 'src/geometry/simulations'
 
 export interface WorkerRequest {
   dimensions: number
   particles: number
-  simulation: SimulationSpecs
+  behavior: BehaviorSpecs
   neighborhood: NeighborhoodSpecs
   boundings: BoundingEnabled
   layers: LayerEnabled
@@ -53,7 +53,7 @@ const state: {
 
 /**
  * TODO hook these into request object
- * (currently they are on Simulation Specs)
+ * (currently they are on Behavior Specs)
  * (but they should actually be more global)
  */
 const MAX_FORCE = 1
@@ -113,7 +113,7 @@ const sendUpdate = () => {
 
 /**
  * Particle physics loop
- * - runs chosen simulation
+ * - runs chosen behavior
  * - runs chosen boundings
  * - runs chosen neighborhood
  * - posts message with updated particles
@@ -127,10 +127,10 @@ const loop = () => {
   state.particles.forEach(p => p.acceleration.multiply(0))
 
   {
-    // Accumulate acceleration from simulation
-    const spec = state.request.simulation
-    const simulation = simulations[spec.name]
-    simulation(state.particles, spec.config)
+    // Accumulate acceleration from behavior
+    const spec = state.request.behavior
+    const behavior = behaviors[spec.name]
+    behavior(state.particles, spec.config)
   }
 
   // Accumulate acceleration from boundings

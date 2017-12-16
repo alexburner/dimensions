@@ -1,6 +1,6 @@
+import { Behavior, SharedConfig } from 'src/geometry/behaviors'
 import { findNearestNeighbor } from 'src/geometry/neighborhoods/nearest'
 import { ParticleN } from 'src/geometry/particles'
-import { SharedConfig, Simulation } from 'src/geometry/simulations'
 import VectorN from 'src/geometry/VectorN'
 
 export interface Config extends SharedConfig {
@@ -12,7 +12,7 @@ export interface Spec {
   config: Config
 }
 
-export const diffusion: Simulation<Config> = (
+export const diffusion: Behavior<Config> = (
   particles: ParticleN[],
   config: Config,
 ) => {
