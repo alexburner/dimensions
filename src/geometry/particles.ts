@@ -14,12 +14,14 @@ export interface Neighbor {
  * Particle using VectorN
  */
 export class ParticleN {
+  public dimensions: number
   public position: VectorN
   public velocity: VectorN
   public acceleration: VectorN
   public neighbors: Neighbor[]
 
   constructor(dimensions: number) {
+    this.dimensions = dimensions
     this.position = new VectorN(dimensions)
     this.velocity = new VectorN(dimensions)
     this.acceleration = new VectorN(dimensions)
@@ -45,12 +47,14 @@ export class ParticleN {
  * Particle using THREE.Vector3
  */
 export class Particle3 {
+  public dimensions: number
   public position: THREE.Vector3
   public velocity: THREE.Vector3
   public acceleration: THREE.Vector3
   public neighbors: Neighbor[]
 
   constructor(particleN: ParticleN) {
+    this.dimensions = particleN.dimensions
     this.position = toVector3(particleN.position)
     this.velocity = toVector3(particleN.velocity)
     this.acceleration = toVector3(particleN.acceleration)

@@ -21,6 +21,6 @@ export const locals: Neighborhood<Config> = (particles: ParticleN[]) => {
       [] as Neighbor[],
     )
     neighbors.sort((a, b) => a.distance - b.distance)
-    particle.neighbors = neighbors.slice(0, particle.position.values.length)
+    particle.neighbors = neighbors.slice(0, particle.dimensions)
   })
 }

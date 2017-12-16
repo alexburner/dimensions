@@ -17,7 +17,7 @@ export const wandering: Behavior<Config> = (
 ) => {
   particles.forEach(particle => {
     // Generate random acceleration & add to particle
-    const random = new VectorN(particle.acceleration.values.length)
+    const random = new VectorN(particle.dimensions)
     random.randomize(config.jitter)
     particle.acceleration.add(random)
   })
