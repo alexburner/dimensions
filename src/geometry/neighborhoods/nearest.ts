@@ -9,17 +9,12 @@ export interface Spec {
   config: Config
 }
 
-export const nearest: Neighborhood<Config> = (
-  particles: ParticleN[],
-): ParticleN[] => {
+export const nearest: Neighborhood<Config> = (particles: ParticleN[]) => {
   if (particles.length < 2) return particles
   particles.forEach(
     particle =>
       (particle.neighbors = [findNearestNeighbor(particle, particles)]),
   )
-
-  // TODO update types to reflect mutation-over-creation?
-  return particles
 }
 
 export const findNearestNeighbor = (

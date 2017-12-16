@@ -130,7 +130,7 @@ const loop = () => {
     // Accumulate acceleration from simulation
     const spec = state.request.simulation
     const simulation = simulations[spec.name]
-    state.particles = simulation(state.particles, spec.config)
+    simulation(state.particles, spec.config)
   }
 
   // Accumulate acceleration from boundings
@@ -159,7 +159,7 @@ const loop = () => {
     // Find & annotate particle neighbors
     const spec = state.request.neighborhood
     const neighborhood = neighborhoods[spec.name]
-    state.particles = neighborhood(state.particles, spec.config)
+    neighborhood(state.particles, spec.config)
   }
 
   // Update main thread

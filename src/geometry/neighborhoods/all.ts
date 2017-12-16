@@ -9,9 +9,7 @@ export interface Spec {
   config: Config
 }
 
-export const all: Neighborhood<Config> = (
-  particles: ParticleN[],
-): ParticleN[] => {
+export const all: Neighborhood<Config> = (particles: ParticleN[]) => {
   particles.forEach(
     particle =>
       (particle.neighbors = particles.reduce(
@@ -27,7 +25,4 @@ export const all: Neighborhood<Config> = (
         [] as Neighbor[],
       )),
   )
-
-  // TODO update types to reflect mutation-over-creation?
-  return particles
 }

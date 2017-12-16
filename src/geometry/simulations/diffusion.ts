@@ -15,7 +15,7 @@ export interface Spec {
 export const diffusion: Simulation<Config> = (
   particles: ParticleN[],
   config: Config,
-): ParticleN[] => {
+) => {
   // Only works if more than 1 particle
   if (particles.length < 2) return particles
 
@@ -34,7 +34,4 @@ export const diffusion: Simulation<Config> = (
     // Accelerate particle toward other
     particle.acceleration.add(delta)
   })
-
-  // TODO update types to reflect mutation-over-creation?
-  return particles
 }

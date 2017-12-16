@@ -16,7 +16,7 @@ export interface SharedConfig {
 export type Simulation<Config> = (
   particles: ParticleN[],
   config: Config,
-) => ParticleN[]
+) => void
 
 export type SimulationSpecs = WanderingSpec | DiffusionSpec
 

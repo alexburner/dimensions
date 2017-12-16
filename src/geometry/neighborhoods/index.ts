@@ -8,7 +8,7 @@ import { ParticleN } from 'src/geometry/particles'
 export type Neighborhood<Config> = (
   particles: ParticleN[],
   config?: Config,
-) => ParticleN[]
+) => void
 
 export type NeighborhoodSpecs = AllSpec | NearestSpec
 

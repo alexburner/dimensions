@@ -14,13 +14,11 @@ export interface Spec {
 export const wandering: Simulation<Config> = (
   particles: ParticleN[],
   config: Config,
-): ParticleN[] => {
+) => {
   particles.forEach(particle => {
     // Generate random acceleration & add to particle
     const random = new VectorN(particle.acceleration.values.length)
     random.randomize(config.jitter)
     particle.acceleration.add(random)
   })
-
-  return particles
 }

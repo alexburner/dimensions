@@ -17,7 +17,6 @@ const wrap = (n: number): number => {
   return n
 }
 
-export const wrapping: Bounding = (particles: ParticleN[]): ParticleN[] => {
+export const wrapping: Bounding = (particles: ParticleN[]) => {
   particles.forEach(particle => particle.position.mutate(wrap))
-  return particles
 }
