@@ -1,7 +1,6 @@
-import { times } from 'lodash'
 import * as THREE from 'three'
 
-import { makeRandom, VectorN } from 'src/geometry/vector-n'
+import VectorN from 'src/geometry/VectorN'
 
 export interface Neighbor {
   index: number
@@ -32,42 +31,42 @@ export const makeParticles = (
   particles: number,
   prev: Particle[] = [],
 ): Particle[] =>
-  times(
-    particles,
-    i =>
-      prev[i]
-        ? makeParticleFromPrev(dimensions, fieldSize / 2, prev[i])
-        : makeParticle(dimensions, fieldSize / 2),
-  )
-
-/**
- * Make a new particle (seeded with random (-k, k) values)
- */
-export const makeParticle = (d: number, k: number): Particle => ({
-  position: makeRandom(d, k),
-  velocity: makeRandom(d, k),
-  acceleration: makeRandom(d, k),
-  neighbors: [],
-})
+  new Array(particles)
+    .fill(undefined)
+    .map(
+      (_, i) =>
+        prev[i]
+          ? makeParticleFromPrev(dimensions, fieldSize / 2, prev[i])
+          : makeParticle(dimensions, fieldSize / 2),
+    )
 
 /**
  * Make a new particle from a previous particle
- * (expanding/contracting dimensionality as needed)
- * (expansions seeded with random (-k, k) values)
+ * (filling missing dimensions with random (-k, k) values)
  */
 export const makeParticleFromPrev = (
   d: number,
   k: number,
   prev: Particle,
 ): Particle => {
+  // Create fresh new particle
   const next = makeParticle(d, k)
-  return {
-    position: times(d, i => prev.position[i] || next.position[i]),
-    velocity: times(d, i => prev.velocity[i] || next.velocity[i]),
-    acceleration: times(d, i => prev.acceleration[i] || next.acceleration[i]),
-    neighbors: [],
-  }
+  // Backfill particle with previous values, if available
+  next.position.mutate((v, i) => prev.position.values[i] || v)
+  next.velocity.mutate((v, i) => prev.velocity.values[i] || v)
+  next.acceleration.mutate((v, i) => prev.acceleration.values[i] || v)
+  return next
 }
+
+/**
+ * Make a new particle (seeded with random (-k, k) values)
+ */
+export const makeParticle = (d: number, k: number): Particle => ({
+  position: new VectorN(d).randomize(k),
+  velocity: new VectorN(d).randomize(k),
+  acceleration: new VectorN(d).randomize(k),
+  neighbors: [],
+})
 
 /**
  * Convert a VectorN particle to a Vector3 particle
@@ -80,4 +79,4 @@ export const toParticle3 = (p: Particle): Particle3 => ({
 })
 
 const toVector3 = (v: VectorN): THREE.Vector3 =>
-  new THREE.Vector3(v[0] || 0, v[1] || 0, v[2] || 0)
+  new THREE.Vector3(v.values[0] || 0, v.values[1] || 0, v.values[2] || 0)

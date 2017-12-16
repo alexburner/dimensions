@@ -10,7 +10,6 @@ import {
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { makeParticles, Particle } from 'src/geometry/particles'
 import { simulations, SimulationSpecs } from 'src/geometry/simulations'
-import { limit, makeNew, math } from 'src/geometry/vector-n'
 
 export interface WorkerRequest {
   dimensions: number
@@ -127,10 +126,7 @@ const loop = () => {
   if (!state.request) return
 
   // Reset particle accelerations
-  each(
-    state.particles,
-    p => (p.acceleration = makeNew(p.acceleration.length, 0)),
-  )
+  state.particles.forEach(p => p.acceleration.multiply(0))
 
   {
     // Accumulate acceleration from simulation
@@ -146,22 +142,16 @@ const loop = () => {
   })
 
   // Apply force limits to accelerations
-  each(
-    state.particles,
-    p => (p.acceleration = limit(p.acceleration, MAX_FORCE)),
-  )
+  state.particles.forEach(p => p.acceleration.limit(MAX_FORCE))
 
   // Apply accelerations to velocities
-  each(
-    state.particles,
-    p => (p.velocity = math.add(p.velocity, p.acceleration)),
-  )
+  state.particles.forEach(p => p.velocity.add(p.acceleration))
 
   // Apply speed limits to velocities
-  each(state.particles, p => (p.velocity = limit(p.velocity, MAX_SPEED)))
+  state.particles.forEach(p => p.velocity.limit(MAX_SPEED))
 
   // Appliy velocities to positions
-  each(state.particles, p => (p.position = math.add(p.position, p.velocity)))
+  state.particles.forEach(p => p.position.add(p.velocity))
 
   // [TODO] Apply wrapping
 

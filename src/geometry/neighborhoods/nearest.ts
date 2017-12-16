@@ -1,8 +1,6 @@
-import { each, map } from 'lodash'
-
 import { Neighborhood } from 'src/geometry/neighborhoods'
 import { Neighbor, Particle } from 'src/geometry/particles'
-import { getDistance } from 'src/geometry/vector-n'
+import VectorN from 'src/geometry/VectorN'
 
 interface Config {}
 
@@ -15,13 +13,13 @@ export const nearest: Neighborhood<Config> = (
   particles: Particle[],
 ): Particle[] => {
   if (particles.length < 2) return particles
-  return map(particles, particle => {
-    const neighbor = findNearestNeighbor(particle, particles)
-    return {
-      ...particle,
-      neighbors: [neighbor],
-    }
-  })
+  particles.forEach(
+    particle =>
+      (particle.neighbors = [findNearestNeighbor(particle, particles)]),
+  )
+
+  // TODO update types to reflect mutation-over-creation?
+  return particles
 }
 
 export const findNearestNeighbor = (
@@ -30,9 +28,9 @@ export const findNearestNeighbor = (
 ): Neighbor => {
   let minDistance: number = Infinity
   let minIndex: number = -1
-  each(particles, (other, index) => {
+  particles.forEach((other, index) => {
     if (particle === other) return
-    const distance = getDistance(particle.position, other.position)
+    const distance = VectorN.getDistance(particle.position, other.position)
     if (distance < minDistance) {
       minDistance = distance
       minIndex = index

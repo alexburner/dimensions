@@ -49,10 +49,6 @@ const NEIGHBORHOOD_PRESETS: {
     name: 'nearest',
     config: {},
   },
-  nextNearest: {
-    name: 'nextNearest',
-    config: {},
-  },
 }
 
 export default class Controls extends React.Component<Props, State> {

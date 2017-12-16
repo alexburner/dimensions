@@ -1,8 +1,6 @@
-import { map, reduce } from 'lodash'
-
 import { Neighborhood } from 'src/geometry/neighborhoods'
 import { Neighbor, Particle } from 'src/geometry/particles'
-import { getDistance } from 'src/geometry/vector-n'
+import VectorN from 'src/geometry/VectorN'
 
 interface Config {}
 
@@ -14,17 +12,22 @@ export interface Spec {
 export const all: Neighborhood<Config> = (
   particles: Particle[],
 ): Particle[] => {
-  return map(particles, particle => ({
-    ...particle,
-    neighbors: reduce(
-      particles,
-      (memo, other, index) => {
-        if (particle === other) return memo
-        const distance = getDistance(particle.position, other.position)
-        memo.push({ index, distance })
-        return memo
-      },
-      [] as Neighbor[],
-    ),
-  }))
+  particles.forEach(
+    particle =>
+      (particle.neighbors = particles.reduce(
+        (memo, other, index) => {
+          if (particle === other) return memo
+          const distance = VectorN.getDistance(
+            particle.position,
+            other.position,
+          )
+          memo.push({ index, distance })
+          return memo
+        },
+        [] as Neighbor[],
+      )),
+  )
+
+  // TODO update types to reflect mutation-over-creation?
+  return particles
 }
