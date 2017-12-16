@@ -9,6 +9,7 @@
     "curly": false,
     "eofline": true,
     "interface-name": false,
+    "max-classes-per-file": false,
     "no-console": ["error", {"allow": ["warn", "error"]}],
     "no-empty-interface": false,
     "no-unused-variable": [true, {"ignore-pattern": "^_"}],

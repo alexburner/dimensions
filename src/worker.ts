@@ -8,7 +8,7 @@ import {
   boundings,
 } from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
-import { makeParticles, Particle } from 'src/geometry/particles'
+import { makeParticles, ParticleN } from 'src/geometry/particles'
 import { simulations, SimulationSpecs } from 'src/geometry/simulations'
 
 export interface WorkerRequest {
@@ -22,7 +22,7 @@ export interface WorkerRequest {
 
 export interface WorkerResponse {
   dimensions: number
-  particles: Particle[]
+  particles: ParticleN[]
   layers: LayerEnabled
 }
 
@@ -44,7 +44,7 @@ const context = (self as any) as DedicatedWorkerGlobalScope
  * (think of this as a class instantiated on `new WebpackWorkerLoader()`)
  */
 const state: {
-  particles: Particle[]
+  particles: ParticleN[]
   request: WorkerRequest | undefined
   stopped: boolean
 } = {

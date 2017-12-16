@@ -1,4 +1,4 @@
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 import {
   diffusion,
   Spec as DiffusionSpec,
@@ -14,9 +14,9 @@ export interface SharedConfig {
 }
 
 export type Simulation<Config> = (
-  particles: Particle[],
+  particles: ParticleN[],
   config: Config,
-) => Particle[]
+) => ParticleN[]
 
 export type SimulationSpecs = WanderingSpec | DiffusionSpec
 

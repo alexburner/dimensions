@@ -1,4 +1,4 @@
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 import { SharedConfig, Simulation } from 'src/geometry/simulations'
 import VectorN from 'src/geometry/VectorN'
 
@@ -12,9 +12,9 @@ export interface Spec {
 }
 
 export const wandering: Simulation<Config> = (
-  particles: Particle[],
+  particles: ParticleN[],
   config: Config,
-): Particle[] => {
+): ParticleN[] => {
   particles.forEach(particle => {
     // Generate random acceleration & add to particle
     const random = new VectorN(particle.acceleration.values.length)

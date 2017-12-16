@@ -1,12 +1,12 @@
 import { FIELD_SIZE } from 'src/constants'
 import { Bounding } from 'src/geometry/boundings'
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
 const RADIUS = FIELD_SIZE / 2
 const LIMIT = RADIUS * RADIUS // XXX to avoid Math.sqrt()
 
-export const scaling: Bounding = (particles: Particle[]): Particle[] => {
+export const scaling: Bounding = (particles: ParticleN[]): ParticleN[] => {
   // Only works for 2 or more particles
   if (particles.length < 2) return particles
 

@@ -1,8 +1,8 @@
 import { Bounding } from 'src/geometry/boundings'
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
-export const centering: Bounding = (particles: Particle[]): Particle[] => {
+export const centering: Bounding = (particles: ParticleN[]): ParticleN[] => {
   if (particles.length === 0) return []
 
   // Find geometric center of particles (by averaging their positions)

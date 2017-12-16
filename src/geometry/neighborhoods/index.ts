@@ -3,12 +3,12 @@ import {
   nearest,
   Spec as NearestSpec,
 } from 'src/geometry/neighborhoods/nearest'
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 
 export type Neighborhood<Config> = (
-  particles: Particle[],
+  particles: ParticleN[],
   config?: Config,
-) => Particle[]
+) => ParticleN[]
 
 export type NeighborhoodSpecs = AllSpec | NearestSpec
 

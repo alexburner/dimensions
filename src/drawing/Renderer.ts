@@ -1,4 +1,4 @@
-import { each, map } from 'lodash'
+import { each } from 'lodash'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
@@ -8,7 +8,7 @@ import Grid from 'src/drawing/layers/Grid'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
-import { toParticle3 } from 'src/geometry/particles'
+import { Particle3 } from 'src/geometry/particles'
 import { WorkerResponse } from 'src/worker'
 
 const NEAR = 1
@@ -86,7 +86,7 @@ export default class Renderer {
 
   public update(response: WorkerResponse) {
     const dimensions = response.dimensions
-    const particles = map(response.particles, toParticle3)
+    const particles = response.particles.map(p => new Particle3(p))
     each(response.layers, (isLayerVisible, layerName) => {
       const layer = this.layers[layerName as LayerName] // XXX lodash type bug?
       isLayerVisible ? layer.update(particles, dimensions) : layer.clear()

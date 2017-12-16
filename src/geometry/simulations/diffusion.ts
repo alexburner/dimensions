@@ -1,5 +1,5 @@
 import { findNearestNeighbor } from 'src/geometry/neighborhoods/nearest'
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 import { SharedConfig, Simulation } from 'src/geometry/simulations'
 import VectorN from 'src/geometry/VectorN'
 
@@ -13,9 +13,9 @@ export interface Spec {
 }
 
 export const diffusion: Simulation<Config> = (
-  particles: Particle[],
+  particles: ParticleN[],
   config: Config,
-): Particle[] => {
+): ParticleN[] => {
   // Only works if more than 1 particle
   if (particles.length < 2) return particles
 

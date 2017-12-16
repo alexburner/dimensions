@@ -1,5 +1,5 @@
 import { Neighborhood } from 'src/geometry/neighborhoods'
-import { Neighbor, Particle } from 'src/geometry/particles'
+import { Neighbor, ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
 interface Config {}
@@ -10,8 +10,8 @@ export interface Spec {
 }
 
 export const all: Neighborhood<Config> = (
-  particles: Particle[],
-): Particle[] => {
+  particles: ParticleN[],
+): ParticleN[] => {
   particles.forEach(
     particle =>
       (particle.neighbors = particles.reduce(

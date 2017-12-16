@@ -1,5 +1,5 @@
 import { Neighborhood } from 'src/geometry/neighborhoods'
-import { Neighbor, Particle } from 'src/geometry/particles'
+import { Neighbor, ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
 interface Config {}
@@ -10,8 +10,8 @@ export interface Spec {
 }
 
 export const nearest: Neighborhood<Config> = (
-  particles: Particle[],
-): Particle[] => {
+  particles: ParticleN[],
+): ParticleN[] => {
   if (particles.length < 2) return particles
   particles.forEach(
     particle =>
@@ -23,8 +23,8 @@ export const nearest: Neighborhood<Config> = (
 }
 
 export const findNearestNeighbor = (
-  particle: Particle,
-  particles: Particle[],
+  particle: ParticleN,
+  particles: ParticleN[],
 ): Neighbor => {
   let minDistance: number = Infinity
   let minIndex: number = -1

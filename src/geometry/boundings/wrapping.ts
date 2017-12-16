@@ -1,6 +1,6 @@
 import { FIELD_SIZE } from 'src/constants'
 import { Bounding } from 'src/geometry/boundings'
-import { Particle } from 'src/geometry/particles'
+import { ParticleN } from 'src/geometry/particles'
 
 /**
  * XXX: wraps line/square/cube for simplicity
@@ -17,7 +17,7 @@ const wrap = (n: number): number => {
   return n
 }
 
-export const wrapping: Bounding = (particles: Particle[]): Particle[] => {
+export const wrapping: Bounding = (particles: ParticleN[]): ParticleN[] => {
   particles.forEach(particle => particle.position.mutate(wrap))
   return particles
 }
