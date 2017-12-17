@@ -7,8 +7,6 @@ import { NeighborhoodSpecs } from 'src/geometry/neighborhoods'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {
-  running: boolean
-  request: WorkerRequest
   onRequestChange: (request: WorkerRequest) => void
   onRunningChange: (running: boolean) => void
 }
@@ -54,8 +52,30 @@ export default class Controls extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      running: props.running,
-      request: { ...props.request },
+      running: true,
+      request: {
+        dimensions: 3,
+        particles: 9,
+        max: {
+          force: 0.1,
+          speed: 0.1,
+        },
+        behavior: BEHAVIOR_PRESETS.wandering,
+        neighborhood: NEIGHBORHOOD_PRESETS.nearest,
+        boundings: {
+          centering: true,
+          scaling: true,
+          binding: false,
+          wrapping: false,
+        },
+        layers: {
+          grid: true,
+          points: true,
+          lines: true,
+          circles: true,
+          spheres: true,
+        },
+      },
     }
   }
 
@@ -230,6 +250,14 @@ export default class Controls extends React.Component<Props, State> {
         </div>
       </div>
     )
+  }
+
+  public getRequest(): WorkerRequest {
+    return this.state.request
+  }
+
+  public getRunning(): boolean {
+    return this.state.running
   }
 
   private handleDimensions = (e: React.FormEvent<HTMLInputElement>) => {

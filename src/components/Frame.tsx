@@ -9,39 +9,8 @@ const CONTROL_WIDTH = 180
 export default class Frame extends React.Component<{}, {}> {
   private canvas: HTMLCanvasElement | void
   private container: HTMLDivElement | void
+  private controls: Controls | null
   private manager: Manager
-  private running: boolean = true
-  private request: WorkerRequest = {
-    dimensions: 3,
-    particles: 9,
-    max: {
-      force: 0.1,
-      speed: 0.1,
-    },
-    behavior: {
-      name: 'wandering',
-      config: {
-        jitter: 0.01,
-      },
-    },
-    neighborhood: {
-      name: 'nearest',
-      config: {},
-    },
-    boundings: {
-      centering: true,
-      scaling: true,
-      binding: false,
-      wrapping: false,
-    },
-    layers: {
-      grid: true,
-      points: true,
-      lines: true,
-      circles: true,
-      spheres: true,
-    },
-  }
 
   public render() {
     return (
@@ -86,10 +55,9 @@ export default class Frame extends React.Component<{}, {}> {
           }}
         >
           <Controls
+            ref={controls => (this.controls = controls)}
             onRequestChange={this.handleRequestChange}
             onRunningChange={this.handleRunningChange}
-            request={this.request}
-            running={this.running}
           />
         </div>
       </div>
@@ -98,10 +66,13 @@ export default class Frame extends React.Component<{}, {}> {
 
   public componentDidMount() {
     if (!this.canvas) throw new Error('DOM failed to mount')
+    if (!this.controls) throw new Error('Controls failed to mount')
     const bounds = this.updateCanvasSize()
+    const request = this.controls.getRequest()
+    const running = this.controls.getRunning()
     this.manager = new Manager({ canvas: this.canvas, bounds })
-    this.manager.draw(this.request)
-    this.running ? this.manager.resume() : this.manager.pause()
+    this.manager.draw(request)
+    running ? this.manager.resume() : this.manager.pause()
     window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
   }
@@ -129,20 +100,18 @@ export default class Frame extends React.Component<{}, {}> {
   }
 
   private handleVisibility = () => {
-    if (!this.manager) return
-    if (!this.running) return
+    if (!this.manager || !this.controls) return
+    if (!this.controls.getRunning()) return
     document.hidden ? this.manager.pause() : this.manager.resume()
   }
 
   private handleRequestChange = (request: WorkerRequest) => {
     if (!this.manager) return
-    this.request = request
     this.manager.draw(request)
   }
 
   private handleRunningChange = (running: boolean) => {
     if (!this.manager) return
-    this.running = running
-    this.running ? this.manager.resume() : this.manager.pause()
+    running ? this.manager.resume() : this.manager.pause()
   }
 }

@@ -48,11 +48,9 @@ const context = (self as any) as DedicatedWorkerGlobalScope
 const state: {
   particles: ParticleN[]
   request: WorkerRequest | undefined
-  stopped: boolean
 } = {
   particles: [],
   request: undefined,
-  stopped: false,
 }
 
 /**
@@ -69,20 +67,14 @@ context.addEventListener('message', e => {
         state.request.particles,
         state.particles,
       )
-      loop()
+      tick()
       break
     }
-    case 'pause': {
-      state.stopped = true
-      break
-    }
-    case 'resume': {
-      state.stopped = false
-      loop()
+    case 'request.tick': {
+      tick()
       break
     }
     case 'destroy': {
-      state.stopped = true
       context.close()
       break
     }
@@ -108,15 +100,13 @@ const sendUpdate = () => {
 }
 
 /**
- * Particle physics loop
+ * Particle physics tick
  * - runs chosen behavior
  * - runs chosen boundings
  * - runs chosen neighborhood
  * - posts message with updated particles
- *
- * Note: asynchronous loop, to allow external interruptions
  */
-const loop = () => {
+const tick = () => {
   if (!state.request) return
 
   // Reset particle accelerations
@@ -159,11 +149,4 @@ const loop = () => {
 
   // Update main thread
   sendUpdate()
-
-  // Bail if paused
-  // (first run allowed to get updates to main thread)
-  if (state.stopped) return
-
-  // Async to allow interrupt
-  setTimeout(loop, 1000 / 60)
 }

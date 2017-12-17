@@ -4,8 +4,10 @@ import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
   private isDestroyed: boolean = false
+  private isRunning: boolean = true
   private renderer: Renderer
   private worker: Worker
+  private rafId: number
 
   constructor({
     canvas,
@@ -22,6 +24,11 @@ export default class Manager {
       switch (e.data.type) {
         case 'update': {
           this.renderer.update(e.data.response)
+          // Throttle worker tick to browser frame rate
+          this.rafId = window.requestAnimationFrame(() => {
+            if (!this.isRunning || this.isDestroyed) return
+            this.worker.postMessage({ type: 'request.tick' })
+          })
           break
         }
       }
@@ -30,6 +37,8 @@ export default class Manager {
 
   public destroy() {
     this.isDestroyed = true
+    this.isRunning = false
+    window.cancelAnimationFrame(this.rafId)
     this.worker.postMessage({ type: 'destroy' })
     this.renderer.destroy()
   }
@@ -43,10 +52,12 @@ export default class Manager {
   }
 
   public pause() {
-    this.worker.postMessage({ type: 'pause' })
+    this.isRunning = false
+    window.cancelAnimationFrame(this.rafId)
   }
 
   public resume() {
-    this.worker.postMessage({ type: 'resume' })
+    this.isRunning = true
+    this.worker.postMessage({ type: 'request.tick' })
   }
 }

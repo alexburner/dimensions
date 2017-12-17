@@ -16,7 +16,6 @@ const VIEWANGLE = 45
 
 export default class Renderer {
   private isDestroyed: boolean = false
-  private rafId: number
   private canvas: HTMLCanvasElement
   private renderer: THREE.Renderer
   private scene: THREE.Scene
@@ -24,6 +23,7 @@ export default class Renderer {
   private controls: TrackballControls
   private layers: { [name in LayerName]: Layer }
   private layerNames: LayerName[]
+  private rafId: number
 
   constructor({
     canvas,
@@ -97,8 +97,8 @@ export default class Renderer {
 
   private loop() {
     if (this.isDestroyed) return
-    this.renderer.render(this.scene, this.camera)
     this.rafId = window.requestAnimationFrame(() => this.loop())
+    this.renderer.render(this.scene, this.camera)
     this.controls.update()
   }
 }
