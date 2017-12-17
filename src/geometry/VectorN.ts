@@ -129,6 +129,15 @@ export default class VectorN {
   }
 
   /**
+   * Create a new copy of a vector
+   */
+  public static clone(v: VectorN): VectorN {
+    const clone = new VectorN(v.values.length)
+    clone.mutate((_, i) => v.values[i])
+    return clone
+  }
+
+  /**
    * The coords of a vector (index maps to spatial dimensions [1, 2, 3, etc])
    */
   public values: Float32Array

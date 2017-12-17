@@ -11,5 +11,9 @@ export const centering: Bounding = (particles: ParticleN[]) => {
 
   // Subtract centroid vector from each particle's position
   // (effectively shifting the centroid to origin zero)
-  particles.forEach(particle => particle.position.subtract(centroid))
+  particles.forEach(particle => {
+    const ideal = VectorN.subtract(particle.position, centroid)
+    const delta = VectorN.subtract(ideal, particle.position)
+    particle.acceleration.add(delta)
+  })
 }

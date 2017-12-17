@@ -4,7 +4,7 @@ import { ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
 const RADIUS = FIELD_SIZE / 2
-const LIMIT = RADIUS * RADIUS // XXX to avoid Math.sqrt()
+const RADIUS_SQ = RADIUS * RADIUS
 
 export const scaling: Bounding = (particles: ParticleN[]) => {
   // Only works for 2 or more particles
@@ -15,15 +15,29 @@ export const scaling: Bounding = (particles: ParticleN[]) => {
   const centroid = VectorN.getAverage(positions)
 
   // Find longest radius between individual & center
-  const maxRadius = positions.reduce((memo, position) => {
-    const radius = VectorN.getDistanceSq(position, centroid)
-    return Math.max(radius, memo)
+  const maxRadiusSq = positions.reduce((memo, position) => {
+    const radiusSq = VectorN.getDistanceSq(position, centroid)
+    return Math.max(radiusSq, memo)
   }, -Infinity)
 
   // Abort if already within limits
-  if (maxRadius <= LIMIT) return particles
+  if (maxRadiusSq <= RADIUS_SQ) return particles
 
   // Scale down all particles
-  const factor = LIMIT / maxRadius
-  particles.forEach(particle => particle.position.multiply(factor))
+  const factor = RADIUS_SQ / maxRadiusSq
+  particles.forEach(particle => {
+    particle.position.multiply(factor)
+    // TODO SO CLOSE
+    //
+    // something about the way the forces accumulate on the acceleration
+    // are turning this scaling into a black hole of death
+    // const ideal = VectorN.multiply(particle.position, factor)
+    // const delta = VectorN.subtract(ideal, particle.position)
+    // particle.acceleration.add(delta)
+    //
+    // possible clue:
+    // the relative positions are frozen initially
+    // (no "behavior" motion is apparent)
+    // while the bounding forces apply
+  })
 }

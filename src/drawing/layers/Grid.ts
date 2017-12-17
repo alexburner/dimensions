@@ -12,6 +12,7 @@ interface ObjectSpec {
 export default class Grid implements Layer {
   private scene: THREE.Scene
   private objects: THREE.Object3D[]
+  private dimensions: number | undefined
 
   constructor(scene: THREE.Scene) {
     this.scene = scene
@@ -19,6 +20,9 @@ export default class Grid implements Layer {
   }
 
   public update(particles: Particle3[], dimensions: number) {
+    if (this.dimensions === dimensions) return
+    else this.dimensions = dimensions
+
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(dimensions)
 
@@ -36,6 +40,7 @@ export default class Grid implements Layer {
 
   public clear() {
     this.objects = clearObjList(this.scene, this.objects)
+    this.dimensions = undefined
   }
 }
 

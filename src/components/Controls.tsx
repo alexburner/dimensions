@@ -54,14 +54,14 @@ export default class Controls extends React.Component<Props, State> {
     this.state = {
       running: true,
       request: {
-        dimensions: 3,
+        dimensions: 2,
         particles: 9,
         max: {
           force: 0.1,
           speed: 0.1,
         },
-        behavior: BEHAVIOR_PRESETS.wandering,
-        neighborhood: NEIGHBORHOOD_PRESETS.nearest,
+        behavior: BEHAVIOR_PRESETS.diffusion,
+        neighborhood: NEIGHBORHOOD_PRESETS.locals,
         boundings: {
           centering: true,
           scaling: true,
@@ -72,8 +72,8 @@ export default class Controls extends React.Component<Props, State> {
           grid: true,
           points: true,
           lines: true,
-          circles: true,
-          spheres: true,
+          circles: false,
+          spheres: false,
         },
       },
     }
