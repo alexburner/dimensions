@@ -14,11 +14,13 @@ export default class Frame extends React.Component<{}, {}> {
   private request: WorkerRequest = {
     dimensions: 3,
     particles: 9,
+    max: {
+      force: 0.1,
+      speed: 0.1,
+    },
     behavior: {
       name: 'wandering',
       config: {
-        maxForce: 10,
-        maxSpeed: 10,
         jitter: 0.01,
       },
     },

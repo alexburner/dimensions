@@ -22,16 +22,12 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   diffusion: {
     name: 'diffusion',
     config: {
-      maxForce: 10,
-      maxSpeed: 10,
-      charge: 0.1,
+      charge: 0.01,
     },
   },
   wandering: {
     name: 'wandering',
     config: {
-      maxForce: 10,
-      maxSpeed: 10,
       jitter: 0.01,
     },
   },

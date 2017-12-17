@@ -12,6 +12,10 @@ import { makeParticles, ParticleN } from 'src/geometry/particles'
 export interface WorkerRequest {
   dimensions: number
   particles: number
+  max: {
+    force: number
+    speed: number
+  }
   behavior: BehaviorSpecs
   neighborhood: NeighborhoodSpecs
   boundings: BoundingEnabled
@@ -50,14 +54,6 @@ const state: {
   request: undefined,
   stopped: false,
 }
-
-/**
- * TODO hook these into request object
- * (currently they are on Behavior Specs)
- * (but they should actually be more global)
- */
-const MAX_FORCE = 1
-const MAX_SPEED = 1
 
 /**
  * Handle messages from main browser thread
@@ -135,22 +131,21 @@ const loop = () => {
 
   // Accumulate acceleration from boundings
   boundingNames.forEach(boundingName => {
-    if (!state.request) return
     const bounding = boundings[boundingName]
-    const boundingVisible = state.request.boundings[boundingName]
+    const boundingVisible = state.request!.boundings[boundingName]
     if (boundingVisible) bounding(state.particles)
   })
 
   // Apply force limits to accelerations
-  state.particles.forEach(p => p.acceleration.limit(MAX_FORCE))
+  state.particles.forEach(p => p.acceleration.limit(state.request!.max.force))
 
   // Apply accelerations to velocities
   state.particles.forEach(p => p.velocity.add(p.acceleration))
 
   // Apply speed limits to velocities
-  state.particles.forEach(p => p.velocity.limit(MAX_SPEED))
+  state.particles.forEach(p => p.velocity.limit(state.request!.max.speed))
 
-  // Appliy velocities to positions
+  // Apply velocities to positions
   state.particles.forEach(p => p.position.add(p.velocity))
 
   // [TODO] Apply wrapping

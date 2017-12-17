@@ -1,8 +1,8 @@
-import { Behavior, SharedConfig } from 'src/geometry/behaviors'
+import { Behavior } from 'src/geometry/behaviors'
 import { ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
-export interface Config extends SharedConfig {
+export interface Config {
   jitter: number
 }
 

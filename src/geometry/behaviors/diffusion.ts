@@ -1,9 +1,9 @@
-import { Behavior, SharedConfig } from 'src/geometry/behaviors'
+import { Behavior } from 'src/geometry/behaviors'
 import { findNearestNeighbor } from 'src/geometry/neighborhoods/nearest'
 import { ParticleN } from 'src/geometry/particles'
 import VectorN from 'src/geometry/VectorN'
 
-export interface Config extends SharedConfig {
+export interface Config {
   charge: number
 }
 
@@ -28,8 +28,8 @@ export const diffusion: Behavior<Config> = (
     // Find delta vector from that neighbor's postions to here
     const delta = VectorN.subtract(particle.position, other.position)
 
-    // TODO should probably limit force here?
-    // using config.charge value? or something?
+    // Limit force with "charge"
+    delta.multiply(config.charge)
 
     // Accelerate particle toward other
     particle.acceleration.add(delta)
