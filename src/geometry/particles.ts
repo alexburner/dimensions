@@ -36,9 +36,9 @@ export class ParticleN {
   }
 
   public backfill(other: ParticleN): ParticleN {
-    this.position.mutate((v, i) => other.position.value(i) || v)
-    this.velocity.mutate((v, i) => other.velocity.value(i) || v)
-    this.acceleration.mutate((v, i) => other.acceleration.value(i) || v)
+    this.position.mutate((v, i) => other.position.values[i] || v)
+    this.velocity.mutate((v, i) => other.velocity.values[i] || v)
+    this.acceleration.mutate((v, i) => other.acceleration.values[i] || v)
     return this
   }
 }
@@ -65,11 +65,8 @@ export class Particle3 {
 /**
  * Convert VectorN to THREE.Vector3
  */
-const toVector3 = (v: VectorN): THREE.Vector3 => {
-  console.log(v)
-  debugger
-  return new THREE.Vector3(v.value(0) || 0, v.value(1) || 0, v.value(2) || 0)
-}
+const toVector3 = (v: VectorN): THREE.Vector3 =>
+  new THREE.Vector3(v.values[0] || 0, v.values[1] || 0, v.values[2] || 0)
 
 /**
  * Make new particles, optionally using values from old particles
