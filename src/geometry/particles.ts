@@ -36,9 +36,9 @@ export class ParticleN {
   }
 
   public backfill(other: ParticleN): ParticleN {
-    this.position.mutate((v, i) => other.position.values[i] || v)
-    this.velocity.mutate((v, i) => other.velocity.values[i] || v)
-    this.acceleration.mutate((v, i) => other.acceleration.values[i] || v)
+    this.position.mutate((v, i) => other.position.value(i) || v)
+    this.velocity.mutate((v, i) => other.velocity.value(i) || v)
+    this.acceleration.mutate((v, i) => other.acceleration.value(i) || v)
     return this
   }
 }

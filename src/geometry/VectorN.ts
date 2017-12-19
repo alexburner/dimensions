@@ -14,7 +14,7 @@ const random = (k: number = 1) => {
 /**
  * N-dimensional vector math
  *
- * VectorN supports n dimensions by using lists to hold scalars
+ * VectorN supports n dimensions by using lists to hold values
  *  Vector0 { }          ->  VectorN [ ]
  *  Vector1 { x }        ->  VectorN [ x ]
  *  Vector2 { x, y }     ->  VectorN [ x, y ]
@@ -25,10 +25,7 @@ const random = (k: number = 1) => {
  *  const vectorA = new Vector(3)    // vectorA.values -> [0, 0, 0]
  *  const vectorB = new Vector(3, 5) // vectorB.values -> [5, 5, 5]
  *
- * VectorN instance values can be manipulated directly:
- *  vectorA.values = vectorA.values.map(() => Math.random() * 10)
- *
- * VectorN arithmetic methods support both vectors and scalars:
+ * VectorN arithmetic methods support both vectors and numbers:
  *  const vectorC = VectorN.add(vectorA, vectorB)
  *  const vectorC = VectorN.add(vectorA, 10)
  *
@@ -38,7 +35,13 @@ const random = (k: number = 1) => {
  *
  * VectorN instance methods are chainable (where reasonable):
  *  vectorA.add(10).multiply(11).limit(20) // yes
- *  vectorA.add(10).getLength().limit(20) // no
+ *  vectorA.add(10).getMagnitude().limit(20) // no
+ *
+ * VectorN instance magnitude measurements are memoized, resets when needed:
+ *  vectorA.multiply(10) // magnitude cache reset
+ *  vectorA.getMagnitude() // new magnitude calculated
+ *  vectorA.getMagnitude() // magnitude cache hit
+ *
  *
  * Danger! VectorN assumes all vectors share the same number of dimensions:
  *  const vectorA = new Vector(2) // 2-dimensional
@@ -109,7 +112,7 @@ export default class VectorN {
    */
   public static getDistanceSq(a: VectorN, b: VectorN): number {
     const delta = VectorN.subtract(a, b)
-    return delta.getLengthSq()
+    return delta.getMagnitudeSq()
   }
 
   /**
@@ -131,7 +134,17 @@ export default class VectorN {
   /**
    * The coords of a vector (index maps to spatial dimensions [1, 2, 3, etc])
    */
-  public values: Float32Array
+  private values: Float32Array
+
+  /**
+   * Cache for magnitude memoization
+   */
+  private magnitude: number | undefined
+
+  /**
+   * Cache for squared magnitude memoization
+   */
+  private magnitudeSq: number | undefined
 
   /**
    * Construct a new VectorN instance, with dimension count and optional fill
@@ -149,6 +162,13 @@ export default class VectorN {
   }
 
   /**
+   * Get value at a given index
+   */
+  public value(i: number): number {
+    return this.values[i]
+  }
+
+  /**
    * Fill vector with random numbers in (-k, k) range
    */
   public randomize(k: number = 1): VectorN {
@@ -162,39 +182,48 @@ export default class VectorN {
     callback: (value: number, index: number, values: Float32Array) => number,
   ): VectorN {
     this.values = this.values.map(callback)
+    this.cacheMagnitude(undefined)
     return this
   }
 
   /**
    * Find vector magnitude
    */
-  public getLength(): number {
-    return Math.sqrt(this.getLengthSq())
+  public getMagnitude(): number {
+    if (this.magnitude === undefined) {
+      this.magnitude = Math.sqrt(this.getMagnitudeSq())
+    }
+    return this.magnitude
   }
 
   /**
    * Find squared vector magnitude
    */
-  public getLengthSq(): number {
-    return this.values.reduce((memo, n) => memo + n * n, 0)
+  public getMagnitudeSq(): number {
+    if (this.magnitudeSq === undefined) {
+      this.magnitudeSq = this.values.reduce((memo, n) => memo + n * n, 0)
+    }
+    return this.magnitudeSq
   }
 
   /**
    * Set vector magnitude
    */
-  public setLength(length: number): VectorN {
-    this.multiply(length / this.getLength())
+  public setMagnitude(magnitude: number): VectorN {
+    this.multiply(magnitude / this.getMagnitude())
+    this.cacheMagnitude(magnitude)
     return this
   }
 
   /**
    * Limit vector magnitude to within a given value
    */
-  public limit(length: number): VectorN {
-    const limitLengthSq = length * length
-    const currLengthSq = this.getLengthSq()
-    if (currLengthSq > limitLengthSq) {
-      this.multiply(limitLengthSq / currLengthSq)
+  public limit(magnitude: number): VectorN {
+    const target = magnitude * magnitude
+    const current = this.getMagnitudeSq()
+    if (current > target) {
+      this.multiply(target / current)
+      this.cacheMagnitude(target)
     }
     return this
   }
@@ -204,6 +233,7 @@ export default class VectorN {
    */
   public add(other: VectorN | number): VectorN {
     this.values = VectorN.add(this, other).values
+    this.cacheMagnitude(undefined)
     return this
   }
 
@@ -212,6 +242,7 @@ export default class VectorN {
    */
   public subtract(other: VectorN | number): VectorN {
     this.values = VectorN.subtract(this, other).values
+    this.cacheMagnitude(undefined)
     return this
   }
 
@@ -220,6 +251,7 @@ export default class VectorN {
    */
   public multiply(other: VectorN | number): VectorN {
     this.values = VectorN.multiply(this, other).values
+    this.cacheMagnitude(undefined)
     return this
   }
 
@@ -228,6 +260,15 @@ export default class VectorN {
    */
   public divide(other: VectorN | number): VectorN {
     this.values = VectorN.divide(this, other).values
+    this.cacheMagnitude(undefined)
     return this
+  }
+
+  /**
+   * Set/unset magnitude memoization caches
+   */
+  private cacheMagnitude(value: number | undefined) {
+    this.magnitude = value
+    this.magnitudeSq = value && value * value
   }
 }
