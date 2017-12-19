@@ -44,6 +44,25 @@ export class ParticleN {
 }
 
 /**
+ * Particle for exchanging between worker & render threads
+ */
+export class ParticleMsg {
+  public dimensions: number
+  public position: Float32Array
+  public velocity: Float32Array
+  public acceleration: Float32Array
+  public neighbors: Neighbor[]
+
+  constructor(particleN: ParticleN) {
+    this.dimensions = particleN.dimensions
+    this.position = particleN.position.toArray()
+    this.velocity = particleN.velocity.toArray()
+    this.acceleration = particleN.acceleration.toArray()
+    this.neighbors = particleN.neighbors
+  }
+}
+
+/**
  * Particle using THREE.Vector3
  */
 export class Particle3 {
@@ -53,20 +72,24 @@ export class Particle3 {
   public acceleration: THREE.Vector3
   public neighbors: Neighbor[]
 
-  constructor(particleN: ParticleN) {
-    this.dimensions = particleN.dimensions
-    this.position = toVector3(particleN.position)
-    this.velocity = toVector3(particleN.velocity)
-    this.acceleration = toVector3(particleN.acceleration)
-    this.neighbors = particleN.neighbors
+  constructor(particleMsg: ParticleMsg) {
+    this.dimensions = particleMsg.dimensions
+    this.position = toVector3(particleMsg.position)
+    this.velocity = toVector3(particleMsg.velocity)
+    this.acceleration = toVector3(particleMsg.acceleration)
+    this.neighbors = particleMsg.neighbors
   }
 }
 
 /**
  * Convert VectorN to THREE.Vector3
  */
-const toVector3 = (v: VectorN): THREE.Vector3 =>
-  new THREE.Vector3(v.values[0] || 0, v.values[1] || 0, v.values[2] || 0)
+const toVector3 = (v: Float32Array): THREE.Vector3 => {
+  const x = v[0] || 0
+  const y = v[1] || 0
+  const z = v[2] || 0
+  return new THREE.Vector3(x, y, z)
+}
 
 /**
  * Make new particles, optionally using values from old particles

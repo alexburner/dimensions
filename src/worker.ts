@@ -7,7 +7,7 @@ import {
   boundings,
 } from 'src/geometry/boundings'
 import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
-import { makeParticles, ParticleN } from 'src/geometry/particles'
+import { makeParticles, ParticleMsg, ParticleN } from 'src/geometry/particles'
 
 export interface WorkerRequest {
   dimensions: number
@@ -24,7 +24,7 @@ export interface WorkerRequest {
 
 export interface WorkerResponse {
   dimensions: number
-  particles: ParticleN[]
+  particles: ParticleMsg[]
   layers: LayerEnabled
 }
 
@@ -92,7 +92,7 @@ const sendUpdate = () => {
   }>({
     type: 'update',
     response: {
-      particles: state.particles,
+      particles: state.particles.map(p => new ParticleMsg(p)),
       dimensions: state.request.dimensions,
       layers: state.request.layers,
     },

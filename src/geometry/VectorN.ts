@@ -142,6 +142,13 @@ export default class VectorN {
   }
 
   /**
+   * Get values
+   */
+  public toArray(): Float32Array {
+    return new Float32Array(this.values)
+  }
+
+  /**
    * Fill vector with random numbers in (-k, k) range
    */
   public randomize(k: number = 1): VectorN {
