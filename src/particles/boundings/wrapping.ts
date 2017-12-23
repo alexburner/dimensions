@@ -1,12 +1,12 @@
 import { FIELD_SIZE } from 'src/constants'
 import { Bounding } from 'src/particles/boundings'
-import ParticleN from 'src/particles/ParticleN'
+import System from 'src/particles/System'
 
 /**
  * XXX: wraps line/square/cube for simplicity
  * (instead of line/circle/sphere)
  *
- * TODO: radiual wrapping
+ * TODO: radial wrapping
  */
 
 const LIMIT = FIELD_SIZE / 2
@@ -17,6 +17,6 @@ const wrap = (n: number): number => {
   return n
 }
 
-export const wrapping: Bounding = (particles: ParticleN[]) => {
-  particles.forEach(particle => particle.position.mutate(wrap))
+export const wrapping: Bounding = (system: System) => {
+  system.particles.forEach(p => p.position.mutate(wrap))
 }

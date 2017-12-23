@@ -1,6 +1,12 @@
 import * as THREE from 'three'
 
-import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
+import {
+  clearObjList,
+  Layer,
+  LayerArgs,
+  resizeObjList,
+} from 'src/drawing/layers'
+import { Neighborhood } from 'src/particles/neighborhoods'
 import Particle3 from 'src/particles/Particle3'
 
 interface ObjectSpec {
@@ -17,9 +23,9 @@ export default class Circles implements Layer {
     this.objects = []
   }
 
-  public update(particles: Particle3[]) {
+  public update({ particles, neighborhood }: LayerArgs) {
     // 1. Generate fresh list of specs
-    const specs = makeObjectSpecs(particles)
+    const specs = makeObjectSpecs(particles, neighborhood)
 
     // 2. Resize object list for new spec count
     this.objects = resizeObjList({
@@ -40,10 +46,13 @@ export default class Circles implements Layer {
 
 const DIVISIONS = 64
 
-const makeObjectSpecs = (particles: Particle3[]): ObjectSpec[] =>
+const makeObjectSpecs = (
+  particles: Particle3[],
+  neighborhood: Neighborhood,
+): ObjectSpec[] =>
   particles.reduce(
-    (memo, particle) => {
-      particle.neighbors.forEach(neighbor => {
+    (memo, particle, i) => {
+      neighborhood[i].forEach(neighbor => {
         memo.push({
           position: particle.position,
           radius: neighbor.distance,

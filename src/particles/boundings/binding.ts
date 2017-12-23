@@ -1,10 +1,10 @@
 import { FIELD_SIZE } from 'src/constants'
 import { Bounding } from 'src/particles/boundings'
-import ParticleN from 'src/particles/ParticleN'
+import System from 'src/particles/System'
 
 const RADIUS = FIELD_SIZE / 2
 
-export const binding: Bounding = (particles: ParticleN[]) => {
+export const binding: Bounding = (system: System) => {
   // Scale all particles to be exact radius from center
-  particles.forEach(particle => particle.position.setMagnitude(RADIUS))
+  system.particles.forEach(p => p.position.setMagnitude(RADIUS))
 }

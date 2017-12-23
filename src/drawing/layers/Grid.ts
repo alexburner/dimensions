@@ -1,8 +1,12 @@
 import * as THREE from 'three'
 
 import { FIELD_SIZE } from 'src/constants'
-import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
-import Particle3 from 'src/particles/Particle3'
+import {
+  clearObjList,
+  Layer,
+  LayerArgs,
+  resizeObjList,
+} from 'src/drawing/layers'
 
 interface ObjectSpec {
   source: THREE.Vector3
@@ -18,7 +22,7 @@ export default class Grid implements Layer {
     this.objects = []
   }
 
-  public update(particles: Particle3[], dimensions: number) {
+  public update({ dimensions }: LayerArgs) {
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(dimensions)
 

@@ -20,7 +20,7 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   diffusion: {
     name: 'diffusion',
     config: {
-      charge: 1,
+      charge: 1.2,
     },
   },
   wandering: {
@@ -36,15 +36,19 @@ const NEIGHBORHOOD_PRESETS: {
 } = {
   all: {
     name: 'all',
-    config: {},
   },
   locals: {
     name: 'locals',
-    config: {},
   },
   nearest: {
     name: 'nearest',
-    config: {},
+  },
+  proximity: {
+    name: 'nearest',
+    config: {
+      min: 1,
+      max: 10,
+    },
   },
 }
 

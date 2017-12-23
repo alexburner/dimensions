@@ -1,10 +1,13 @@
 import { LayerName } from 'src/drawing/layers'
 import { behaviors, BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName, boundingNames, boundings } from 'src/particles/boundings'
-import { neighborhoods, NeighborhoodSpecs } from 'src/particles/neighborhoods'
+import {
+  getNeighborhood,
+  Neighborhood,
+  NeighborhoodSpecs,
+} from 'src/particles/neighborhoods'
 import ParticleMsg from 'src/particles/ParticleMsg'
-import ParticleN from 'src/particles/ParticleN'
-import { makeParticles } from 'src/particles/System'
+import System from 'src/particles/System'
 
 export interface WorkerRequest {
   dimensions: number
@@ -22,6 +25,7 @@ export interface WorkerRequest {
 export interface WorkerResponse {
   dimensions: number
   particles: ParticleMsg[]
+  neighborhood: Neighborhood
   layers: { [name in LayerName]: boolean }
 }
 
@@ -43,11 +47,11 @@ const context = (self as any) as DedicatedWorkerGlobalScope
  * (think of this as a class instantiated on `new WebpackWorkerLoader()`)
  */
 const state: {
-  particles: ParticleN[]
   request: WorkerRequest | undefined
+  system: System
 } = {
-  particles: [],
   request: undefined,
+  system: new System(),
 }
 
 /**
@@ -58,10 +62,9 @@ context.addEventListener('message', e => {
   switch (e.data.type) {
     case 'request': {
       state.request = e.data.request as WorkerRequest
-      state.particles = makeParticles(
-        state.request.dimensions,
+      state.system.setPopulation(
         state.request.particles,
-        state.particles,
+        state.request.dimensions,
       )
       tick()
       break
@@ -88,9 +91,15 @@ const sendUpdate = () => {
   }>({
     type: 'update',
     response: {
-      particles: state.particles.map(p => new ParticleMsg(p)),
+      // pass-through from request
       dimensions: state.request.dimensions,
       layers: state.request.layers,
+      // derived from particle system
+      particles: state.system.particles.map(p => new ParticleMsg(p)),
+      neighborhood: getNeighborhood(
+        state.system.particles,
+        state.request.neighborhood,
+      ),
     },
   })
 }
@@ -110,21 +119,18 @@ const sendUpdate = () => {
  *     a. find centroid
  *     b. find all of each particle's neighbors { index, distance }
  *     c. sort all of each particle's neighbors by distance (asc)
- * 6. prepare for transport
- *     a. filter neighbors by neighborhood (all, nearest, local, etc)
- *     b. convert ParticleN objects to ParticleMsg objects
  */
 const tick = () => {
   if (!state.request) return
 
   // Reset accelerations
-  state.particles.forEach(p => p.acceleration.multiply(0))
+  state.system.particles.forEach(p => p.acceleration.multiply(0))
 
   {
     // Apply behavior
     const spec = state.request.behavior
     const behavior = behaviors[spec.name]
-    behavior(state.particles, spec.config)
+    behavior(state.system, spec.config)
   }
 
   // Apply boundings
@@ -132,11 +138,11 @@ const tick = () => {
     if (!state.request) return
     const bounding = boundings[boundingName]
     const boundingVisible = state.request.boundings[boundingName]
-    if (boundingVisible) bounding(state.particles)
+    if (boundingVisible) bounding(state.system)
   })
 
   // Update positions
-  state.particles.forEach(p => {
+  state.system.particles.forEach(p => {
     if (!state.request) return
     p.velocity.add(p.acceleration)
     p.velocity.limit(state.request.max.speed)
@@ -145,57 +151,9 @@ const tick = () => {
 
   // [TODO] Apply wrapping
 
-  {
-    // Find neighbors
-    const spec = state.request.neighborhood
-    const neighborhood = neighborhoods[spec.name]
-    neighborhood(state.particles, spec.config)
-  }
+  // Update system
+  state.system.recalculate()
 
   // Update host thread
   sendUpdate()
 }
-
-/**
- * particles/
- *   behaviors/
- *   boundings/
- *   neighborhoods/
- *   ParticleN
- *   ParticleMsg
- *   Particle3
- *   System
- *
- * VectorN
- *
- *
- *
- *  System
- *    - centroid // average of all particle positions
- *    - furthest // longest distance between any two particles
- *    - updateNeighbors() // mutates each particle with neighbor distances
- *    - getNeighborhood(spec) // map of particle index -> filtered neighbors
- *
- *  Remove "neighbors" from ParticleMsg
- *  Pass separate "Neighborhood" instead
- *  { [particleIndex: number]: Neighbor[] }
- *
- *
- *
- *  algos (behavior, bounding)
- *    - name
- *    - config
- *    - function
- *
- *  options
- *    - behavior (+config)
- *    - boundings
- *    - neighborhoods (+config, for proximity)
- *    - layers (+config, for colors)
- *
- *
- *  also, configuragble field size?
- *
- *
- *
- */

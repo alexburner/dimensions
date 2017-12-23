@@ -1,9 +1,16 @@
 import THREE from 'three'
 
+import { Neighborhood } from 'src/particles/neighborhoods'
 import Particle3 from 'src/particles/Particle3'
 
+export interface LayerArgs {
+  dimensions: number
+  particles: Particle3[]
+  neighborhood: Neighborhood
+}
+
 export interface Layer {
-  update: (particles: Particle3[], dimensions: number) => void
+  update: (args: LayerArgs) => void
   clear: () => void
 }
 

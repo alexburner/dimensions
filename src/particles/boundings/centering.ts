@@ -1,15 +1,8 @@
 import { Bounding } from 'src/particles/boundings'
-import ParticleN from 'src/particles/ParticleN'
-import VectorN from 'src/particles/VectorN'
+import System from 'src/particles/System'
 
-export const centering: Bounding = (particles: ParticleN[]) => {
-  if (particles.length === 0) return []
-
-  // Find geometric center of particles (by averaging their positions)
-  const positions = particles.map(particle => particle.position)
-  const centroid = VectorN.getAverage(positions)
-
+export const centering: Bounding = (system: System) => {
   // Subtract centroid vector from each particle's position
   // (effectively shifting the centroid to origin zero)
-  particles.forEach(particle => particle.position.subtract(centroid))
+  system.particles.forEach(p => p.position.subtract(system.centroid))
 }

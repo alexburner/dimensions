@@ -87,11 +87,14 @@ export default class Renderer {
 
   public update(response: WorkerResponse) {
     const dimensions = response.dimensions
+    const neighborhood = response.neighborhood
     const particles = response.particles.map(p => new Particle3(p))
     this.layerNames.forEach(layerName => {
       const layer = this.layers[layerName]
       const layerVisible = response.layers[layerName]
-      layerVisible ? layer.update(particles, dimensions) : layer.clear()
+      layerVisible
+        ? layer.update({ particles, dimensions, neighborhood })
+        : layer.clear()
     })
   }
 

@@ -6,6 +6,7 @@
     "tslint-config-prettier"
   ],
   "rules": {
+    "array-type": [true, "array"],
     "curly": false,
     "eofline": true,
     "interface-name": false,

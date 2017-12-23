@@ -6,9 +6,9 @@ import {
   Spec as WanderingSpec,
   wandering,
 } from 'src/particles/behaviors/wandering'
-import ParticleN from 'src/particles/ParticleN'
+import System from 'src/particles/System'
 
-export type Behavior<Config> = (particles: ParticleN[], config: Config) => void
+export type Behavior<Config> = (system: System, config: Config) => void
 
 export type BehaviorSpecs = WanderingSpec | DiffusionSpec
 

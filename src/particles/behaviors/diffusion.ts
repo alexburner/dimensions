@@ -1,7 +1,5 @@
 import { Behavior } from 'src/particles/behaviors'
-import { findNearestNeighbor } from 'src/particles/neighborhoods/nearest'
-import ParticleN from 'src/particles/ParticleN'
-import VectorN from 'src/particles/VectorN'
+import System from 'src/particles/System'
 
 export interface Config {
   charge: number
@@ -12,27 +10,17 @@ export interface Spec {
   config: Config
 }
 
-export const diffusion: Behavior<Config> = (
-  particles: ParticleN[],
-  config: Config,
-) => {
+export const diffusion: Behavior<Config> = (system: System, config: Config) => {
   // Only works if more than 1 particle
-  if (particles.length < 2) return particles
+  if (system.particles.length < 2) return
 
   // Compare each particle to every other particle
-  particles.forEach(particle => {
-    // Find nearest neighbor
-    const neighbor = findNearestNeighbor(particle, particles)
-    const other = particles[neighbor.index]
-    const distance = neighbor.distance
-
-    // Find delta vector from that neighbor's postions to here
-    const delta = VectorN.subtract(particle.position, other.position)
-
+  system.particles.forEach(particle => {
+    // Grab nearest neighbor delta vector & distance
+    const { delta, distance } = particle.neighbors[0]
     // Set force magnitude with inverse square law
     delta.setMagnitude(config.charge * config.charge / (distance * distance))
-
-    // Accelerate particle toward other
+    // Accelerate away from neighbor
     particle.acceleration.add(delta)
   })
 }
