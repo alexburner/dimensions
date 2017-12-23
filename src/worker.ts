@@ -138,7 +138,6 @@ const tick = () => {
   // Update positions
   state.particles.forEach(p => {
     if (!state.request) return
-    p.acceleration.limit(state.request.max.force) // TODO move to individual algos
     p.velocity.add(p.acceleration)
     p.velocity.limit(state.request.max.speed)
     p.position.add(p.velocity)

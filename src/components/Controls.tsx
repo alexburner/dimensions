@@ -20,13 +20,13 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   diffusion: {
     name: 'diffusion',
     config: {
-      charge: 0.01,
+      charge: 1,
     },
   },
   wandering: {
     name: 'wandering',
     config: {
-      jitter: 0.01,
+      jitter: 1 / 100,
     },
   },
 }
@@ -57,8 +57,8 @@ export default class Controls extends React.Component<Props, State> {
         dimensions: 3,
         particles: 9,
         max: {
-          force: 0.1,
-          speed: 0.1,
+          force: 1,
+          speed: 1,
         },
         behavior: BEHAVIOR_PRESETS.wandering,
         neighborhood: NEIGHBORHOOD_PRESETS.nearest,

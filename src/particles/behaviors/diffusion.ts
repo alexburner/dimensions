@@ -24,12 +24,13 @@ export const diffusion: Behavior<Config> = (
     // Find nearest neighbor
     const neighbor = findNearestNeighbor(particle, particles)
     const other = particles[neighbor.index]
+    const distance = neighbor.distance
 
     // Find delta vector from that neighbor's postions to here
     const delta = VectorN.subtract(particle.position, other.position)
 
-    // Limit force with "charge"
-    delta.multiply(config.charge)
+    // Set force magnitude with inverse square law
+    delta.setMagnitude(config.charge * config.charge / (distance * distance))
 
     // Accelerate particle toward other
     particle.acceleration.add(delta)
