@@ -37,7 +37,7 @@ export default class Points implements Layer {
   }
 }
 
-const SIZE = 12
+const SIZE = 8
 
 const texture = ((): THREE.Texture => {
   const size = 256
