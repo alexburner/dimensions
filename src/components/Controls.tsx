@@ -20,7 +20,7 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   diffusion: {
     name: 'diffusion',
     config: {
-      charge: 1.2,
+      charge: 50,
     },
   },
   wandering: {
