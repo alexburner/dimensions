@@ -9,8 +9,6 @@ export interface Layer {
 
 export type LayerName = 'grid' | 'points' | 'lines' | 'circles' | 'spheres'
 
-export type LayerEnabled = { [name in LayerName]: boolean }
-
 /**
  * Resize a generic list, creating or destroying elements as needed
  */

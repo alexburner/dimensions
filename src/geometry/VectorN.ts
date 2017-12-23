@@ -132,7 +132,8 @@ export default class VectorN {
   }
 
   /**
-   * The coords of a vector (index maps to spatial dimensions [1, 2, 3, etc])
+   * The coords of a vector
+   * (index maps to spatial dimensions [1, 2, 3, etc])
    */
   private values: Float32Array
 
@@ -147,7 +148,8 @@ export default class VectorN {
   private magnitudeSq: number | undefined
 
   /**
-   * Construct a new VectorN instance, with dimension count and optional fill
+   * Construct a new VectorN instance
+   * with dimension count and optional fill
    */
   constructor(dimensions: number, fill?: number) {
     this.values = new Float32Array(dimensions)
@@ -176,12 +178,13 @@ export default class VectorN {
   }
 
   /**
-   * Map over vector's values, replacing them with the result
+   * Map over a vector's values
+   * and replace them with the result
    */
   public mutate(
-    callback: (value: number, index: number, values: Float32Array) => number,
+    iteratee: (value: number, index: number, values: Float32Array) => number,
   ): VectorN {
-    this.values = this.values.map(callback)
+    this.values = this.values.map(iteratee)
     this.cacheMagnitude(undefined)
     return this
   }
@@ -265,7 +268,8 @@ export default class VectorN {
   }
 
   /**
-   * Set/unset magnitude memoization caches
+   * Set magnitude memoization caches
+   * (pass undefined to reset)
    */
   private cacheMagnitude(value: number | undefined) {
     this.magnitude = value

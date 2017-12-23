@@ -1,13 +1,14 @@
 import * as THREE from 'three'
 
+import { FIELD_SIZE } from 'src/constants'
 import VectorN from 'src/geometry/VectorN'
 
 /**
  * Annotation for neighbors within particles array
  */
 export interface Neighbor {
-  index: number
   distance: number
+  index: number
 }
 
 /**
@@ -53,12 +54,18 @@ export class ParticleMsg {
   public acceleration: Float32Array
   public neighbors: Neighbor[]
 
-  constructor(particleN: ParticleN) {
-    this.dimensions = particleN.dimensions
-    this.position = particleN.position.toArray()
-    this.velocity = particleN.velocity.toArray()
-    this.acceleration = particleN.acceleration.toArray()
-    this.neighbors = particleN.neighbors
+  constructor({
+    dimensions,
+    position,
+    velocity,
+    acceleration,
+    neighbors,
+  }: ParticleN) {
+    this.dimensions = dimensions
+    this.position = position.toArray()
+    this.velocity = velocity.toArray()
+    this.acceleration = acceleration.toArray()
+    this.neighbors = neighbors
   }
 }
 
@@ -72,12 +79,18 @@ export class Particle3 {
   public acceleration: THREE.Vector3
   public neighbors: Neighbor[]
 
-  constructor(particleMsg: ParticleMsg) {
-    this.dimensions = particleMsg.dimensions
-    this.position = toVector3(particleMsg.position)
-    this.velocity = toVector3(particleMsg.velocity)
-    this.acceleration = toVector3(particleMsg.acceleration)
-    this.neighbors = particleMsg.neighbors
+  constructor({
+    dimensions,
+    position,
+    velocity,
+    acceleration,
+    neighbors,
+  }: ParticleMsg) {
+    this.dimensions = dimensions
+    this.position = toVector3(position)
+    this.velocity = toVector3(velocity)
+    this.acceleration = toVector3(acceleration)
+    this.neighbors = neighbors
   }
 }
 
@@ -95,13 +108,12 @@ const toVector3 = (v: Float32Array): THREE.Vector3 => {
  * Make new particles, optionally using values from old particles
  */
 export const makeParticles = (
-  fieldSize: number,
   dimensions: number,
   particles: number,
   prev: ParticleN[] = [],
 ): ParticleN[] =>
   new Array(particles).fill(undefined).map((_, i): ParticleN => {
-    const particle = new ParticleN(dimensions).randomize(fieldSize / 2)
+    const particle = new ParticleN(dimensions).randomize(FIELD_SIZE / 2)
     if (prev[i]) particle.backfill(prev[i])
     return particle
   })

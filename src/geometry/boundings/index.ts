@@ -5,8 +5,8 @@ import { wrapping } from 'src/geometry/boundings/wrapping'
 import { ParticleN } from 'src/geometry/particles'
 
 export type Bounding = (particles: ParticleN[]) => void
+
 export type BoundingName = 'centering' | 'scaling' | 'binding' | 'wrapping'
-export type BoundingEnabled = { [name in BoundingName]: boolean }
 
 export const boundings: { [name in BoundingName]: Bounding } = {
   centering,

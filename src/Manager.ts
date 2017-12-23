@@ -24,7 +24,7 @@ export default class Manager {
       switch (e.data.type) {
         case 'update': {
           this.renderer.update(e.data.response)
-          // Throttle worker tick to browser frame rate
+          // Sync worker tick with browser frame rate
           this.rafId = window.requestAnimationFrame(() => {
             if (!this.isRunning || this.isDestroyed) return
             this.worker.postMessage({ type: 'request.tick' })
