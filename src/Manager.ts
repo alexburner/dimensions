@@ -25,10 +25,11 @@ export default class Manager {
         case 'update': {
           this.renderer.update(e.data.response)
           // Sync worker tick with browser frame rate
-          this.rafId = window.requestAnimationFrame(() => {
+          const rafId = (this.rafId = window.requestAnimationFrame(() => {
+            if (rafId !== this.rafId) return // out of date
             if (!this.isRunning || this.isDestroyed) return
             this.worker.postMessage({ type: 'request.tick' })
-          })
+          }))
           break
         }
       }
