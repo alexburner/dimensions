@@ -7,7 +7,7 @@ import Grid from 'src/drawing/layers/Grid'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
-import { Particle3 } from 'src/geometry/particles'
+import Particle3 from 'src/particles/Particle3'
 import { WorkerResponse } from 'src/worker'
 
 const NEAR = 1

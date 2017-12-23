@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import { clearObjList, Layer, resizeObjList } from 'src/drawing/layers'
-import { Particle3 } from 'src/geometry/particles'
+import Particle3 from 'src/particles/Particle3'
 
 interface ObjectSpec {
   source: THREE.Vector3

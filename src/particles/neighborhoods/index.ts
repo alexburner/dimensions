@@ -1,10 +1,10 @@
-import { all, Spec as AllSpec } from 'src/geometry/neighborhoods/all'
-import { locals, Spec as LocalsSpec } from 'src/geometry/neighborhoods/locals'
+import { all, Spec as AllSpec } from 'src/particles/neighborhoods/all'
+import { locals, Spec as LocalsSpec } from 'src/particles/neighborhoods/locals'
 import {
   nearest,
   Spec as NearestSpec,
-} from 'src/geometry/neighborhoods/nearest'
-import { ParticleN } from 'src/geometry/particles'
+} from 'src/particles/neighborhoods/nearest'
+import ParticleN from 'src/particles/ParticleN'
 
 export type Neighborhood<Config> = (
   particles: ParticleN[],

@@ -1,12 +1,12 @@
 import {
   diffusion,
   Spec as DiffusionSpec,
-} from 'src/geometry/behaviors/diffusion'
+} from 'src/particles/behaviors/diffusion'
 import {
   Spec as WanderingSpec,
   wandering,
-} from 'src/geometry/behaviors/wandering'
-import { ParticleN } from 'src/geometry/particles'
+} from 'src/particles/behaviors/wandering'
+import ParticleN from 'src/particles/ParticleN'
 
 export type Behavior<Config> = (particles: ParticleN[], config: Config) => void
 

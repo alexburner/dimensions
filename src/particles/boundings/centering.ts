@@ -1,6 +1,6 @@
-import { Bounding } from 'src/geometry/boundings'
-import { ParticleN } from 'src/geometry/particles'
-import VectorN from 'src/geometry/VectorN'
+import { Bounding } from 'src/particles/boundings'
+import ParticleN from 'src/particles/ParticleN'
+import VectorN from 'src/particles/VectorN'
 
 export const centering: Bounding = (particles: ParticleN[]) => {
   if (particles.length === 0) return []

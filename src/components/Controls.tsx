@@ -1,9 +1,9 @@
 import * as React from 'react'
 
 import { LayerName } from 'src/drawing/layers'
-import { BehaviorSpecs } from 'src/geometry/behaviors'
-import { BoundingName } from 'src/geometry/boundings'
-import { NeighborhoodSpecs } from 'src/geometry/neighborhoods'
+import { BehaviorSpecs } from 'src/particles/behaviors'
+import { BoundingName } from 'src/particles/boundings'
+import { NeighborhoodSpecs } from 'src/particles/neighborhoods'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {

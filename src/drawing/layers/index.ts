@@ -1,6 +1,6 @@
 import THREE from 'three'
 
-import { Particle3 } from 'src/geometry/particles'
+import Particle3 from 'src/particles/Particle3'
 
 export interface Layer {
   update: (particles: Particle3[], dimensions: number) => void

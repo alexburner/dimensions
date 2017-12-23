@@ -1,6 +1,7 @@
-import { Neighborhood } from 'src/geometry/neighborhoods'
-import { Neighbor, ParticleN } from 'src/geometry/particles'
-import VectorN from 'src/geometry/VectorN'
+import { Neighborhood } from 'src/particles/neighborhoods'
+import ParticleN from 'src/particles/ParticleN'
+import { Neighbor } from 'src/particles/System'
+import VectorN from 'src/particles/VectorN'
 
 interface Config {}
 

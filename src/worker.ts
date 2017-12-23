@@ -1,8 +1,10 @@
 import { LayerName } from 'src/drawing/layers'
-import { behaviors, BehaviorSpecs } from 'src/geometry/behaviors'
-import { BoundingName, boundingNames, boundings } from 'src/geometry/boundings'
-import { neighborhoods, NeighborhoodSpecs } from 'src/geometry/neighborhoods'
-import { makeParticles, ParticleMsg, ParticleN } from 'src/geometry/particles'
+import { behaviors, BehaviorSpecs } from 'src/particles/behaviors'
+import { BoundingName, boundingNames, boundings } from 'src/particles/boundings'
+import { neighborhoods, NeighborhoodSpecs } from 'src/particles/neighborhoods'
+import ParticleMsg from 'src/particles/ParticleMsg'
+import ParticleN from 'src/particles/ParticleN'
+import { makeParticles } from 'src/particles/System'
 
 export interface WorkerRequest {
   dimensions: number

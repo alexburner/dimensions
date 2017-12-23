@@ -1,6 +1,6 @@
-import { Behavior } from 'src/geometry/behaviors'
-import { ParticleN } from 'src/geometry/particles'
-import VectorN from 'src/geometry/VectorN'
+import { Behavior } from 'src/particles/behaviors'
+import ParticleN from 'src/particles/ParticleN'
+import VectorN from 'src/particles/VectorN'
 
 export interface Config {
   jitter: number

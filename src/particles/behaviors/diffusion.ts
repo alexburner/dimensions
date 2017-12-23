@@ -1,7 +1,7 @@
-import { Behavior } from 'src/geometry/behaviors'
-import { findNearestNeighbor } from 'src/geometry/neighborhoods/nearest'
-import { ParticleN } from 'src/geometry/particles'
-import VectorN from 'src/geometry/VectorN'
+import { Behavior } from 'src/particles/behaviors'
+import { findNearestNeighbor } from 'src/particles/neighborhoods/nearest'
+import ParticleN from 'src/particles/ParticleN'
+import VectorN from 'src/particles/VectorN'
 
 export interface Config {
   charge: number

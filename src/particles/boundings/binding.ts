@@ -1,6 +1,6 @@
 import { FIELD_SIZE } from 'src/constants'
-import { Bounding } from 'src/geometry/boundings'
-import { ParticleN } from 'src/geometry/particles'
+import { Bounding } from 'src/particles/boundings'
+import ParticleN from 'src/particles/ParticleN'
 
 const RADIUS = FIELD_SIZE / 2
 

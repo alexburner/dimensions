@@ -1,8 +1,8 @@
-import { binding } from 'src/geometry/boundings/binding'
-import { centering } from 'src/geometry/boundings/centering'
-import { scaling } from 'src/geometry/boundings/scaling'
-import { wrapping } from 'src/geometry/boundings/wrapping'
-import { ParticleN } from 'src/geometry/particles'
+import { binding } from 'src/particles/boundings/binding'
+import { centering } from 'src/particles/boundings/centering'
+import { scaling } from 'src/particles/boundings/scaling'
+import { wrapping } from 'src/particles/boundings/wrapping'
+import ParticleN from 'src/particles/ParticleN'
 
 export type Bounding = (particles: ParticleN[]) => void
 
