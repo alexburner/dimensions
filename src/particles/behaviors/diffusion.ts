@@ -20,8 +20,8 @@ export const diffusion: Behavior<Config> = (system: System, config: Config) => {
     // Grab nearest neighbor delta vector & distance
     const { delta, distance } = particle.neighbors[0]
     // Set force magnitude with inverse square law
-    // + fudge in some count reduction for larger systems? I dunno
-    delta.setMagnitude(config.charge / (distance * distance) / count)
+    const force = config.charge * config.charge / (distance * distance)
+    delta.setMagnitude(force / (count * count)) // XXX magic reduction
     // Accelerate away from neighbor
     particle.acceleration.add(delta)
   })
