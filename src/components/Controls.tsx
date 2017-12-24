@@ -23,6 +23,12 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
       charge: 50,
     },
   },
+  diffusionX: {
+    name: 'diffusionX',
+    config: {
+      charge: 0.01,
+    },
+  },
   wandering: {
     name: 'wandering',
     config: {
@@ -191,6 +197,15 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleBehaviors}
             />
           </label>
+          {/*<label>
+            Diffusion X &nbsp;
+            <input
+              type="radio"
+              name="diffusionX"
+              checked={this.state.request.behavior.name === 'diffusionX'}
+              onChange={this.handleBehaviors}
+            />
+          </label>*/}
         </div>
         <div>
           Bounds
