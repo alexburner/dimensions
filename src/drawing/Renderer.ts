@@ -16,9 +16,11 @@ const VIEWANGLE = 45
 
 export default class Renderer {
   private isDestroyed: boolean = false
+  private isRotating: boolean = false
   private canvas: HTMLCanvasElement
   private renderer: THREE.Renderer
   private scene: THREE.Scene
+  private group: THREE.Group
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
   private layers: { [name in LayerName]: Layer }
@@ -41,8 +43,10 @@ export default class Renderer {
       alpha: true,
     })
 
-    // Set up scene
+    // Set up scene & group
     this.scene = new THREE.Scene()
+    this.group = new THREE.Group()
+    this.scene.add(this.group)
 
     // Set up camera
     this.camera = new THREE.PerspectiveCamera(
@@ -51,6 +55,8 @@ export default class Renderer {
       NEAR,
       FAR,
     )
+    this.camera.position.x = 0
+    this.camera.position.y = 40
     this.camera.position.z = 400
 
     // Set up camera controls
@@ -61,11 +67,11 @@ export default class Renderer {
 
     // Set up layers
     this.layers = {
-      grid: new Grid(this.scene),
-      points: new Points(this.scene),
-      lines: new Lines(this.scene),
-      circles: new Circles(this.scene),
-      spheres: new Spheres(this.scene),
+      grid: new Grid(this.group),
+      points: new Points(this.group),
+      lines: new Lines(this.group),
+      circles: new Circles(this.group),
+      spheres: new Spheres(this.group),
     }
     this.layerNames = Object.keys(this.layers) as LayerName[]
 
@@ -85,6 +91,10 @@ export default class Renderer {
     this.controls.handleResize()
   }
 
+  public setRotating(rotating: boolean) {
+    this.isRotating = rotating
+  }
+
   public update(response: WorkerResponse) {
     const dimensions = response.dimensions
     const neighborhood = response.neighborhood
@@ -100,8 +110,9 @@ export default class Renderer {
 
   private loop() {
     if (this.isDestroyed) return
-    this.rafId = window.requestAnimationFrame(() => this.loop())
+    if (this.isRotating) this.group.rotation.y -= 0.001
     this.renderer.render(this.scene, this.camera)
     this.controls.update()
+    this.rafId = window.requestAnimationFrame(() => this.loop())
   }
 }

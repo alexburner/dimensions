@@ -23,14 +23,14 @@ const texture = ((): THREE.Texture => {
 })()
 
 export default class Points implements Layer {
-  private scene: THREE.Scene
+  private group: THREE.Group
   private positions: Float32Array
   private posAttr: THREE.BufferAttribute
   private geometry: THREE.BufferGeometry
   private pointCloud: THREE.Points
 
-  constructor(scene: THREE.Scene) {
-    this.scene = scene
+  constructor(group: THREE.Group) {
+    this.group = group
     this.positions = new Float32Array(MAX_PARTICLES * 3)
     this.posAttr = new THREE.BufferAttribute(this.positions, 3).setDynamic(true)
     this.geometry = new THREE.BufferGeometry()
@@ -48,7 +48,7 @@ export default class Points implements Layer {
         size: SIZE,
       }),
     )
-    this.scene.add(this.pointCloud)
+    this.group.add(this.pointCloud)
   }
 
   public update({ particles }: LayerArgs) {

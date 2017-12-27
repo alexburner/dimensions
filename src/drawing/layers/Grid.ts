@@ -14,11 +14,11 @@ interface ObjectSpec {
 }
 
 export default class Grid implements Layer {
-  private scene: THREE.Scene
+  private group: THREE.Group
   private objects: THREE.Object3D[]
 
-  constructor(scene: THREE.Scene) {
-    this.scene = scene
+  constructor(group: THREE.Group) {
+    this.group = group
     this.objects = []
   }
 
@@ -28,7 +28,7 @@ export default class Grid implements Layer {
 
     // 2. Resize object list for new spec count
     this.objects = resizeObjList({
-      scene: this.scene,
+      group: this.group,
       currList: this.objects,
       newSize: specs.length,
       createObj: makeObject,
@@ -39,7 +39,7 @@ export default class Grid implements Layer {
   }
 
   public clear() {
-    this.objects = clearObjList(this.scene, this.objects)
+    this.objects = clearObjList(this.group, this.objects)
   }
 }
 

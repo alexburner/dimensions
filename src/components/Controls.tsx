@@ -8,12 +8,14 @@ import { NeighborhoodSpecs } from 'src/particles/neighborhoods'
 import { WorkerRequest } from 'src/worker'
 
 interface Props {
-  onRequestChange: (request: WorkerRequest) => void
   onRunningChange: (running: boolean) => void
+  onRotatingChange: (rotating: boolean) => void
+  onRequestChange: (request: WorkerRequest) => void
 }
 
 interface State {
   running: boolean
+  rotating: boolean
   request: WorkerRequest
 }
 
@@ -64,6 +66,7 @@ export default class Controls extends React.Component<Props, State> {
     super(props)
     this.state = {
       running: true,
+      rotating: true,
       request: {
         dimensions: 3,
         particles: 9,
@@ -99,7 +102,16 @@ export default class Controls extends React.Component<Props, State> {
             type="checkbox"
             name="run"
             checked={this.state.running}
-            onChange={this.handleRun}
+            onChange={this.handleRunning}
+          />
+        </label>
+        <label>
+          Rotating &nbsp;
+          <input
+            type="checkbox"
+            name="run"
+            checked={this.state.rotating}
+            onChange={this.handleRotating}
           />
         </label>
         <label>
@@ -130,54 +142,6 @@ export default class Controls extends React.Component<Props, State> {
             onChange={this.handleParticles}
           />
         </label>
-        <div>
-          Drawing
-          <label>
-            Grid &nbsp;
-            <input
-              type="checkbox"
-              name="grid"
-              checked={this.state.request.layers.grid}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            Points &nbsp;
-            <input
-              type="checkbox"
-              name="points"
-              checked={this.state.request.layers.points}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            Lines &nbsp;
-            <input
-              type="checkbox"
-              name="lines"
-              checked={this.state.request.layers.lines}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            Circles &nbsp;
-            <input
-              type="checkbox"
-              name="circles"
-              checked={this.state.request.layers.circles}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            Spheres &nbsp;
-            <input
-              type="checkbox"
-              name="spheres"
-              checked={this.state.request.layers.spheres}
-              onChange={this.handleLayers}
-            />
-          </label>
-        </div>
         <div>
           Behavior
           <label>
@@ -268,6 +232,54 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
         </div>
+        <div>
+          Drawing
+          <label>
+            Grid &nbsp;
+            <input
+              type="checkbox"
+              name="grid"
+              checked={this.state.request.layers.grid}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            Points &nbsp;
+            <input
+              type="checkbox"
+              name="points"
+              checked={this.state.request.layers.points}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            Lines &nbsp;
+            <input
+              type="checkbox"
+              name="lines"
+              checked={this.state.request.layers.lines}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            Circles &nbsp;
+            <input
+              type="checkbox"
+              name="circles"
+              checked={this.state.request.layers.circles}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            Spheres &nbsp;
+            <input
+              type="checkbox"
+              name="spheres"
+              checked={this.state.request.layers.spheres}
+              onChange={this.handleLayers}
+            />
+          </label>
+        </div>
       </div>
     )
   }
@@ -278,6 +290,10 @@ export default class Controls extends React.Component<Props, State> {
 
   public getRunning(): boolean {
     return this.state.running
+  }
+
+  public getRotating(): boolean {
+    return this.state.rotating
   }
 
   private handleDimensions = (e: React.FormEvent<HTMLInputElement>) => {
@@ -331,9 +347,15 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ request })
   }
 
-  private handleRun = (e: React.FormEvent<HTMLInputElement>) => {
+  private handleRunning = (e: React.FormEvent<HTMLInputElement>) => {
     const running = e.currentTarget.checked
     this.props.onRunningChange(running)
     this.setState({ running })
+  }
+
+  private handleRotating = (e: React.FormEvent<HTMLInputElement>) => {
+    const rotating = e.currentTarget.checked
+    this.props.onRotatingChange(rotating)
+    this.setState({ rotating })
   }
 }

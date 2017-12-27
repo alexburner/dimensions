@@ -53,12 +53,12 @@ const resizeList = <T>({
  * Resize a layer's object list
  */
 export const resizeObjList = <T extends THREE.Object3D>({
-  scene,
+  group,
   currList,
   newSize,
   createObj,
 }: {
-  scene: THREE.Scene
+  group: THREE.Group
   currList: T[]
   newSize: number
   createObj: () => T
@@ -68,19 +68,19 @@ export const resizeObjList = <T extends THREE.Object3D>({
     newSize,
     createEl: (): T => {
       const obj = createObj()
-      scene.add(obj)
+      group.add(obj)
       return obj
     },
-    destroyEl: (obj: T) => scene.remove(obj),
+    destroyEl: (obj: T) => group.remove(obj),
   })
 
 /**
  * Clear a layer's object list
  */
 export const clearObjList = <T extends THREE.Object3D>(
-  scene: THREE.Scene,
+  group: THREE.Group,
   list: T[],
 ): T[] => {
-  list.forEach(object => scene.remove(object))
+  list.forEach(object => group.remove(object))
   return []
 }

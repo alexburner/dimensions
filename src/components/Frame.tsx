@@ -57,6 +57,7 @@ export default class Frame extends React.Component<{}, {}> {
           <Controls
             ref={controls => (this.controls = controls)}
             onRequestChange={this.handleRequestChange}
+            onRotatingChange={this.handleRotatingChange}
             onRunningChange={this.handleRunningChange}
           />
         </div>
@@ -70,9 +71,11 @@ export default class Frame extends React.Component<{}, {}> {
     const bounds = this.updateCanvasSize()
     const request = this.controls.getRequest()
     const running = this.controls.getRunning()
+    const rotating = this.controls.getRotating()
     this.manager = new Manager({ canvas: this.canvas, bounds })
     this.manager.draw(request)
-    running ? this.manager.resume() : this.manager.pause()
+    this.manager.setRunning(running)
+    this.manager.setRotating(rotating)
     window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
   }
@@ -102,7 +105,7 @@ export default class Frame extends React.Component<{}, {}> {
   private handleVisibility = () => {
     if (!this.manager || !this.controls) return
     if (!this.controls.getRunning()) return
-    document.hidden ? this.manager.pause() : this.manager.resume()
+    this.manager.setRunning(!document.hidden)
   }
 
   private handleRequestChange = (request: WorkerRequest) => {
@@ -112,6 +115,11 @@ export default class Frame extends React.Component<{}, {}> {
 
   private handleRunningChange = (running: boolean) => {
     if (!this.manager) return
-    running ? this.manager.resume() : this.manager.pause()
+    this.manager.setRunning(running)
+  }
+
+  private handleRotatingChange = (rotating: boolean) => {
+    if (!this.manager) return
+    this.manager.setRotating(rotating)
   }
 }

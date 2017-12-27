@@ -4,14 +4,14 @@ import { MAX_NEIGHBORS } from 'src/constants'
 import { Layer, LayerArgs } from 'src/drawing/layers'
 
 export default class Lines implements Layer {
-  private scene: THREE.Scene
+  private group: THREE.Group
   private positions: Float32Array
   private posAttr: THREE.BufferAttribute
   private geometry: THREE.BufferGeometry
   private lineSegments: THREE.LineSegments
 
-  constructor(scene: THREE.Scene) {
-    this.scene = scene
+  constructor(group: THREE.Group) {
+    this.group = group
     this.positions = new Float32Array(MAX_NEIGHBORS * 3)
     this.posAttr = new THREE.BufferAttribute(this.positions, 3).setDynamic(true)
     this.geometry = new THREE.BufferGeometry()
@@ -27,7 +27,7 @@ export default class Lines implements Layer {
         opacity: 0.4,
       }),
     )
-    this.scene.add(this.lineSegments)
+    this.group.add(this.lineSegments)
   }
 
   public update({ particles, neighborhood }: LayerArgs) {

@@ -52,13 +52,17 @@ export default class Manager {
     this.worker.postMessage({ type: 'request', request })
   }
 
-  public pause() {
-    this.isRunning = false
-    window.cancelAnimationFrame(this.rafId)
+  public setRunning(running: boolean) {
+    if (running) {
+      this.isRunning = true
+      this.worker.postMessage({ type: 'request.tick' })
+    } else {
+      this.isRunning = false
+      window.cancelAnimationFrame(this.rafId)
+    }
   }
 
-  public resume() {
-    this.isRunning = true
-    this.worker.postMessage({ type: 'request.tick' })
+  public setRotating(rotating: boolean) {
+    this.renderer.setRotating(rotating)
   }
 }
