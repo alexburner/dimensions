@@ -43,7 +43,7 @@ export default class Points implements Layer {
         depthTest: false,
         depthWrite: false,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.9,
         map: texture,
         size: SIZE,
       }),
