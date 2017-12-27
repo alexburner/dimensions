@@ -20,6 +20,10 @@ html, body, #root {
   color: #EEE;
 }
 
+.controls {
+  padding: 4px;
+}
+
 .controls div,
 .controls label {
   margin: 16px;
