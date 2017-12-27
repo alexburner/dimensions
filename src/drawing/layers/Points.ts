@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { MAX_PARTICLES } from 'src/constants'
 import { Layer, LayerArgs } from 'src/drawing/layers'
 
-const SIZE = 8
+const SIZE = 6
 
 const texture = ((): THREE.Texture => {
   const size = 256
@@ -39,7 +39,11 @@ export default class Points implements Layer {
     this.pointCloud = new THREE.Points(
       this.geometry,
       new THREE.PointsMaterial({
+        blending: THREE.AdditiveBlending,
+        depthTest: false,
+        depthWrite: false,
         transparent: true,
+        opacity: 0.8,
         map: texture,
         size: SIZE,
       }),
