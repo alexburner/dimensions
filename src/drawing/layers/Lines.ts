@@ -1,79 +1,55 @@
 import * as THREE from 'three'
 
-import {
-  clearObjList,
-  Layer,
-  LayerArgs,
-  resizeObjList,
-} from 'src/drawing/layers'
-import { Neighborhood } from 'src/particles/neighborhoods'
-import Particle3 from 'src/particles/Particle3'
-
-interface ObjectSpec {
-  source: THREE.Vector3
-  target: THREE.Vector3
-}
+import { MAX_NEIGHBORS } from 'src/constants'
+import { Layer, LayerArgs } from 'src/drawing/layers'
 
 export default class Lines implements Layer {
   private scene: THREE.Scene
-  private objects: THREE.Object3D[]
+  private positions: Float32Array
+  private posAttr: THREE.BufferAttribute
+  private geometry: THREE.BufferGeometry
+  private lineSegments: THREE.LineSegments
 
   constructor(scene: THREE.Scene) {
     this.scene = scene
-    this.objects = []
+    this.positions = new Float32Array(MAX_NEIGHBORS * 3)
+    this.posAttr = new THREE.BufferAttribute(this.positions, 3).setDynamic(true)
+    this.geometry = new THREE.BufferGeometry()
+    this.geometry.addAttribute('position', this.posAttr)
+    this.geometry.computeBoundingSphere()
+    this.geometry.setDrawRange(0, 0)
+    this.lineSegments = new THREE.LineSegments(
+      this.geometry,
+      new THREE.LineBasicMaterial({
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        color: 0xffffff,
+      }),
+    )
+    this.scene.add(this.lineSegments)
   }
 
   public update({ particles, neighborhood }: LayerArgs) {
-    // 1. Generate fresh list of specs
-    const specs = makeObjectSpecs(particles, neighborhood)
-
-    // 2. Resize object list for new spec count
-    this.objects = resizeObjList({
-      scene: this.scene,
-      currList: this.objects,
-      newSize: specs.length,
-      createObj: makeObject,
+    let posIndex = 0
+    let numConnected = 0
+    particles.forEach((particle, i) => {
+      neighborhood[i].forEach(neighbor => {
+        const other = particles[neighbor.index]
+        this.positions[posIndex++] = particle.position.x
+        this.positions[posIndex++] = particle.position.y
+        this.positions[posIndex++] = particle.position.z
+        this.positions[posIndex++] = other.position.x
+        this.positions[posIndex++] = other.position.y
+        this.positions[posIndex++] = other.position.z
+        numConnected++
+      })
     })
 
-    // 3. Update objects to match specs
-    updateObjects(specs, this.objects)
+    this.geometry.setDrawRange(0, numConnected * 2)
+    this.posAttr.needsUpdate = true
   }
 
   public clear() {
-    this.objects = clearObjList(this.scene, this.objects)
+    this.geometry.setDrawRange(0, 0)
   }
 }
-
-const makeObjectSpecs = (
-  particles: Particle3[],
-  neighborhood: Neighborhood,
-): ObjectSpec[] =>
-  particles.reduce(
-    (memo, particle, i) => {
-      neighborhood[i].forEach(neighbor => {
-        memo.push({
-          source: particle.position,
-          target: particles[neighbor.index].position,
-        })
-      })
-      return memo
-    },
-    [] as ObjectSpec[],
-  )
-
-const makeObject = (): THREE.Object3D => {
-  const geometry = new THREE.BufferGeometry()
-  const source = new THREE.Vector3(0, 0, 0)
-  const target = new THREE.Vector3(0, 0, 0)
-  geometry.setFromPoints([source, target])
-  const material = new THREE.LineBasicMaterial({ color: 0xffffff })
-  const line = new THREE.Line(geometry, material)
-  return line
-}
-
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  specs.forEach((spec, i) => {
-    const object = objects[i] as THREE.Line
-    const geometry = object.geometry as THREE.BufferGeometry
-    geometry.setFromPoints([spec.source, spec.target])
-  })

@@ -34,14 +34,14 @@ export default class Points implements Layer {
     this.positions = new Float32Array(MAX_PARTICLES * 3)
     this.posAttr = new THREE.BufferAttribute(this.positions, 3).setDynamic(true)
     this.geometry = new THREE.BufferGeometry()
-    this.geometry.setDrawRange(0, 0)
     this.geometry.addAttribute('position', this.posAttr)
+    this.geometry.setDrawRange(0, 0)
     this.pointCloud = new THREE.Points(
       this.geometry,
       new THREE.PointsMaterial({
+        transparent: true,
         map: texture,
         size: SIZE,
-        transparent: true,
       }),
     )
     this.scene.add(this.pointCloud)
