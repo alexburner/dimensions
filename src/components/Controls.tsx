@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { MAX_PARTICLES } from 'src/constants'
 import { LayerName } from 'src/drawing/layers'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
@@ -288,7 +289,8 @@ export default class Controls extends React.Component<Props, State> {
 
   private handleParticles = (e: React.FormEvent<HTMLInputElement>) => {
     const request = { ...this.state.request }
-    request.particles = Number(e.currentTarget.value)
+    const particles = Number(e.currentTarget.value)
+    request.particles = Math.min(particles, MAX_PARTICLES)
     this.props.onRequestChange(request)
     this.setState({ request })
   }

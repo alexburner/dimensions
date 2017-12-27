@@ -4,7 +4,7 @@ import Controls from 'src/components/Controls'
 import Manager from 'src/Manager'
 import { WorkerRequest } from 'src/worker'
 
-const CONTROL_WIDTH = 180
+const CONTROL_WIDTH = 160
 
 export default class Frame extends React.Component<{}, {}> {
   private canvas: HTMLCanvasElement | void

@@ -1,46 +1,7 @@
 import * as THREE from 'three'
 
-import {
-  clearObjList,
-  Layer,
-  LayerArgs,
-  resizeObjList,
-} from 'src/drawing/layers'
-import Particle3 from 'src/particles/Particle3'
-
-interface ObjectSpec {
-  position: THREE.Vector3
-}
-
-export default class Points implements Layer {
-  private scene: THREE.Scene
-  private objects: THREE.Object3D[]
-
-  constructor(scene: THREE.Scene) {
-    this.scene = scene
-    this.objects = []
-  }
-
-  public update({ particles }: LayerArgs) {
-    // 1. Generate fresh list of specs
-    const specs = makeSpecs(particles)
-
-    // 2. Resize object list for new spec count
-    this.objects = resizeObjList({
-      scene: this.scene,
-      currList: this.objects,
-      newSize: specs.length,
-      createObj: makeObject,
-    })
-
-    // 3. Update objects to match specs
-    updateObjects(specs, this.objects)
-  }
-
-  public clear() {
-    this.objects = clearObjList(this.scene, this.objects)
-  }
-}
+import { MAX_PARTICLES } from 'src/constants'
+import { Layer, LayerArgs } from 'src/drawing/layers'
 
 const SIZE = 8
 
@@ -61,27 +22,43 @@ const texture = ((): THREE.Texture => {
   return new THREE.CanvasTexture(canvas)
 })()
 
-const makeSpecs = (particles: Particle3[]): ObjectSpec[] =>
-  particles.map(particle => ({
-    position: particle.position,
-  }))
+export default class Points implements Layer {
+  private scene: THREE.Scene
+  private positions: Float32Array
+  private posAttr: THREE.BufferAttribute
+  private geometry: THREE.BufferGeometry
+  private pointCloud: THREE.Points
 
-const makeObject = (): THREE.Object3D => {
-  const geometry = new THREE.BufferGeometry()
-  geometry.setFromPoints([new THREE.Vector3()])
-  const material = new THREE.PointsMaterial({
-    map: texture,
-    transparent: true,
-    size: SIZE,
-  })
-  const point = new THREE.Points(geometry, material)
-  return point
+  constructor(scene: THREE.Scene) {
+    this.scene = scene
+    this.positions = new Float32Array(MAX_PARTICLES * 3)
+    this.posAttr = new THREE.BufferAttribute(this.positions, 3).setDynamic(true)
+    this.geometry = new THREE.BufferGeometry()
+    this.geometry.setDrawRange(0, 0)
+    this.geometry.addAttribute('position', this.posAttr)
+    this.pointCloud = new THREE.Points(
+      this.geometry,
+      new THREE.PointsMaterial({
+        map: texture,
+        size: SIZE,
+        transparent: true,
+      }),
+    )
+    this.scene.add(this.pointCloud)
+  }
+
+  public update({ particles }: LayerArgs) {
+    particles.forEach((particle, i) => {
+      this.positions[i * 3 + 0] = particle.position.x
+      this.positions[i * 3 + 1] = particle.position.y
+      this.positions[i * 3 + 2] = particle.position.z
+    })
+
+    this.geometry.setDrawRange(0, particles.length)
+    this.posAttr.needsUpdate = true
+  }
+
+  public clear() {
+    this.geometry.setDrawRange(0, 0)
+  }
 }
-
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  specs.forEach((spec, i) => {
-    const object = objects[i]
-    object.position.x = spec.position.x
-    object.position.y = spec.position.y
-    object.position.z = spec.position.z
-  })
