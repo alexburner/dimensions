@@ -17,10 +17,20 @@ interface ObjectSpec {
 export default class Circles implements Layer {
   private group: THREE.Group
   private objects: THREE.Object3D[]
+  private geometry: THREE.BufferGeometry
+  private material: THREE.LineBasicMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
     this.objects = []
+    const shape = new THREE.Shape()
+    shape.arc(0, 0, 1, 0, 2 * Math.PI, false)
+    shape.autoClose = true
+    const points2 = shape.getSpacedPoints(DIVISIONS)
+    const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
+    this.geometry = new THREE.BufferGeometry()
+    this.geometry.setFromPoints(points3)
+    this.material = new THREE.LineBasicMaterial({ color: 0xffffff })
   }
 
   public update({ particles, neighborhood }: LayerArgs) {
@@ -32,7 +42,7 @@ export default class Circles implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: makeObject,
+      createObj: () => new THREE.Line(this.geometry, this.material),
     })
 
     // 3. Update objects to match specs
@@ -62,19 +72,6 @@ const makeObjectSpecs = (
     },
     [] as ObjectSpec[],
   )
-
-const makeObject = (): THREE.Object3D => {
-  const shape = new THREE.Shape()
-  shape.arc(0, 0, 1, 0, 2 * Math.PI, false)
-  shape.autoClose = true
-  const points2 = shape.getSpacedPoints(DIVISIONS)
-  const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
-  const geometry = new THREE.BufferGeometry()
-  geometry.setFromPoints(points3)
-  const material = new THREE.LineBasicMaterial({ color: 0xffffff })
-  const line = new THREE.Line(geometry, material)
-  return line
-}
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
   specs.forEach((spec, i) => {

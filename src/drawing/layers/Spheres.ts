@@ -17,10 +17,19 @@ interface ObjectSpec {
 export default class Spheres implements Layer {
   private group: THREE.Group
   private objects: THREE.Object3D[]
+  private geometry: THREE.SphereBufferGeometry
+  private material: THREE.MeshNormalMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
     this.objects = []
+    this.geometry = new THREE.SphereBufferGeometry(1, SEGMENTS, RINGS)
+    this.material = new THREE.MeshNormalMaterial({
+      blending: THREE.AdditiveBlending,
+      depthTest: false,
+      opacity: OPACITY_MAX,
+      transparent: true,
+    })
   }
 
   public update({ particles, neighborhood }: LayerArgs) {
@@ -32,7 +41,7 @@ export default class Spheres implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: makeObject,
+      createObj: () => new THREE.Mesh(this.geometry, this.material),
     })
 
     // 3. Update objects to match specs
@@ -45,7 +54,7 @@ export default class Spheres implements Layer {
 }
 
 const OPACITY_MAX = 0.5
-const OPACITY_MIN = 0.2
+const OPACITY_MIN = 0.1
 const SEGMENTS = 40
 const RINGS = 40
 
@@ -68,18 +77,6 @@ const makeObjectSpecs = (
     },
     [] as ObjectSpec[],
   )
-
-const makeObject = (): THREE.Object3D => {
-  const geometry = new THREE.SphereBufferGeometry(1, SEGMENTS, RINGS)
-  const material = new THREE.MeshNormalMaterial({
-    blending: THREE.AdditiveBlending,
-    depthTest: false,
-    opacity: OPACITY_MAX,
-    transparent: true,
-  })
-  const mesh = new THREE.Mesh(geometry, material)
-  return mesh
-}
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) => {
   const opacity = getOpacity(specs.length)
