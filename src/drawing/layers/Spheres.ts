@@ -14,6 +14,44 @@ interface ObjectSpec {
   radius: number
 }
 
+const OPACITY_MAX = 0.5
+const OPACITY_MIN = 0.1
+const SEGMENTS = 40
+const RINGS = 40
+
+const getOpacity = (count: number): number =>
+  Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
+
+const makeObjectSpecs = (
+  particles: Particle3[],
+  neighborhood: Neighborhood,
+): ObjectSpec[] =>
+  particles.reduce(
+    (memo, particle, i) => {
+      neighborhood[i].forEach(neighbor => {
+        memo.push({
+          position: particle.position,
+          radius: neighbor.distance,
+        })
+      })
+      return memo
+    },
+    [] as ObjectSpec[],
+  )
+
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) => {
+  const opacity = getOpacity(specs.length)
+  specs.forEach((spec, i) => {
+    const object = objects[i] as THREE.Mesh
+    object.position.x = spec.position.x
+    object.position.y = spec.position.y
+    object.position.z = spec.position.z
+    object.scale.set(spec.radius, spec.radius, spec.radius)
+    const material = object.material as THREE.MeshNormalMaterial
+    material.opacity = opacity
+  })
+}
+
 export default class Spheres implements Layer {
   private group: THREE.Group
   private objects: THREE.Object3D[]
@@ -51,42 +89,4 @@ export default class Spheres implements Layer {
   public clear() {
     this.objects = clearObjList(this.group, this.objects)
   }
-}
-
-const OPACITY_MAX = 0.5
-const OPACITY_MIN = 0.1
-const SEGMENTS = 40
-const RINGS = 40
-
-const getOpacity = (count: number): number =>
-  Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
-
-const makeObjectSpecs = (
-  particles: Particle3[],
-  neighborhood: Neighborhood,
-): ObjectSpec[] =>
-  particles.reduce(
-    (memo, particle, i) => {
-      neighborhood[i].forEach(neighbor => {
-        memo.push({
-          position: particle.position,
-          radius: neighbor.distance,
-        })
-      })
-      return memo
-    },
-    [] as ObjectSpec[],
-  )
-
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) => {
-  const opacity = getOpacity(specs.length)
-  specs.forEach((spec, i) => {
-    const object = objects[i] as THREE.Mesh
-    object.position.x = spec.position.x
-    object.position.y = spec.position.y
-    object.position.z = spec.position.z
-    object.scale.set(spec.radius, spec.radius, spec.radius)
-    const material = object.material as THREE.MeshNormalMaterial
-    material.opacity = opacity
-  })
 }

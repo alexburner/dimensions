@@ -14,6 +14,34 @@ interface ObjectSpec {
   radius: number
 }
 
+const DIVISIONS = 64
+
+const makeObjectSpecs = (
+  particles: Particle3[],
+  neighborhood: Neighborhood,
+): ObjectSpec[] =>
+  particles.reduce(
+    (memo, particle, i) => {
+      neighborhood[i].forEach(neighbor => {
+        memo.push({
+          position: particle.position,
+          radius: neighbor.distance,
+        })
+      })
+      return memo
+    },
+    [] as ObjectSpec[],
+  )
+
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
+  specs.forEach((spec, i) => {
+    const object = objects[i]
+    object.position.x = spec.position.x
+    object.position.y = spec.position.y
+    object.position.z = spec.position.z
+    object.scale.set(spec.radius, spec.radius, spec.radius)
+  })
+
 export default class Circles implements Layer {
   private group: THREE.Group
   private objects: THREE.Object3D[]
@@ -53,31 +81,3 @@ export default class Circles implements Layer {
     this.objects = clearObjList(this.group, this.objects)
   }
 }
-
-const DIVISIONS = 64
-
-const makeObjectSpecs = (
-  particles: Particle3[],
-  neighborhood: Neighborhood,
-): ObjectSpec[] =>
-  particles.reduce(
-    (memo, particle, i) => {
-      neighborhood[i].forEach(neighbor => {
-        memo.push({
-          position: particle.position,
-          radius: neighbor.distance,
-        })
-      })
-      return memo
-    },
-    [] as ObjectSpec[],
-  )
-
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  specs.forEach((spec, i) => {
-    const object = objects[i]
-    object.position.x = spec.position.x
-    object.position.y = spec.position.y
-    object.position.z = spec.position.z
-    object.scale.set(spec.radius, spec.radius, spec.radius)
-  })
