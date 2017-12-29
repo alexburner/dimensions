@@ -126,6 +126,7 @@ export default class Controls extends React.Component<Props, State> {
             step="1"
             value={this.state.request.dimensions}
             onChange={this.handleDimensions}
+            onKeyDown={this.handleEnter}
           />
         </label>
         <label>
@@ -140,6 +141,7 @@ export default class Controls extends React.Component<Props, State> {
             step="1"
             value={this.state.request.particles}
             onChange={this.handleParticles}
+            onKeyDown={this.handleEnter}
           />
         </label>
         <div>
@@ -357,5 +359,10 @@ export default class Controls extends React.Component<Props, State> {
     const rotating = e.currentTarget.checked
     this.props.onRotatingChange(rotating)
     this.setState({ rotating })
+  }
+
+  private handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // For mobile devices, easier dismissing of keyboards
+    if (e.key === 'Enter') e.currentTarget.blur()
   }
 }
