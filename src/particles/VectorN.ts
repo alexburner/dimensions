@@ -213,7 +213,8 @@ export default class VectorN {
    * Set vector magnitude
    */
   public setMagnitude(magnitude: number): VectorN {
-    this.multiply(magnitude / this.getMagnitude())
+    if (this.getMagnitude() === 0) this.add(Math.sqrt(magnitude))
+    else this.multiply(magnitude / this.getMagnitude())
     this.cacheMagnitude(magnitude)
     return this
   }
