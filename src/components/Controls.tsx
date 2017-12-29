@@ -114,6 +114,7 @@ export default class Controls extends React.Component<Props, State> {
             onChange={this.handleRotating}
           />
         </label>
+        <hr />
         <label>
           Dimensions &nbsp;
           <input
@@ -144,6 +145,7 @@ export default class Controls extends React.Component<Props, State> {
             onKeyDown={this.handleEnter}
           />
         </label>
+        <hr />
         <div>
           Behavior
           <label>
@@ -174,6 +176,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>*/}
         </div>
+        <hr />
         <div>
           Neighbors
           <label>
@@ -204,6 +207,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
         </div>
+        <hr />
         <div>
           Bounds
           <label>
@@ -234,8 +238,9 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
         </div>
+        <hr />
         <div>
-          Drawing
+          Layers
           <label>
             Grid &nbsp;
             <input
@@ -246,7 +251,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Points &nbsp;
+            0D &mdash; Points &nbsp;
             <input
               type="checkbox"
               name="points"
@@ -255,7 +260,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Lines &nbsp;
+            1D &mdash; Lines &nbsp;
             <input
               type="checkbox"
               name="lines"
@@ -264,7 +269,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Circles &nbsp;
+            2D &mdash; Circles &nbsp;
             <input
               type="checkbox"
               name="circles"
@@ -273,7 +278,7 @@ export default class Controls extends React.Component<Props, State> {
             />
           </label>
           <label>
-            Spheres &nbsp;
+            3D &mdash; Spheres &nbsp;
             <input
               type="checkbox"
               name="spheres"
