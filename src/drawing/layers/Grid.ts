@@ -13,10 +13,18 @@ type ObjectSpec = [number, number, number] // [x, y, z]
 export default class Grid implements Layer {
   private group: THREE.Group
   private objects: THREE.Object3D[]
+  private material: THREE.LineDashedMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
     this.objects = []
+    this.material = new THREE.LineDashedMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.2,
+      dashSize: 1.25,
+      gapSize: 1.25,
+    })
   }
 
   public update({ dimensions }: LayerArgs) {
@@ -28,7 +36,7 @@ export default class Grid implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: makeObject,
+      createObj: () => new THREE.Line(new THREE.Geometry(), this.material),
     })
 
     // 3. Update objects to match specs
@@ -137,22 +145,6 @@ const SPECS: ObjectSpec[][] = [
 const makeObjectSpecs = (dimensions: number): ObjectSpec[] => {
   if (dimensions > 3) dimensions = 3 // XXX human limits
   return SPECS[dimensions]
-}
-
-const makeObject = (): THREE.Object3D => {
-  const geometry = new THREE.Geometry()
-  const source = new THREE.Vector3(0, 0, 0)
-  const target = new THREE.Vector3(0, 0, 0)
-  geometry.vertices = [source, target]
-  const material = new THREE.LineDashedMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.2,
-    dashSize: 1.25,
-    gapSize: 1.25,
-  })
-  const line = new THREE.Line(geometry, material)
-  return line
 }
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
