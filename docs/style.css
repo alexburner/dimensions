@@ -21,18 +21,24 @@ html, body, #root {
 }
 
 .controls {
-  padding: 4px;
+  padding: 8px 12px;
 }
 
 .controls div,
 .controls label {
-  margin: 16px;
+  margin: 8px 4px;
 }
 
-.controls div {
-  padding-top: 8px;
+.controls div > label {
+  margin-left: 8px;
 }
 
 .controls label {
   display: block;
+}
+
+.controls hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 12px 0;
 }
