@@ -97,26 +97,25 @@ export default class Controls extends React.Component<Props, State> {
     return (
       <div className="controls">
         <label>
-          Running &nbsp;
           <input
             type="checkbox"
             name="run"
             checked={this.state.running}
             onChange={this.handleRunning}
           />
+          &nbsp; Running
         </label>
         <label>
-          Rotating &nbsp;
           <input
             type="checkbox"
             name="run"
             checked={this.state.rotating}
             onChange={this.handleRotating}
           />
+          &nbsp; Rotating
         </label>
         <hr />
         <label>
-          Dimensions &nbsp;
           <input
             type="number"
             style={{
@@ -129,9 +128,9 @@ export default class Controls extends React.Component<Props, State> {
             onChange={this.handleDimensions}
             onKeyDown={this.handleEnter}
           />
+          &nbsp; Dimensions
         </label>
         <label>
-          Particles &nbsp;
           <input
             type="number"
             style={{
@@ -144,147 +143,148 @@ export default class Controls extends React.Component<Props, State> {
             onChange={this.handleParticles}
             onKeyDown={this.handleEnter}
           />
+          &nbsp; Particles
         </label>
         <hr />
         <div>
           Layers
           <label>
-            0D &mdash; Points &nbsp;
             <input
               type="checkbox"
               name="points"
               checked={this.state.request.layers.points}
               onChange={this.handleLayers}
             />
+            &nbsp; 0D &mdash; Points
           </label>
           <label>
-            1D &mdash; Lines &nbsp;
             <input
               type="checkbox"
               name="lines"
               checked={this.state.request.layers.lines}
               onChange={this.handleLayers}
             />
+            &nbsp; 1D &mdash; Lines
           </label>
           <label>
-            2D &mdash; Circles &nbsp;
             <input
               type="checkbox"
               name="circles"
               checked={this.state.request.layers.circles}
               onChange={this.handleLayers}
             />
+            &nbsp; 2D &mdash; Circles
           </label>
           <label>
-            3D &mdash; Spheres &nbsp;
             <input
               type="checkbox"
               name="spheres"
               checked={this.state.request.layers.spheres}
               onChange={this.handleLayers}
             />
+            &nbsp; 3D &mdash; Spheres
           </label>
           <label>
-            Grid &nbsp;
             <input
               type="checkbox"
               name="grid"
               checked={this.state.request.layers.grid}
               onChange={this.handleLayers}
             />
+            &nbsp; Grid
           </label>
         </div>
         <hr />
         <div>
           Behavior
           <label>
-            Wandering &nbsp;
             <input
               type="radio"
               name="wandering"
               checked={this.state.request.behavior.name === 'wandering'}
               onChange={this.handleBehaviors}
             />
+            &nbsp; Wandering
           </label>
           <label>
-            Diffusion &nbsp;
             <input
               type="radio"
               name="diffusion"
               checked={this.state.request.behavior.name === 'diffusion'}
               onChange={this.handleBehaviors}
             />
+            &nbsp; Diffusion
           </label>
           {/*<label>
-            Diffusion X &nbsp;
             <input
               type="radio"
               name="diffusionX"
               checked={this.state.request.behavior.name === 'diffusionX'}
               onChange={this.handleBehaviors}
             />
+            Diffusion X &nbsp;
           </label>*/}
         </div>
         <hr />
         <div>
           Neighbors
           <label>
-            Nearest &nbsp;
             <input
               type="radio"
               name="nearest"
               checked={this.state.request.neighborhood.name === 'nearest'}
               onChange={this.handleNeighborhoods}
             />
+            &nbsp; Nearest
           </label>
           <label>
-            Locals &nbsp;
             <input
               type="radio"
               name="locals"
               checked={this.state.request.neighborhood.name === 'locals'}
               onChange={this.handleNeighborhoods}
             />
+            &nbsp; Locals
           </label>
           <label>
-            All &nbsp;
             <input
               type="radio"
               name="all"
               checked={this.state.request.neighborhood.name === 'all'}
               onChange={this.handleNeighborhoods}
             />
+            &nbsp; All
           </label>
         </div>
         <hr />
         <div>
           Bounds
           <label>
-            Centering &nbsp;
             <input
               type="checkbox"
               name="centering"
               checked={this.state.request.boundings.centering}
               onChange={this.handleBoundings}
             />
+            &nbsp; Centering
           </label>
           <label>
-            Scaling &nbsp;
             <input
               type="checkbox"
               name="scaling"
               checked={this.state.request.boundings.scaling}
               onChange={this.handleBoundings}
             />
+            &nbsp; Scaling
           </label>
           <label>
-            Binding &nbsp;
             <input
               type="checkbox"
               name="binding"
               checked={this.state.request.boundings.binding}
               onChange={this.handleBoundings}
             />
+            &nbsp; Binding
           </label>
         </div>
       </div>
