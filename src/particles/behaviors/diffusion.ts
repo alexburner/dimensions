@@ -16,12 +16,14 @@ export const diffusion: Behavior<Config> = (system: System, config: Config) => {
 
   // Compare each particle to every other particle
   const count = system.particles.length
+  const countSq = count * count
+  const chargeSq = config.charge * config.charge
   system.particles.forEach(particle => {
     // Grab nearest neighbor delta vector & distance
     const { delta, distance } = particle.neighbors[0]
     // Set force magnitude with inverse square law
-    const force = config.charge * config.charge / (distance * distance)
-    delta.setMagnitude(force / (count * count)) // XXX magic reduction
+    const distanceSq = distance ? distance * distance : 1
+    delta.setMagnitude(chargeSq / distanceSq / countSq)
     // Accelerate away from neighbor
     particle.acceleration.add(delta)
   })
