@@ -29,8 +29,8 @@ html, body, #root {
   margin: 8px 4px;
 }
 
-.controls div > label {
-  margin-left: 8px;
+.controls div label:first-of-type {
+  margin-top: 10px;
 }
 
 .controls label {
