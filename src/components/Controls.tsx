@@ -147,6 +147,55 @@ export default class Controls extends React.Component<Props, State> {
         </label>
         <hr />
         <div>
+          Layers
+          <label>
+            Grid &nbsp;
+            <input
+              type="checkbox"
+              name="grid"
+              checked={this.state.request.layers.grid}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            0D &mdash; Points &nbsp;
+            <input
+              type="checkbox"
+              name="points"
+              checked={this.state.request.layers.points}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            1D &mdash; Lines &nbsp;
+            <input
+              type="checkbox"
+              name="lines"
+              checked={this.state.request.layers.lines}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            2D &mdash; Circles &nbsp;
+            <input
+              type="checkbox"
+              name="circles"
+              checked={this.state.request.layers.circles}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            3D &mdash; Spheres &nbsp;
+            <input
+              type="checkbox"
+              name="spheres"
+              checked={this.state.request.layers.spheres}
+              onChange={this.handleLayers}
+            />
+          </label>
+        </div>
+        <hr />
+        <div>
           Behavior
           <label>
             Wandering &nbsp;
@@ -235,55 +284,6 @@ export default class Controls extends React.Component<Props, State> {
               name="binding"
               checked={this.state.request.boundings.binding}
               onChange={this.handleBoundings}
-            />
-          </label>
-        </div>
-        <hr />
-        <div>
-          Layers
-          <label>
-            Grid &nbsp;
-            <input
-              type="checkbox"
-              name="grid"
-              checked={this.state.request.layers.grid}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            0D &mdash; Points &nbsp;
-            <input
-              type="checkbox"
-              name="points"
-              checked={this.state.request.layers.points}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            1D &mdash; Lines &nbsp;
-            <input
-              type="checkbox"
-              name="lines"
-              checked={this.state.request.layers.lines}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            2D &mdash; Circles &nbsp;
-            <input
-              type="checkbox"
-              name="circles"
-              checked={this.state.request.layers.circles}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
-            3D &mdash; Spheres &nbsp;
-            <input
-              type="checkbox"
-              name="spheres"
-              checked={this.state.request.layers.spheres}
-              onChange={this.handleLayers}
             />
           </label>
         </div>
