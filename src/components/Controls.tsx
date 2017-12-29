@@ -149,15 +149,6 @@ export default class Controls extends React.Component<Props, State> {
         <div>
           Layers
           <label>
-            Grid &nbsp;
-            <input
-              type="checkbox"
-              name="grid"
-              checked={this.state.request.layers.grid}
-              onChange={this.handleLayers}
-            />
-          </label>
-          <label>
             0D &mdash; Points &nbsp;
             <input
               type="checkbox"
@@ -190,6 +181,15 @@ export default class Controls extends React.Component<Props, State> {
               type="checkbox"
               name="spheres"
               checked={this.state.request.layers.spheres}
+              onChange={this.handleLayers}
+            />
+          </label>
+          <label>
+            Grid &nbsp;
+            <input
+              type="checkbox"
+              name="grid"
+              checked={this.state.request.layers.grid}
               onChange={this.handleLayers}
             />
           </label>
