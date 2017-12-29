@@ -18,7 +18,7 @@ export default class Renderer {
   private isDestroyed: boolean = false
   private isRotating: boolean = false
   private canvas: HTMLCanvasElement
-  private renderer: THREE.Renderer
+  private renderer: THREE.WebGLRenderer
   private scene: THREE.Scene
   private group: THREE.Group
   private camera: THREE.PerspectiveCamera
@@ -42,6 +42,9 @@ export default class Renderer {
       antialias: true,
       alpha: true,
     })
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.gammaInput = true
+    this.renderer.gammaOutput = true
 
     // Set up scene & group
     this.scene = new THREE.Scene()
