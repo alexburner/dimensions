@@ -8,10 +8,7 @@ import {
   resizeObjList,
 } from 'src/drawing/layers'
 
-interface ObjectSpec {
-  source: THREE.Vector3
-  target: THREE.Vector3
-}
+type ObjectSpec = [number, number, number] // [x, y, z]
 
 export default class Grid implements Layer {
   private group: THREE.Group
@@ -45,169 +42,101 @@ export default class Grid implements Layer {
 
 const SIZE = FIELD_SIZE // reality is FIELD_SIZE / 2
 
-const specsByDimension: { [dimension: number]: ObjectSpec[] } = {
-  0: [],
-  1: [
+const SPECS: ObjectSpec[][] = [
+  [],
+  [
     // x axis
-    {
-      source: new THREE.Vector3(-SIZE, 0, 0),
-      target: new THREE.Vector3(SIZE, 0, 0),
-    },
+    [-SIZE, 0, 0],
+    [SIZE, 0, 0],
   ],
-  2: [
+  [
     // x axis
-    {
-      source: new THREE.Vector3(-SIZE, 0, 0),
-      target: new THREE.Vector3(SIZE, 0, 0),
-    },
+    [-SIZE, 0, 0],
+    [SIZE, 0, 0],
     // y axis
-    {
-      source: new THREE.Vector3(0, -SIZE, 0),
-      target: new THREE.Vector3(0, SIZE, 0),
-    },
+    [0, -SIZE, 0],
+    [0, SIZE, 0],
     // square
-    {
-      source: new THREE.Vector3(SIZE, -SIZE, 0),
-      target: new THREE.Vector3(SIZE, SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, 0),
-      target: new THREE.Vector3(-SIZE, SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, 0),
-      target: new THREE.Vector3(SIZE, -SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, SIZE, 0),
-      target: new THREE.Vector3(SIZE, SIZE, 0),
-    },
+    [SIZE, -SIZE, 0],
+    [SIZE, SIZE, 0],
+    [-SIZE, -SIZE, 0],
+    [-SIZE, SIZE, 0],
+    [-SIZE, -SIZE, 0],
+    [SIZE, -SIZE, 0],
+    [-SIZE, SIZE, 0],
+    [SIZE, SIZE, 0],
   ],
-  3: [
+  [
     // x axis
-    {
-      source: new THREE.Vector3(-SIZE, 0, 0),
-      target: new THREE.Vector3(SIZE, 0, 0),
-    },
+    [-SIZE, 0, 0],
+    [SIZE, 0, 0],
     // y axis
-    {
-      source: new THREE.Vector3(0, -SIZE, 0),
-      target: new THREE.Vector3(0, SIZE, 0),
-    },
+    [0, -SIZE, 0],
+    [0, SIZE, 0],
     // z axis
-    {
-      source: new THREE.Vector3(0, 0, -SIZE),
-      target: new THREE.Vector3(0, 0, SIZE),
-    },
+    [0, 0, -SIZE],
+    [0, 0, SIZE],
     // > cube <
     // bottom square
-    {
-      source: new THREE.Vector3(SIZE, -SIZE, -SIZE),
-      target: new THREE.Vector3(SIZE, SIZE, -SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, -SIZE),
-      target: new THREE.Vector3(-SIZE, SIZE, -SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, -SIZE),
-      target: new THREE.Vector3(SIZE, -SIZE, -SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, SIZE, -SIZE),
-      target: new THREE.Vector3(SIZE, SIZE, -SIZE),
-    },
+    [SIZE, -SIZE, -SIZE],
+    [SIZE, SIZE, -SIZE],
+    [-SIZE, -SIZE, -SIZE],
+    [-SIZE, SIZE, -SIZE],
+    [-SIZE, -SIZE, -SIZE],
+    [SIZE, -SIZE, -SIZE],
+    [-SIZE, SIZE, -SIZE],
+    [SIZE, SIZE, -SIZE],
     // top square
-    {
-      source: new THREE.Vector3(SIZE, -SIZE, SIZE),
-      target: new THREE.Vector3(SIZE, SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, SIZE),
-      target: new THREE.Vector3(-SIZE, SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, SIZE),
-      target: new THREE.Vector3(SIZE, -SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, SIZE, SIZE),
-      target: new THREE.Vector3(SIZE, SIZE, SIZE),
-    },
+    [SIZE, -SIZE, SIZE],
+    [SIZE, SIZE, SIZE],
+    [-SIZE, -SIZE, SIZE],
+    [-SIZE, SIZE, SIZE],
+    [-SIZE, -SIZE, SIZE],
+    [SIZE, -SIZE, SIZE],
+    [-SIZE, SIZE, SIZE],
+    [SIZE, SIZE, SIZE],
     // z poles
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, -SIZE),
-      target: new THREE.Vector3(-SIZE, -SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(SIZE, SIZE, -SIZE),
-      target: new THREE.Vector3(SIZE, SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(SIZE, -SIZE, -SIZE),
-      target: new THREE.Vector3(SIZE, -SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, SIZE, -SIZE),
-      target: new THREE.Vector3(-SIZE, SIZE, SIZE),
-    },
+    [-SIZE, -SIZE, -SIZE],
+    [-SIZE, -SIZE, SIZE],
+    [SIZE, SIZE, -SIZE],
+    [SIZE, SIZE, SIZE],
+    [SIZE, -SIZE, -SIZE],
+    [SIZE, -SIZE, SIZE],
+    [-SIZE, SIZE, -SIZE],
+    [-SIZE, SIZE, SIZE],
     // xy square
-    {
-      source: new THREE.Vector3(SIZE, -SIZE, 0),
-      target: new THREE.Vector3(SIZE, SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, 0),
-      target: new THREE.Vector3(-SIZE, SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, -SIZE, 0),
-      target: new THREE.Vector3(SIZE, -SIZE, 0),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, SIZE, 0),
-      target: new THREE.Vector3(SIZE, SIZE, 0),
-    },
+    [SIZE, -SIZE, 0],
+    [SIZE, SIZE, 0],
+    [-SIZE, -SIZE, 0],
+    [-SIZE, SIZE, 0],
+    [-SIZE, -SIZE, 0],
+    [SIZE, -SIZE, 0],
+    [-SIZE, SIZE, 0],
+    [SIZE, SIZE, 0],
     // xz square
-    {
-      source: new THREE.Vector3(SIZE, 0, -SIZE),
-      target: new THREE.Vector3(SIZE, 0, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, 0, -SIZE),
-      target: new THREE.Vector3(-SIZE, 0, SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, 0, -SIZE),
-      target: new THREE.Vector3(SIZE, 0, -SIZE),
-    },
-    {
-      source: new THREE.Vector3(-SIZE, 0, SIZE),
-      target: new THREE.Vector3(SIZE, 0, SIZE),
-    },
+    [SIZE, 0, -SIZE],
+    [SIZE, 0, SIZE],
+    [-SIZE, 0, -SIZE],
+    [-SIZE, 0, SIZE],
+    [-SIZE, 0, -SIZE],
+    [SIZE, 0, -SIZE],
+    [-SIZE, 0, SIZE],
+    [SIZE, 0, SIZE],
     // yz square
-    {
-      source: new THREE.Vector3(0, SIZE, -SIZE),
-      target: new THREE.Vector3(0, SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(0, -SIZE, -SIZE),
-      target: new THREE.Vector3(0, -SIZE, SIZE),
-    },
-    {
-      source: new THREE.Vector3(0, -SIZE, -SIZE),
-      target: new THREE.Vector3(0, SIZE, -SIZE),
-    },
-    {
-      source: new THREE.Vector3(0, -SIZE, SIZE),
-      target: new THREE.Vector3(0, SIZE, SIZE),
-    },
+    [0, SIZE, -SIZE],
+    [0, SIZE, SIZE],
+    [0, -SIZE, -SIZE],
+    [0, -SIZE, SIZE],
+    [0, -SIZE, -SIZE],
+    [0, SIZE, -SIZE],
+    [0, -SIZE, SIZE],
+    [0, SIZE, SIZE],
   ],
-}
+]
 
 const makeObjectSpecs = (dimensions: number): ObjectSpec[] => {
   if (dimensions > 3) dimensions = 3 // XXX human limits
-  return specsByDimension[dimensions]
+  return SPECS[dimensions]
 }
 
 const makeObject = (): THREE.Object3D => {
@@ -228,9 +157,12 @@ const makeObject = (): THREE.Object3D => {
 
 const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
   specs.forEach((spec, i) => {
+    if (i % 2) return // only do evens, each pair
+    const source = new THREE.Vector3(...specs[i])
+    const target = new THREE.Vector3(...specs[i + 1])
     const object = objects[i] as THREE.Line
     const geometry = object.geometry as THREE.Geometry
-    geometry.vertices = [spec.source, spec.target]
+    geometry.vertices = [source, target]
     geometry.verticesNeedUpdate = true
     geometry.computeLineDistances()
   })
