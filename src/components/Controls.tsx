@@ -173,36 +173,6 @@ export default class Controls extends React.Component<Props, State> {
           </label>*/}
         </div>
         <div>
-          Bounds
-          <label>
-            Centering &nbsp;
-            <input
-              type="checkbox"
-              name="centering"
-              checked={this.state.request.boundings.centering}
-              onChange={this.handleBoundings}
-            />
-          </label>
-          <label>
-            Scaling &nbsp;
-            <input
-              type="checkbox"
-              name="scaling"
-              checked={this.state.request.boundings.scaling}
-              onChange={this.handleBoundings}
-            />
-          </label>
-          <label>
-            Binding &nbsp;
-            <input
-              type="checkbox"
-              name="binding"
-              checked={this.state.request.boundings.binding}
-              onChange={this.handleBoundings}
-            />
-          </label>
-        </div>
-        <div>
           Neighbors
           <label>
             Nearest &nbsp;
@@ -229,6 +199,36 @@ export default class Controls extends React.Component<Props, State> {
               name="all"
               checked={this.state.request.neighborhood.name === 'all'}
               onChange={this.handleNeighborhoods}
+            />
+          </label>
+        </div>
+        <div>
+          Bounds
+          <label>
+            Centering &nbsp;
+            <input
+              type="checkbox"
+              name="centering"
+              checked={this.state.request.boundings.centering}
+              onChange={this.handleBoundings}
+            />
+          </label>
+          <label>
+            Scaling &nbsp;
+            <input
+              type="checkbox"
+              name="scaling"
+              checked={this.state.request.boundings.scaling}
+              onChange={this.handleBoundings}
+            />
+          </label>
+          <label>
+            Binding &nbsp;
+            <input
+              type="checkbox"
+              name="binding"
+              checked={this.state.request.boundings.binding}
+              onChange={this.handleBoundings}
             />
           </label>
         </div>
