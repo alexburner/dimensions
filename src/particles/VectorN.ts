@@ -213,8 +213,8 @@ export default class VectorN {
    * Set vector magnitude
    */
   public setMagnitude(magnitude: number): VectorN {
-    if (this.getMagnitude() === 0) this.add(Math.sqrt(magnitude))
-    else this.multiply(magnitude / this.getMagnitude())
+    if (this.getMagnitude() > 0) this.multiply(magnitude / this.getMagnitude())
+    else this.add(Math.sqrt(magnitude / this.values.length)) // XXX zero vector
     this.cacheMagnitude(magnitude)
     return this
   }
@@ -273,7 +273,7 @@ export default class VectorN {
    * (pass undefined to reset)
    */
   private cacheMagnitude(value: number | undefined) {
+    this.magnitudeSq = value !== undefined ? value * value : value
     this.magnitude = value
-    this.magnitudeSq = value && value * value
   }
 }
