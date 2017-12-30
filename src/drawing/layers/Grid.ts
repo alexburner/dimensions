@@ -11,11 +11,13 @@ import {
 type ObjectSpec = [number, number, number] // [x, y, z]
 
 export default class Grid implements Layer {
+  private dimensions: number
   private group: THREE.Group
   private objects: THREE.Object3D[]
   private material: THREE.LineDashedMaterial
 
   constructor(group: THREE.Group) {
+    this.dimensions = -1
     this.group = group
     this.objects = []
     this.material = new THREE.LineDashedMaterial({
@@ -28,6 +30,9 @@ export default class Grid implements Layer {
   }
 
   public update({ dimensions }: LayerArgs) {
+    if (this.dimensions === dimensions) return
+    else this.dimensions = dimensions
+
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(dimensions)
 
@@ -45,6 +50,7 @@ export default class Grid implements Layer {
 
   public clear() {
     this.objects = clearObjList(this.group, this.objects)
+    this.dimensions = -1
   }
 }
 
