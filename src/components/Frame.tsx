@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import Canvas from 'src/components/Canvas'
 import Controls from 'src/components/Controls'
 import Manager from 'src/Manager'
 import { WorkerRequest } from 'src/worker'
@@ -7,8 +8,7 @@ import { WorkerRequest } from 'src/worker'
 const CONTROL_WIDTH = 165
 
 export default class Frame extends React.Component<{}, {}> {
-  private canvas: HTMLCanvasElement | void
-  private container: HTMLDivElement | void
+  private canvas: Canvas | null
   private controls: Controls | null
   private manager: Manager
 
@@ -24,7 +24,6 @@ export default class Frame extends React.Component<{}, {}> {
         }}
       >
         <div
-          ref={el => el && (this.container = el)}
           style={{
             position: 'fixed',
             top: 0,
@@ -34,13 +33,9 @@ export default class Frame extends React.Component<{}, {}> {
             backgroundColor: '#111',
           }}
         >
-          <canvas
-            ref={el => el && (this.canvas = el)}
-            style={{
-              display: 'block',
-              width: '100%',
-              height: '100%',
-            }}
+          <Canvas
+            ref={canvas => (this.canvas = canvas)}
+            onResize={this.handleResize}
           />
         </div>
         <div
@@ -66,39 +61,28 @@ export default class Frame extends React.Component<{}, {}> {
   }
 
   public componentDidMount() {
-    if (!this.canvas) throw new Error('DOM failed to mount')
+    if (!this.canvas) throw new Error('Canvas failed to mount')
     if (!this.controls) throw new Error('Controls failed to mount')
-    const bounds = this.updateCanvasSize()
+    const bounds = this.canvas.getBounds()
+    const canvas = this.canvas.getElement()
+    if (!bounds || !canvas) throw new Error('Canvas failed to initialize')
     const request = this.controls.getRequest()
     const running = this.controls.getRunning()
     const rotating = this.controls.getRotating()
-    this.manager = new Manager({ canvas: this.canvas, bounds })
+    this.manager = new Manager({ bounds, canvas })
     this.manager.draw(request)
     this.manager.setRunning(running)
     this.manager.setRotating(rotating)
-    window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
   }
 
   public componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
     document.removeEventListener('visibilitychange', this.handleVisibility)
     if (this.manager) this.manager.destroy()
   }
 
-  private updateCanvasSize(): ClientRect {
-    if (!this.container || !this.canvas) throw new Error('DOM failed to mount')
-    const bounds = this.container.getBoundingClientRect()
-    this.canvas.style.width = bounds.width + 'px'
-    this.canvas.style.height = bounds.height + 'px'
-    this.canvas.width = bounds.width
-    this.canvas.height = bounds.height
-    return bounds
-  }
-
-  private handleResize = () => {
+  private handleResize = (bounds: ClientRect) => {
     if (!this.manager) return
-    const bounds = this.updateCanvasSize()
     this.manager.resize(bounds)
   }
 
