@@ -83,11 +83,12 @@ export default class Controls extends React.Component<Props, State> {
           wrapping: false,
         },
         layers: {
-          grid: true,
           points: true,
           lines: true,
           circles: true,
           spheres: true,
+          bounds: false,
+          grid: true,
         },
       },
     }
@@ -183,6 +184,15 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleLayers}
             />
             &nbsp; 3D &mdash; Spheres
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="bounds"
+              checked={this.state.request.layers.bounds}
+              onChange={this.handleLayers}
+            />
+            &nbsp; Bounds
           </label>
           <label>
             <input

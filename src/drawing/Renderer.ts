@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
 import { Layer, LayerName } from 'src/drawing/layers'
+import Bounds from 'src/drawing/layers/Bounds'
 import Circles from 'src/drawing/layers/Circles'
 import Grid from 'src/drawing/layers/Grid'
 import Lines from 'src/drawing/layers/Lines'
@@ -70,11 +71,12 @@ export default class Renderer {
 
     // Set up layers
     this.layers = {
-      grid: new Grid(this.group),
       points: new Points(this.group),
       lines: new Lines(this.group),
       circles: new Circles(this.group),
       spheres: new Spheres(this.group),
+      bounds: new Bounds(this.group, this.camera),
+      grid: new Grid(this.group),
     }
     this.layerNames = Object.keys(this.layers) as LayerName[]
 
@@ -113,9 +115,20 @@ export default class Renderer {
 
   private loop() {
     if (this.isDestroyed) return
-    if (this.isRotating) this.group.rotation.y -= 0.001
+    if (this.isRotating) this.rotateCamera()
     this.renderer.render(this.scene, this.camera)
     this.controls.update()
     this.rafId = window.requestAnimationFrame(() => this.loop())
+  }
+
+  private rotateCamera() {
+    const speed = 0.001
+    const speedSin = Math.sin(speed)
+    const speedCos = Math.cos(speed)
+    const x = this.camera.position.x
+    const z = this.camera.position.z
+    this.camera.position.x = x * speedCos + z * speedSin
+    this.camera.position.z = z * speedCos - x * speedSin
+    this.camera.lookAt(this.scene.position)
   }
 }

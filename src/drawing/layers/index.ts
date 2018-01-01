@@ -14,7 +14,13 @@ export interface Layer {
   clear: () => void
 }
 
-export type LayerName = 'grid' | 'points' | 'lines' | 'circles' | 'spheres'
+export type LayerName =
+  | 'points'
+  | 'lines'
+  | 'circles'
+  | 'spheres'
+  | 'bounds'
+  | 'grid'
 
 /**
  * Resize a generic list, creating or destroying elements as needed
