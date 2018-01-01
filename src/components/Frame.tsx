@@ -47,6 +47,7 @@ export default class Frame extends React.Component<{}, {}> {
             width: CONTROL_WIDTH + 'px',
             backgroundColor: '#222',
             borderLeft: '1px solid #333',
+            overflow: 'auto',
           }}
         >
           <Controls
