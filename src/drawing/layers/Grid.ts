@@ -21,7 +21,9 @@ export default class Grid implements Layer {
     this.group = group
     this.objects = []
     this.material = new THREE.LineDashedMaterial({
+      blending: THREE.AdditiveBlending,
       color: 0xffffff,
+      depthTest: false,
       transparent: true,
       opacity: 0.2,
       dashSize: 0.8,
