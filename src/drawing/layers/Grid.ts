@@ -24,8 +24,8 @@ export default class Grid implements Layer {
       color: 0xffffff,
       transparent: true,
       opacity: 0.2,
-      dashSize: 1.25,
-      gapSize: 1.25,
+      dashSize: 0.8,
+      gapSize: 0.8,
     })
   }
 
