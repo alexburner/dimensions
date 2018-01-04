@@ -43,7 +43,6 @@ export default class Renderer {
       antialias: true,
       alpha: true,
     })
-    this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.gammaInput = true
     this.renderer.gammaOutput = true
 
