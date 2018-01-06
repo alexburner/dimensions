@@ -133,20 +133,20 @@ const tick = () => {
     behavior(state.system, spec.config)
   }
 
-  // Apply boundings
-  boundingNames.forEach(boundingName => {
-    if (!state.request) return
-    const bounding = boundings[boundingName]
-    const boundingVisible = state.request.boundings[boundingName]
-    if (boundingVisible) bounding(state.system)
-  })
-
   // Update positions
   state.system.particles.forEach(p => {
     if (!state.request) return
     p.velocity.add(p.acceleration)
     p.velocity.limit(state.request.max.speed)
     p.position.add(p.velocity)
+  })
+
+  // Apply boundings
+  boundingNames.forEach(boundingName => {
+    if (!state.request) return
+    const bounding = boundings[boundingName]
+    const boundingVisible = state.request.boundings[boundingName]
+    if (boundingVisible) bounding(state.system)
   })
 
   // [TODO] Apply wrapping
