@@ -2,21 +2,21 @@ import * as React from 'react'
 
 import { MAX_PARTICLES } from 'src/constants'
 import { LayerName } from 'src/drawing/layers'
+import { Options } from 'src/options'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
 import { NeighborhoodSpecs } from 'src/particles/neighborhoods'
-import { WorkerRequest } from 'src/worker'
 
 interface Props {
   onRunningChange: (running: boolean) => void
   onRotatingChange: (rotating: boolean) => void
-  onRequestChange: (request: WorkerRequest) => void
+  onOptionsChange: (options: Options) => void
 }
 
 interface State {
   running: boolean
   rotating: boolean
-  request: WorkerRequest
+  options: Options
 }
 
 const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
@@ -67,7 +67,7 @@ export default class Controls extends React.Component<Props, State> {
     this.state = {
       running: true,
       rotating: true,
-      request: {
+      options: {
         dimensions: 3,
         particles: 9,
         max: {
@@ -125,7 +125,7 @@ export default class Controls extends React.Component<Props, State> {
             }}
             min="0"
             step="1"
-            value={this.state.request.dimensions}
+            value={this.state.options.dimensions}
             onChange={this.handleDimensions}
             onKeyDown={this.handleEnter}
           />
@@ -140,7 +140,7 @@ export default class Controls extends React.Component<Props, State> {
             }}
             min="0"
             step="1"
-            value={this.state.request.particles}
+            value={this.state.options.particles}
             onChange={this.handleParticles}
             onKeyDown={this.handleEnter}
           />
@@ -153,7 +153,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="points"
-              checked={this.state.request.layers.points}
+              checked={this.state.options.layers.points}
               onChange={this.handleLayers}
             />
             &nbsp; 0D &mdash; Points
@@ -162,7 +162,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="lines"
-              checked={this.state.request.layers.lines}
+              checked={this.state.options.layers.lines}
               onChange={this.handleLayers}
             />
             &nbsp; 1D &mdash; Lines
@@ -171,7 +171,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="circles"
-              checked={this.state.request.layers.circles}
+              checked={this.state.options.layers.circles}
               onChange={this.handleLayers}
             />
             &nbsp; 2D &mdash; Circles
@@ -180,7 +180,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="spheres"
-              checked={this.state.request.layers.spheres}
+              checked={this.state.options.layers.spheres}
               onChange={this.handleLayers}
             />
             &nbsp; 3D &mdash; Spheres
@@ -189,7 +189,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="bounds"
-              checked={this.state.request.layers.bounds}
+              checked={this.state.options.layers.bounds}
               onChange={this.handleLayers}
             />
             &nbsp; Bounds
@@ -198,7 +198,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="grid"
-              checked={this.state.request.layers.grid}
+              checked={this.state.options.layers.grid}
               onChange={this.handleLayers}
             />
             &nbsp; Grid
@@ -211,7 +211,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="wandering"
-              checked={this.state.request.behavior.name === 'wandering'}
+              checked={this.state.options.behavior.name === 'wandering'}
               onChange={this.handleBehaviors}
             />
             &nbsp; Wandering
@@ -220,7 +220,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="diffusion"
-              checked={this.state.request.behavior.name === 'diffusion'}
+              checked={this.state.options.behavior.name === 'diffusion'}
               onChange={this.handleBehaviors}
             />
             &nbsp; Diffusion
@@ -229,7 +229,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="diffusionX"
-              checked={this.state.request.behavior.name === 'diffusionX'}
+              checked={this.state.options.behavior.name === 'diffusionX'}
               onChange={this.handleBehaviors}
             />
             Diffusion X &nbsp;
@@ -242,7 +242,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="nearest"
-              checked={this.state.request.neighborhood.name === 'nearest'}
+              checked={this.state.options.neighborhood.name === 'nearest'}
               onChange={this.handleNeighborhoods}
             />
             &nbsp; Nearest
@@ -251,7 +251,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="locals"
-              checked={this.state.request.neighborhood.name === 'locals'}
+              checked={this.state.options.neighborhood.name === 'locals'}
               onChange={this.handleNeighborhoods}
             />
             &nbsp; Locals
@@ -260,7 +260,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="radio"
               name="all"
-              checked={this.state.request.neighborhood.name === 'all'}
+              checked={this.state.options.neighborhood.name === 'all'}
               onChange={this.handleNeighborhoods}
             />
             &nbsp; All
@@ -273,7 +273,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="centering"
-              checked={this.state.request.boundings.centering}
+              checked={this.state.options.boundings.centering}
               onChange={this.handleBoundings}
             />
             &nbsp; Centering
@@ -282,7 +282,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="scaling"
-              checked={this.state.request.boundings.scaling}
+              checked={this.state.options.boundings.scaling}
               onChange={this.handleBoundings}
             />
             &nbsp; Scaling
@@ -291,7 +291,7 @@ export default class Controls extends React.Component<Props, State> {
             <input
               type="checkbox"
               name="binding"
-              checked={this.state.request.boundings.binding}
+              checked={this.state.options.boundings.binding}
               onChange={this.handleBoundings}
             />
             &nbsp; Binding
@@ -301,8 +301,8 @@ export default class Controls extends React.Component<Props, State> {
     )
   }
 
-  public getRequest(): WorkerRequest {
-    return this.state.request
+  public getOptions(): Options {
+    return this.state.options
   }
 
   public getRunning(): boolean {
@@ -314,54 +314,54 @@ export default class Controls extends React.Component<Props, State> {
   }
 
   private handleDimensions = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
-    request.dimensions = Number(e.currentTarget.value)
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    const options = { ...this.state.options }
+    options.dimensions = Number(e.currentTarget.value)
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleParticles = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
+    const options = { ...this.state.options }
     const particles = Number(e.currentTarget.value)
-    request.particles = Math.min(particles, MAX_PARTICLES)
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    options.particles = Math.min(particles, MAX_PARTICLES)
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleLayers = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
+    const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
-    request.layers[name] = value
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    options.layers[name] = value
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleBoundings = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
+    const options = { ...this.state.options }
     const name = e.currentTarget.name as BoundingName
     const value = e.currentTarget.checked
-    request.boundings[name] = value
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    options.boundings[name] = value
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleBehaviors = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
+    const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const spec = BEHAVIOR_PRESETS[name as BehaviorSpecs['name']]
-    request.behavior = spec
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    options.behavior = spec
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleNeighborhoods = (e: React.FormEvent<HTMLInputElement>) => {
-    const request = { ...this.state.request }
+    const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const spec = NEIGHBORHOOD_PRESETS[name as NeighborhoodSpecs['name']]
-    request.neighborhood = spec
-    this.props.onRequestChange(request)
-    this.setState({ request })
+    options.neighborhood = spec
+    this.props.onOptionsChange(options)
+    this.setState({ options })
   }
 
   private handleRunning = (e: React.FormEvent<HTMLInputElement>) => {

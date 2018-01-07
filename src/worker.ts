@@ -1,33 +1,9 @@
-import { LayerName } from 'src/drawing/layers'
-import { behaviors, BehaviorSpecs } from 'src/particles/behaviors'
-import { BoundingName, boundingNames, boundings } from 'src/particles/boundings'
-import {
-  getNeighborhood,
-  Neighborhood,
-  NeighborhoodSpecs,
-} from 'src/particles/neighborhoods'
+import { WorkerOptions, WorkerResponse } from 'src/options'
+import { behaviors } from 'src/particles/behaviors'
+import { boundingNames, boundings } from 'src/particles/boundings'
+import { getNeighborhood } from 'src/particles/neighborhoods'
 import ParticleMsg from 'src/particles/ParticleMsg'
 import System from 'src/particles/System'
-
-export interface WorkerRequest {
-  dimensions: number
-  particles: number
-  max: {
-    force: number
-    speed: number
-  }
-  behavior: BehaviorSpecs
-  neighborhood: NeighborhoodSpecs
-  boundings: { [name in BoundingName]: boolean }
-  layers: { [name in LayerName]: boolean }
-}
-
-export interface WorkerResponse {
-  dimensions: number
-  particles: ParticleMsg[]
-  neighborhood: Neighborhood
-  layers: { [name in LayerName]: boolean }
-}
 
 /**
  * TypeScript currently does not support loading both "DOM" and "WebWorker"
@@ -47,10 +23,10 @@ const context = (self as any) as DedicatedWorkerGlobalScope
  * (think of this as a class instantiated on `new WebpackWorkerLoader()`)
  */
 const state: {
-  request: WorkerRequest | undefined
+  options: WorkerOptions | undefined
   system: System
 } = {
-  request: undefined,
+  options: undefined,
   system: new System(),
 }
 
@@ -60,16 +36,16 @@ const state: {
 context.addEventListener('message', e => {
   if (!(e && e.data && e.data.type)) return
   switch (e.data.type) {
-    case 'request': {
-      state.request = e.data.request as WorkerRequest
+    case 'update': {
+      state.options = e.data.options as WorkerOptions
       state.system.setPopulation(
-        state.request.particles,
-        state.request.dimensions,
+        state.options.particles,
+        state.options.dimensions,
       )
       tick()
       break
     }
-    case 'request.tick': {
+    case 'update.tick': {
       tick()
       break
     }
@@ -84,21 +60,18 @@ context.addEventListener('message', e => {
  * Send WorkerResponse back to main browser thread
  */
 const sendUpdate = () => {
-  if (!state.request) return
+  if (!state.options) return
   context.postMessage<{
     type: 'update'
     response: WorkerResponse
   }>({
     type: 'update',
     response: {
-      // pass-through from request
-      dimensions: state.request.dimensions,
-      layers: state.request.layers,
-      // derived from particle system
+      dimensions: state.options.dimensions,
       particles: state.system.particles.map(p => new ParticleMsg(p)),
       neighborhood: getNeighborhood(
         state.system.particles,
-        state.request.neighborhood,
+        state.options.neighborhood,
       ),
     },
   })
@@ -109,7 +82,7 @@ const sendUpdate = () => {
  * 0. (assume up-to-date system)
  * 1. reset accelerations
  * 2. accumulate behavior acceleration
- * 3. accumulate bounding acceleration
+ * 3. accumulate bounding acceleration [XXX currently bounds just teleport]
  * 4. update positions
  *     a. add acceleration to velocity
  *     b. apply speed limit to velocity
@@ -121,31 +94,31 @@ const sendUpdate = () => {
  *     c. sort all of each particle's neighbors by distance (asc)
  */
 const tick = () => {
-  if (!state.request) return
+  if (!state.options) return
 
   // Reset accelerations
   state.system.particles.forEach(p => p.acceleration.multiply(0))
 
   {
     // Apply behavior
-    const spec = state.request.behavior
+    const spec = state.options.behavior
     const behavior = behaviors[spec.name]
     behavior(state.system, spec.config)
   }
 
   // Update positions
   state.system.particles.forEach(p => {
-    if (!state.request) return
+    if (!state.options) return
     p.velocity.add(p.acceleration)
-    p.velocity.limit(state.request.max.speed)
+    p.velocity.limit(state.options.max.speed)
     p.position.add(p.velocity)
   })
 
   // Apply boundings
-  boundingNames.forEach(boundingName => {
-    if (!state.request) return
-    const bounding = boundings[boundingName]
-    const boundingVisible = state.request.boundings[boundingName]
+  boundingNames.forEach(name => {
+    if (!state.options) return
+    const bounding = boundings[name]
+    const boundingVisible = state.options.boundings[name]
     if (boundingVisible) bounding(state.system)
   })
 

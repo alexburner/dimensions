@@ -1,5 +1,10 @@
 import Renderer from 'src/drawing/Renderer'
-import { WorkerRequest } from 'src/worker'
+import {
+  Options,
+  RenderOptions,
+  WorkerOptions,
+  WorkerResponse,
+} from 'src/options'
 import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
@@ -8,6 +13,10 @@ export default class Manager {
   private renderer: Renderer
   private worker: Worker
   private rafId: number
+
+  private workerOptions: WorkerOptions | void
+  private renderOptions: RenderOptions | void
+  private workerResponse: WorkerResponse | void
 
   constructor({
     canvas,
@@ -23,12 +32,14 @@ export default class Manager {
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
         case 'update': {
-          this.renderer.update(e.data.response)
+          if (!this.renderOptions) return // XXX theoretically unreachable
+          this.workerResponse = e.data.response as WorkerResponse
+          this.renderer.update(this.renderOptions, this.workerResponse)
           // Sync worker tick with browser frame rate
           const rafId = (this.rafId = window.requestAnimationFrame(() => {
             if (rafId !== this.rafId) return // out of date
             if (!this.isRunning || this.isDestroyed) return
-            this.worker.postMessage({ type: 'request.tick' })
+            this.worker.postMessage({ type: 'update.tick' })
           }))
           break
         }
@@ -48,14 +59,31 @@ export default class Manager {
     this.renderer.resize(bounds)
   }
 
-  public draw(request: WorkerRequest) {
-    this.worker.postMessage({ type: 'request', request })
+  public draw(options: Options) {
+    // Split options for worker & renderer
+    this.workerOptions = {
+      dimensions: options.dimensions,
+      particles: options.particles,
+      max: options.max,
+      behavior: options.behavior,
+      neighborhood: options.neighborhood,
+      boundings: options.boundings,
+    }
+    this.renderOptions = {
+      layers: options.layers,
+    }
+    // Update worker
+    this.worker.postMessage({ type: 'update', options: this.workerOptions })
+    // Update renderer IF we have a prior worker response
+    if (this.workerResponse) {
+      this.renderer.update(this.renderOptions, this.workerResponse)
+    }
   }
 
   public setRunning(running: boolean) {
     if (running) {
       this.isRunning = true
-      this.worker.postMessage({ type: 'request.tick' })
+      this.worker.postMessage({ type: 'update.tick' })
     } else {
       this.isRunning = false
       window.cancelAnimationFrame(this.rafId)

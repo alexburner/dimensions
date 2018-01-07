@@ -3,7 +3,7 @@ import * as React from 'react'
 import Canvas from 'src/components/Canvas'
 import Controls from 'src/components/Controls'
 import Manager from 'src/Manager'
-import { WorkerRequest } from 'src/worker'
+import { Options } from 'src/options'
 
 const CONTROL_WIDTH = 165
 
@@ -52,7 +52,7 @@ export default class Frame extends React.Component<{}, {}> {
         >
           <Controls
             ref={controls => (this.controls = controls)}
-            onRequestChange={this.handleRequestChange}
+            onOptionsChange={this.handleOptionsChange}
             onRotatingChange={this.handleRotatingChange}
             onRunningChange={this.handleRunningChange}
           />
@@ -67,11 +67,11 @@ export default class Frame extends React.Component<{}, {}> {
     const bounds = this.canvas.getBounds()
     const canvas = this.canvas.getElement()
     if (!bounds || !canvas) throw new Error('Canvas failed to initialize')
-    const request = this.controls.getRequest()
+    const options = this.controls.getOptions()
     const running = this.controls.getRunning()
     const rotating = this.controls.getRotating()
     this.manager = new Manager({ bounds, canvas })
-    this.manager.draw(request)
+    this.manager.draw(options)
     this.manager.setRunning(running)
     this.manager.setRotating(rotating)
     document.addEventListener('visibilitychange', this.handleVisibility)
@@ -93,9 +93,9 @@ export default class Frame extends React.Component<{}, {}> {
     this.manager.setRunning(!document.hidden)
   }
 
-  private handleRequestChange = (request: WorkerRequest) => {
+  private handleOptionsChange = (options: Options) => {
     if (!this.manager) return
-    this.manager.draw(request)
+    this.manager.draw(options)
   }
 
   private handleRunningChange = (running: boolean) => {

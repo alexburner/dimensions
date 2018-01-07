@@ -8,8 +8,8 @@ import Grid from 'src/drawing/layers/Grid'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
+import { RenderOptions, WorkerResponse } from 'src/options'
 import Particle3 from 'src/particles/Particle3'
-import { WorkerResponse } from 'src/worker'
 
 const NEAR = 1
 const FAR = 5000
@@ -18,14 +18,17 @@ const VIEWANGLE = 45
 export default class Renderer {
   private isDestroyed: boolean = false
   private isRotating: boolean = false
+
   private canvas: HTMLCanvasElement
   private renderer: THREE.WebGLRenderer
   private scene: THREE.Scene
   private group: THREE.Group
   private camera: THREE.PerspectiveCamera
   private controls: TrackballControls
+
   private layers: { [name in LayerName]: Layer }
   private layerNames: LayerName[]
+
   private rafId: number
 
   constructor({
@@ -99,15 +102,16 @@ export default class Renderer {
     this.isRotating = rotating
   }
 
-  public update(response: WorkerResponse) {
-    const dimensions = response.dimensions
-    const neighborhood = response.neighborhood
-    const particles = response.particles.map(p => new Particle3(p))
+  public update(
+    { layers }: RenderOptions,
+    { dimensions, neighborhood, particles }: WorkerResponse,
+  ) {
+    const particles3 = particles.map(p => new Particle3(p))
     this.layerNames.forEach(layerName => {
       const layer = this.layers[layerName]
-      const layerVisible = response.layers[layerName]
+      const layerVisible = layers[layerName]
       layerVisible
-        ? layer.update({ particles, dimensions, neighborhood })
+        ? layer.update({ particles: particles3, dimensions, neighborhood })
         : layer.clear()
     })
   }
