@@ -1,9 +1,8 @@
 import * as THREE from 'three'
 
-import { FIELD_SIZE } from 'src/constants'
+import { MAX_RADIUS } from 'src/constants'
 import { Layer, LayerArgs } from 'src/drawing/layers'
 
-const RADIUS = FIELD_SIZE / 2
 const COLOR = 0xffffff
 const OPACITY = 0.5
 
@@ -49,8 +48,8 @@ export default class Bounds implements Layer {
 
 const makeLine = (): THREE.Object3D => {
   const positions = new Float32Array(6).fill(0)
-  positions[0] = -RADIUS // source x
-  positions[3] = RADIUS // target x
+  positions[0] = -MAX_RADIUS // source x
+  positions[3] = MAX_RADIUS // target x
   const geometry = new THREE.BufferGeometry()
   geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3))
   geometry.computeBoundingSphere()
@@ -68,7 +67,7 @@ const makeLine = (): THREE.Object3D => {
 const DIVISIONS = 64
 const makeCircle = (): THREE.Object3D => {
   const shape = new THREE.Shape()
-  shape.arc(0, 0, RADIUS, 0, 2 * Math.PI, false)
+  shape.arc(0, 0, MAX_RADIUS, 0, 2 * Math.PI, false)
   shape.autoClose = true
   const points2 = shape.getSpacedPoints(DIVISIONS)
   const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
@@ -87,7 +86,7 @@ const SEGMENTS = 32
 const RINGS = 32
 const makeSphere = (camera: THREE.Camera): THREE.Object3D => {
   return new THREE.Mesh(
-    new THREE.SphereBufferGeometry(RADIUS, SEGMENTS, RINGS),
+    new THREE.SphereBufferGeometry(MAX_RADIUS, SEGMENTS, RINGS),
     new THREE.ShaderMaterial({
       uniforms: {
         c: {

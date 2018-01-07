@@ -1,4 +1,4 @@
-import { FIELD_SIZE } from 'src/constants'
+import { MAX_RADIUS } from 'src/constants'
 import { Bounding } from 'src/particles/boundings'
 import System from 'src/particles/System'
 
@@ -9,11 +9,9 @@ import System from 'src/particles/System'
  * TODO: radial wrapping
  */
 
-const LIMIT = FIELD_SIZE / 2
-
 const wrap = (n: number): number => {
-  if (n < -LIMIT) return LIMIT
-  if (n > LIMIT) return -LIMIT
+  if (n < -MAX_RADIUS) return MAX_RADIUS
+  if (n > MAX_RADIUS) return -MAX_RADIUS
   return n
 }
 

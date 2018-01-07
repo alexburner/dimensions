@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-import { FIELD_SIZE } from 'src/constants'
+import { MAX_RADIUS } from 'src/constants'
 import {
   clearObjList,
   Layer,
@@ -56,7 +56,7 @@ export default class Grid implements Layer {
   }
 }
 
-const SIZE = FIELD_SIZE // reality is FIELD_SIZE / 2
+const SIZE = MAX_RADIUS * 2 // reality is MAX_RADIUS
 
 const SPECS: ObjectSpec[][] = [
   [],

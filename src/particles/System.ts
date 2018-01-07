@@ -1,4 +1,4 @@
-import { FIELD_SIZE } from 'src/constants'
+import { MAX_RADIUS } from 'src/constants'
 import ParticleN from 'src/particles/ParticleN'
 import VectorN from 'src/particles/VectorN'
 
@@ -32,7 +32,7 @@ export default class System {
   public setPopulation(count: number, dimensions: number) {
     const oldParticles = this.particles
     const newParticles = new Array(count).fill(null).map((_, i): ParticleN => {
-      const particle = new ParticleN(dimensions).randomize(FIELD_SIZE / 2)
+      const particle = new ParticleN(dimensions).randomize(MAX_RADIUS)
       if (oldParticles[i]) particle.backfill(oldParticles[i])
       return particle
     })
