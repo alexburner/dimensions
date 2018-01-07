@@ -71,7 +71,7 @@ const radialRandomize = (position: VectorN, k: number = 1) => {
       break
     }
     case 3: {
-      // Place within sphere (radius, azimuth, elevation)
+      // Place within sphere (radius, azimuth, inclination)
       // https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
       const radius = Math.random() * k
       const azimuth = Math.random() * 2 * Math.PI
