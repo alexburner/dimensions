@@ -32,9 +32,9 @@ export default class System {
   public setPopulation(count: number, dimensions: number) {
     const oldParticles = this.particles
     const newParticles = new Array(count).fill(null).map((_, i): ParticleN => {
-      const particle = new ParticleN(dimensions).randomize(MAX_RADIUS)
-      if (oldParticles[i]) particle.backfill(oldParticles[i])
-      return particle
+      const newParticle = new ParticleN(dimensions).randomize(MAX_RADIUS)
+      if (oldParticles[i]) newParticle.backfill(oldParticles[i])
+      return newParticle
     })
     this.particles = newParticles
     this.recalculate()

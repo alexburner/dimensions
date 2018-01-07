@@ -64,7 +64,7 @@ export default class VectorN {
     calc: (a: number, b: number) => number,
   ): VectorN {
     const isNumB = typeof b === 'number'
-    const c = new VectorN(a.values.length)
+    const c = new VectorN(a.dimensions)
     c.values = a.values.map((aValue, i) => {
       const bValue = isNumB ? (b as number) : (b as VectorN).values[i]
       return calc(aValue, bValue)
@@ -121,8 +121,7 @@ export default class VectorN {
   public static getAverage(vectors: VectorN[]): VectorN {
     const count = vectors.length
     if (count === 0) throw new Error('Cannot average zero vectors')
-    const dimensions = vectors[0].values.length
-    const average = new VectorN(dimensions)
+    const average = new VectorN(vectors[0].dimensions)
     vectors.forEach(vector => {
       vector.values.forEach((value, i) => {
         average.values[i] = average.values[i] + value / count
@@ -130,6 +129,12 @@ export default class VectorN {
     })
     return average
   }
+
+  /**
+   * The number of spatial dimensions this vector represents
+   * (can be any integer, but cannot be changed after init)
+   */
+  public readonly dimensions: number
 
   /**
    * The coords of a vector
@@ -152,6 +157,7 @@ export default class VectorN {
    * with dimension count and optional fill
    */
   constructor(dimensions: number, fill?: number) {
+    this.dimensions = dimensions
     this.values = new Float32Array(dimensions)
     if (fill !== undefined) this.values.fill(fill)
   }
