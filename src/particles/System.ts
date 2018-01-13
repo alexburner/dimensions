@@ -16,13 +16,9 @@ export interface Neighbor {
  */
 export default class System {
   public particles: ParticleN[]
-  public centroid: VectorN // average of all particle positions
-  public furthest: number // largest distance between two particles
 
   constructor() {
     this.particles = []
-    this.centroid = new VectorN(0)
-    this.furthest = 0
   }
 
   /**
@@ -43,30 +39,17 @@ export default class System {
   }
 
   /**
-   * Recaculate centroid, furthest distance, and particle neighbors
+   * Recaculate particle neighbors
    * (must be run after applying forces to particle positions)
    */
   public recalculate() {
-    // Avoid divice by zero
-    if (this.particles.length === 0) {
-      this.centroid = new VectorN(0)
-      this.furthest = 0
-      return
-    }
-
-    // Find geometric center of particles (by averaging their positions)
-    this.centroid = VectorN.getAverage(this.particles.map(p => p.position))
-
     // Find relationships between all particle positions
-    // and update furthest distance within system
-    this.furthest = -1
     this.particles.forEach(particle => {
       particle.neighbors = []
       this.particles.forEach((other, index) => {
         if (particle === other) return
         const delta = VectorN.subtract(particle.position, other.position)
         const distance = delta.getMagnitude()
-        this.furthest = Math.max(this.furthest, distance)
         particle.neighbors.push({ index, delta, distance })
       })
 

@@ -15,4 +15,10 @@ export const boundings: { [name in BoundingName]: Bounding } = {
   wrapping,
 }
 
-export const boundingNames = Object.keys(boundings) as BoundingName[]
+// Ordered purposefully
+export const boundingNames: BoundingName[] = [
+  'scaling',
+  'centering',
+  'binding',
+  'wrapping',
+]
