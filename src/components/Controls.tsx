@@ -83,6 +83,7 @@ export default class Controls extends React.Component<Props, State> {
         boundings: {
           centering: true,
           scaling: true,
+          centerScaling: false,
           binding: false,
           wrapping: false,
         },
@@ -299,6 +300,15 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleBoundings}
             />
             &nbsp; Scaling
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="centerScaling"
+              checked={this.state.options.boundings.centerScaling}
+              onChange={this.handleBoundings}
+            />
+            &nbsp; Center Scaling
           </label>
           <label>
             <input

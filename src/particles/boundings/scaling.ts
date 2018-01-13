@@ -24,38 +24,3 @@ export const scaling: Bounding = (system: System) => {
   const factor = MAX_DISTANCE_SQ / longestDistanceSq
   system.particles.forEach(p => p.position.multiply(factor))
 }
-
-/**
- * TODO choices
- *   - scale furthest distance between two particles
- *   - scale furthest distance between particle & centroid
- *   - scale furthest distance between particle & origin
- *
- * current = centroid
- *   theoretically, with centering, should be nonvolatile
- *   BUT, when random particle added, centroid shifts to match
- *   which changes centering
- *   which changes furthest from centroid (?)
- *
- *   oooo or because
- *   re-centering can push some beyond bounds?
- *   hm wait does that make sense
- *   but the scaling is to centroid
- *   the new random particle means new centroid?
- *   and new furthest value
- *   and new scaline needed
- *   but if the centroid === the origin (post-centering)
- *   and the new particle is positioned radially
- *   shouldn't it be within the furthest possible distance?
- *   and not trigger additional scaling
- *
- *   HM BUT
- *   scaling & centering should be decoupled
- *   both operate on the centroid of the system
- *   regardless of where it is currently located
- *   right?
- *
- * could do = origin
- *   this would make for smooth radial random placements
- *   but would no longer allow decoupling centering & scaling
- */
