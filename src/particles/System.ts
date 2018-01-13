@@ -47,6 +47,13 @@ export default class System {
    * (must be run after applying forces to particle positions)
    */
   public recalculate() {
+    // Avoid divice by zero
+    if (this.particles.length === 0) {
+      this.centroid = new VectorN(0)
+      this.furthest = 0
+      return
+    }
+
     // Find geometric center of particles (by averaging their positions)
     this.centroid = VectorN.getAverage(this.particles.map(p => p.position))
 

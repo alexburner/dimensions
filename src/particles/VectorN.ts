@@ -1,17 +1,4 @@
 /**
- * Return a boolean with 50% odds of true/false
- */
-const coinFlip = (): boolean => Math.random() < 0.5
-
-/**
- * Generate a random number within a (-k, k) range
- */
-const random = (k: number = 1) => {
-  const n = Math.random() * k
-  return coinFlip() ? n : -n
-}
-
-/**
  * N-dimensional vector math
  *
  * VectorN supports n dimensions by using lists to hold values
@@ -177,26 +164,53 @@ export default class VectorN {
   }
 
   /**
-   * Fill vector with random numbers in (-k, k) range
+   * Fill this vector with random numbers in (-k, k) range
    */
   public randomize(k: number = 1): VectorN {
     return this.mutate(() => random(k))
   }
 
   /**
-   * Map over a vector's values
-   * and replace them with the result
+   * Fill this vector with random numbers within a radial space
+   *
+   * algorithm via Colin Ballast:
+   *   keeps vector distance from origin within "radius" value
+   *   by progressively subtracting previous values
+   *   from available numeric space for Math.random
+   *   then shuffling resulting values
+   *   to scatter randomly across
+   *   available dimensions
+   *
+   * also
+   *   randomly flips positive/negative
+   *   to spread through all quadrants
+   *
+   */
+  public radialRandomize(radius: number = 1): VectorN {
+    let distanceSq = radius * radius
+    const values = new Float32Array(this.dimensions).map(() => {
+      const value = Math.random() * Math.sqrt(distanceSq)
+      distanceSq -= value * value
+      return coinFlip() ? value : -value
+    })
+    shuffle(values)
+    this.values = values
+    return this
+  }
+
+  /**
+   * Map over this vector's values, and replace them with the result
    */
   public mutate(
     iteratee: (value: number, index: number, values: Float32Array) => number,
   ): VectorN {
     this.values = this.values.map(iteratee)
-    this.cacheMagnitude(undefined)
+    this.cacheMagnitude(undefined) // reset cache
     return this
   }
 
   /**
-   * Find vector magnitude
+   * Find this vector's magnitude
    */
   public getMagnitude(): number {
     if (this.magnitude === undefined) {
@@ -206,7 +220,7 @@ export default class VectorN {
   }
 
   /**
-   * Find squared vector magnitude
+   * Find this vector's magnitude square
    */
   public getMagnitudeSq(): number {
     if (this.magnitudeSq === undefined) {
@@ -216,7 +230,7 @@ export default class VectorN {
   }
 
   /**
-   * Set vector magnitude
+   * Set this vector's magnitude
    */
   public setMagnitude(magnitude: number): VectorN {
     if (this.getMagnitude() > 0) this.multiply(magnitude / this.getMagnitude())
@@ -226,7 +240,7 @@ export default class VectorN {
   }
 
   /**
-   * Limit vector magnitude to within a given value
+   * Limit this vector's magnitude to within a given value
    */
   public limit(magnitude: number): VectorN {
     const target = magnitude * magnitude
@@ -275,11 +289,36 @@ export default class VectorN {
   }
 
   /**
-   * Set magnitude memoization caches
-   * (pass undefined to reset)
+   * Set this vector's magnitude cache (undefined to reset)
    */
   private cacheMagnitude(value: number | undefined) {
     this.magnitudeSq = value !== undefined ? value * value : value
     this.magnitude = value
+  }
+}
+
+/**
+ * Return a boolean with 50% odds of true/false
+ */
+const coinFlip = (): boolean => Math.random() < 0.5
+
+/**
+ * Generate a random number within a (-k, k) range
+ */
+const random = (k: number = 1): number => {
+  const n = Math.random() * k
+  return coinFlip() ? n : -n
+}
+
+/**
+ * Shuffle array in place
+ * https://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_modern_algorithm
+ */
+const shuffle = (arr: Float32Array): void => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const x = arr[i]
+    arr[i] = arr[j]
+    arr[j] = x
   }
 }

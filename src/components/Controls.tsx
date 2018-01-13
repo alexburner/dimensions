@@ -20,6 +20,10 @@ interface State {
 }
 
 const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
+  none: {
+    name: 'none',
+    config: {},
+  },
   diffusion: {
     name: 'diffusion',
     config: {
@@ -207,6 +211,15 @@ export default class Controls extends React.Component<Props, State> {
         <hr />
         <div>
           Behavior
+          <label>
+            <input
+              type="radio"
+              name="none"
+              checked={this.state.options.behavior.name === 'none'}
+              onChange={this.handleBehaviors}
+            />
+            &nbsp; None
+          </label>
           <label>
             <input
               type="radio"

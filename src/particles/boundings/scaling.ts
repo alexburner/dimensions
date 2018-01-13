@@ -17,7 +17,7 @@ export const scaling: Bounding = (system: System) => {
   }, -1)
 
   // Abort if already within limits
-  if (longestRadius <= LIMIT) return
+  if (longestRadius <= LIMIT + 1) return
 
   // Scale down all particles
   const factor = LIMIT / longestRadius
