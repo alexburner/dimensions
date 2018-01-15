@@ -21,7 +21,7 @@ html, body, #root {
 }
 
 .controls {
-  padding: 8px 12px;
+  padding: 16px 12px 18px;
 }
 
 .controls div,
@@ -39,6 +39,5 @@ html, body, #root {
 
 .controls hr {
   border: none;
-  border-top: 1px solid #333;
   margin: 12px 0;
 }
