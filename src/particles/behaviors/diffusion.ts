@@ -21,7 +21,7 @@ export const diffusion: Behavior<Config> = (system: System, config: Config) => {
   system.particles.forEach(particle => {
     // Grab nearest neighbor delta vector & distance
     const { delta, distance } = particle.neighbors[0]
-    // Set force magnitude with inverse square law
+    // Set force magnitude with inverse square law + magic
     const distanceSq = distance ? distance * distance : 1
     delta.setMagnitude(chargeSq / distanceSq / countSq)
     // Accelerate away from neighbor

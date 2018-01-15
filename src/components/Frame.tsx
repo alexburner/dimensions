@@ -54,7 +54,6 @@ export default class Frame extends React.Component<{}, {}> {
             ref={controls => (this.controls = controls)}
             onOptionsChange={this.handleOptionsChange}
             onRotatingChange={this.handleRotatingChange}
-            onRunningChange={this.handleRunningChange}
           />
         </div>
       </div>
@@ -68,17 +67,13 @@ export default class Frame extends React.Component<{}, {}> {
     const canvas = this.canvas.getElement()
     if (!bounds || !canvas) throw new Error('Canvas failed to initialize')
     const options = this.controls.getOptions()
-    const running = this.controls.getRunning()
     const rotating = this.controls.getRotating()
     this.manager = new Manager({ bounds, canvas })
     this.manager.draw(options)
-    this.manager.setRunning(running)
     this.manager.setRotating(rotating)
-    document.addEventListener('visibilitychange', this.handleVisibility)
   }
 
   public componentWillUnmount() {
-    document.removeEventListener('visibilitychange', this.handleVisibility)
     if (this.manager) this.manager.destroy()
   }
 
@@ -87,20 +82,9 @@ export default class Frame extends React.Component<{}, {}> {
     this.manager.resize(bounds)
   }
 
-  private handleVisibility = () => {
-    if (!this.manager || !this.controls) return
-    if (!this.controls.getRunning()) return
-    this.manager.setRunning(!document.hidden)
-  }
-
   private handleOptionsChange = (options: Options) => {
     if (!this.manager) return
     this.manager.draw(options)
-  }
-
-  private handleRunningChange = (running: boolean) => {
-    if (!this.manager) return
-    this.manager.setRunning(running)
   }
 
   private handleRotatingChange = (rotating: boolean) => {

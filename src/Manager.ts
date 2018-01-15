@@ -9,7 +9,6 @@ import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
   private isDestroyed: boolean = false
-  private isRunning: boolean = true
   private renderer: Renderer
   private worker: Worker
   private rafId: number
@@ -38,7 +37,7 @@ export default class Manager {
           // Sync worker tick with browser frame rate
           const rafId = (this.rafId = window.requestAnimationFrame(() => {
             if (rafId !== this.rafId) return // out of date
-            if (!this.isRunning || this.isDestroyed) return
+            if (this.isDestroyed) return
             this.worker.postMessage({ type: 'update.tick' })
           }))
           break
@@ -49,7 +48,6 @@ export default class Manager {
 
   public destroy() {
     this.isDestroyed = true
-    this.isRunning = false
     window.cancelAnimationFrame(this.rafId)
     this.worker.postMessage({ type: 'destroy' })
     this.renderer.destroy()
@@ -77,16 +75,6 @@ export default class Manager {
     // Update renderer IF we have a prior worker response
     if (this.workerResponse) {
       this.renderer.update(this.renderOptions, this.workerResponse)
-    }
-  }
-
-  public setRunning(running: boolean) {
-    if (running) {
-      this.isRunning = true
-      this.worker.postMessage({ type: 'update.tick' })
-    } else {
-      this.isRunning = false
-      window.cancelAnimationFrame(this.rafId)
     }
   }
 

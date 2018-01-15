@@ -62,8 +62,8 @@ export default class Renderer {
       FAR,
     )
     this.camera.position.x = 0
-    this.camera.position.y = 48
-    this.camera.position.z = 240
+    this.camera.position.y = 49 // 7*7
+    this.camera.position.z = 280 // 7*40
 
     // Set up camera controls
     this.controls = new TrackballControls(this.camera, this.canvas)

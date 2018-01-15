@@ -8,13 +8,11 @@ import { BoundingName } from 'src/particles/boundings'
 import { NeighborhoodSpecs } from 'src/particles/neighborhoods'
 
 interface Props {
-  onRunningChange: (running: boolean) => void
   onRotatingChange: (rotating: boolean) => void
   onOptionsChange: (options: Options) => void
 }
 
 interface State {
-  running: boolean
   rotating: boolean
   options: Options
 }
@@ -28,12 +26,6 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
     name: 'diffusion',
     config: {
       charge: 50,
-    },
-  },
-  diffusionX: {
-    name: 'diffusionX',
-    config: {
-      charge: 0.01,
     },
   },
   wandering: {
@@ -69,7 +61,6 @@ export default class Controls extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      running: true,
       rotating: true,
       options: {
         dimensions: 3,
@@ -105,16 +96,6 @@ export default class Controls extends React.Component<Props, State> {
         <label>
           <input
             type="checkbox"
-            name="run"
-            checked={this.state.running}
-            onChange={this.handleRunning}
-          />
-          &nbsp; Running
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="run"
             checked={this.state.rotating}
             onChange={this.handleRotating}
           />
@@ -239,15 +220,6 @@ export default class Controls extends React.Component<Props, State> {
             />
             &nbsp; Diffusion
           </label>
-          {/*<label>
-            <input
-              type="radio"
-              name="diffusionX"
-              checked={this.state.options.behavior.name === 'diffusionX'}
-              onChange={this.handleBehaviors}
-            />
-            Diffusion X &nbsp;
-          </label>*/}
         </div>
         <hr />
         <div>
@@ -286,6 +258,15 @@ export default class Controls extends React.Component<Props, State> {
           <label>
             <input
               type="checkbox"
+              name="centerScaling"
+              checked={this.state.options.boundings.centerScaling}
+              onChange={this.handleBoundings}
+            />
+            &nbsp; Center-Scaling
+          </label>
+          <label>
+            <input
+              type="checkbox"
               name="centering"
               checked={this.state.options.boundings.centering}
               onChange={this.handleBoundings}
@@ -304,15 +285,6 @@ export default class Controls extends React.Component<Props, State> {
           <label>
             <input
               type="checkbox"
-              name="centerScaling"
-              checked={this.state.options.boundings.centerScaling}
-              onChange={this.handleBoundings}
-            />
-            &nbsp; Center-Scaling
-          </label>
-          <label>
-            <input
-              type="checkbox"
               name="binding"
               checked={this.state.options.boundings.binding}
               onChange={this.handleBoundings}
@@ -326,10 +298,6 @@ export default class Controls extends React.Component<Props, State> {
 
   public getOptions(): Options {
     return this.state.options
-  }
-
-  public getRunning(): boolean {
-    return this.state.running
   }
 
   public getRotating(): boolean {
@@ -385,12 +353,6 @@ export default class Controls extends React.Component<Props, State> {
     options.neighborhood = spec
     this.props.onOptionsChange(options)
     this.setState({ options })
-  }
-
-  private handleRunning = (e: React.FormEvent<HTMLInputElement>) => {
-    const running = e.currentTarget.checked
-    this.props.onRunningChange(running)
-    this.setState({ running })
   }
 
   private handleRotating = (e: React.FormEvent<HTMLInputElement>) => {
