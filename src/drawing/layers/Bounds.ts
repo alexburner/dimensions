@@ -25,17 +25,10 @@ export default class Bounds implements Layer {
     if (this.dimensions === dimensions) return
     else this.dimensions = dimensions
     this.clear()
-    switch (dimensions) {
-      case 1:
-        this.group.add(this.line)
-        break
-      case 2:
-        this.group.add(this.circle)
-        break
-      case 3:
-        this.group.add(this.sphere)
-        break
-    }
+    if (dimensions === 0) return
+    else if (dimensions === 1) this.group.add(this.line)
+    else if (dimensions === 2) this.group.add(this.circle)
+    else this.group.add(this.sphere)
   }
 
   public clear() {

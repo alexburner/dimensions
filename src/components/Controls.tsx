@@ -39,7 +39,7 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
   wandering: {
     name: 'wandering',
     config: {
-      jitter: 1 / 100,
+      jitter: 0.01,
     },
   },
 }
@@ -81,9 +81,9 @@ export default class Controls extends React.Component<Props, State> {
         behavior: BEHAVIOR_PRESETS.wandering,
         neighborhood: NEIGHBORHOOD_PRESETS.nearest,
         boundings: {
-          centering: true,
-          scaling: true,
-          centerScaling: false,
+          centering: false,
+          scaling: false,
+          centerScaling: true,
           binding: false,
           wrapping: false,
         },
@@ -308,7 +308,7 @@ export default class Controls extends React.Component<Props, State> {
               checked={this.state.options.boundings.centerScaling}
               onChange={this.handleBoundings}
             />
-            &nbsp; Center Scaling
+            &nbsp; Center-Scaling
           </label>
           <label>
             <input
