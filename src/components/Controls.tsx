@@ -28,6 +28,13 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
       charge: 50,
     },
   },
+  gravity: {
+    name: 'gravity',
+    config: {
+      charge: -1,
+      mass: 5,
+    },
+  },
   wandering: {
     name: 'wandering',
     config: {
@@ -219,6 +226,15 @@ export default class Controls extends React.Component<Props, State> {
               onChange={this.handleBehaviors}
             />
             &nbsp; Diffusion
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gravity"
+              checked={this.state.options.behavior.name === 'gravity'}
+              onChange={this.handleBehaviors}
+            />
+            &nbsp; Gravity
           </label>
         </div>
         <hr />

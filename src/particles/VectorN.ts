@@ -1,3 +1,5 @@
+import { coinFlip, random, shuffle } from 'src/util'
+
 /**
  * N-dimensional vector math
  *
@@ -150,6 +152,17 @@ export default class VectorN {
   }
 
   /**
+   * Create a copy of this vector
+   */
+  public clone(): VectorN {
+    const clone = new VectorN(this.dimensions)
+    clone.values = this.toArray()
+    clone.magnitude = this.magnitude
+    clone.magnitudeSq = this.magnitudeSq
+    return clone
+  }
+
+  /**
    * Get values
    */
   public toArray(): Float32Array {
@@ -294,31 +307,5 @@ export default class VectorN {
   private cacheMagnitude(value: number | undefined) {
     this.magnitudeSq = value !== undefined ? value * value : value
     this.magnitude = value
-  }
-}
-
-/**
- * Return a boolean with 50% odds of true/false
- */
-const coinFlip = (): boolean => Math.random() < 0.5
-
-/**
- * Generate a random number within a (-k, k) range
- */
-const random = (k: number = 1): number => {
-  const n = Math.random() * k
-  return coinFlip() ? n : -n
-}
-
-/**
- * Shuffle array in place
- * https://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_modern_algorithm
- */
-const shuffle = (arr: Float32Array): void => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const x = arr[i]
-    arr[i] = arr[j]
-    arr[j] = x
   }
 }
