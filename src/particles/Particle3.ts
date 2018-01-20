@@ -22,7 +22,7 @@ export default class Particle3 {
 /**
  * Convert VectorMsg to THREE.Vector3
  */
-const toVector3 = (vectorMsg: Float32Array): THREE.Vector3 => {
+export const toVector3 = (vectorMsg: Float32Array): THREE.Vector3 => {
   const x = vectorMsg[0] || 0
   const y = vectorMsg[1] || 0
   const z = vectorMsg[2] || 0

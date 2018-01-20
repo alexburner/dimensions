@@ -6,15 +6,17 @@ import {
   LayerArgs,
   resizeObjList,
 } from 'src/drawing/layers'
-import Particle3 from 'src/particles/Particle3'
+import Particle3, { toVector3 } from 'src/particles/Particle3'
 import { NeighborhoodMsg } from 'src/particles/System'
 
 interface ObjectSpec {
+  delta: THREE.Vector3
   position: THREE.Vector3
   radius: number
 }
 
 const DIVISIONS = 64
+const AXIS = new THREE.Vector3(0, 1, 0)
 
 const makeObjectSpecs = (
   particles: Particle3[],
@@ -24,6 +26,7 @@ const makeObjectSpecs = (
     (memo, particle, i) => {
       neighborhood[i].forEach(neighbor => {
         memo.push({
+          delta: toVector3(neighbor.delta),
           position: particle.position,
           radius: neighbor.distance,
         })
@@ -40,6 +43,9 @@ const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
     object.position.y = spec.position.y
     object.position.z = spec.position.z
     object.scale.set(spec.radius, spec.radius, spec.radius)
+    // Rotate circle to align with delta vector
+    // via https://stackoverflow.com/a/31987883/3717556
+    object.quaternion.setFromUnitVectors(AXIS, spec.delta.clone().normalize())
   })
 
 export default class Circles implements Layer {
