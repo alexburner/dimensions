@@ -5,7 +5,7 @@ import { LayerName } from 'src/drawing/layers'
 import { Options } from 'src/options'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
-import { NeighborhoodSpecs } from 'src/particles/neighborhoods'
+import { NeighborhoodSpecs } from 'src/particles/System'
 
 interface Props {
   onRotatingChange: (rotating: boolean) => void

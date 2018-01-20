@@ -1,12 +1,12 @@
 import THREE from 'three'
 
-import { Neighborhood } from 'src/particles/neighborhoods'
 import Particle3 from 'src/particles/Particle3'
+import { NeighborhoodMsg } from 'src/particles/System'
 
 export interface LayerArgs {
   dimensions: number
   particles: Particle3[]
-  neighborhood: Neighborhood
+  neighborhood: NeighborhoodMsg
 }
 
 export interface Layer {

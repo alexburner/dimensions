@@ -5,11 +5,53 @@ import VectorN from 'src/particles/VectorN'
 /**
  * Annotation of one particle's relationship to another
  */
-export interface Neighbor {
+export interface NeighborN {
   index: number
   delta: VectorN
   distance: number
 }
+
+/**
+ * Neighborhood for worker/browser transport
+ */
+interface NeighborMsg {
+  index: number
+  delta: Float32Array
+  distance: number
+}
+
+export type NeighborhoodMsg = NeighborMsg[][]
+
+interface NeighborhoodSpec {
+  name: string
+  config?: { [prop: string]: any }
+}
+
+interface AllSpec extends NeighborhoodSpec {
+  name: 'all'
+}
+
+interface LocalSpec extends NeighborhoodSpec {
+  name: 'locals'
+}
+
+interface NearestSpec extends NeighborhoodSpec {
+  name: 'nearest'
+}
+
+interface ProximitySpec extends NeighborhoodSpec {
+  name: 'proximity'
+  config: {
+    min: number
+    max: number
+  }
+}
+
+export type NeighborhoodSpecs =
+  | AllSpec
+  | LocalSpec
+  | NearestSpec
+  | ProximitySpec
 
 /**
  * A system of ParticleN objects
@@ -57,4 +99,39 @@ export default class System {
       particle.neighbors.sort((a, b) => a.distance - b.distance)
     })
   }
+
+  /**
+   * Extract a neighborhood structure based on a provided spec
+   */
+  public getNeighborhoodMsg(spec: NeighborhoodSpecs): NeighborhoodMsg {
+    switch (spec.name) {
+      case 'all':
+        return this.particles.map(particle =>
+          particle.neighbors.map(neighbor => toNeighborMsg(neighbor)),
+        )
+      case 'locals':
+        return this.particles.map(particle =>
+          particle.neighbors
+            .slice(0, particle.dimensions)
+            .map(neighbor => toNeighborMsg(neighbor)),
+        )
+      case 'nearest':
+        return this.particles.map(particle =>
+          particle.neighbors
+            .slice(0, 1)
+            .map(neighbor => toNeighborMsg(neighbor)),
+        )
+      case 'proximity':
+        throw new Error('TODO: proximity neighborhood')
+    }
+  }
 }
+
+/**
+ * Convert a NeighborN to NeighborMsg
+ */
+const toNeighborMsg = (n: NeighborN): NeighborMsg => ({
+  index: n.index,
+  delta: n.delta.toArray(),
+  distance: n.distance,
+})

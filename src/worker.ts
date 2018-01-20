@@ -1,7 +1,6 @@
 import { WorkerOptions, WorkerResponse } from 'src/options'
 import { behaviors } from 'src/particles/behaviors'
 import { boundingNames, boundings } from 'src/particles/boundings'
-import { getNeighborhood } from 'src/particles/neighborhoods'
 import ParticleMsg from 'src/particles/ParticleMsg'
 import System from 'src/particles/System'
 
@@ -69,10 +68,7 @@ const sendUpdate = () => {
     response: {
       dimensions: state.options.dimensions,
       particles: state.system.particles.map(p => new ParticleMsg(p)),
-      neighborhood: getNeighborhood(
-        state.system.particles,
-        state.options.neighborhood,
-      ),
+      neighborhood: state.system.getNeighborhoodMsg(state.options.neighborhood),
     },
   })
 }

@@ -6,8 +6,8 @@ import {
   LayerArgs,
   resizeObjList,
 } from 'src/drawing/layers'
-import { Neighborhood } from 'src/particles/neighborhoods'
 import Particle3 from 'src/particles/Particle3'
+import { NeighborhoodMsg } from 'src/particles/System'
 
 interface ObjectSpec {
   position: THREE.Vector3
@@ -18,7 +18,7 @@ const DIVISIONS = 64
 
 const makeObjectSpecs = (
   particles: Particle3[],
-  neighborhood: Neighborhood,
+  neighborhood: NeighborhoodMsg,
 ): ObjectSpec[] =>
   particles.reduce(
     (memo, particle, i) => {

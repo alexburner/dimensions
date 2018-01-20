@@ -1,4 +1,4 @@
-import { Neighbor } from 'src/particles/System'
+import { NeighborN } from 'src/particles/System'
 import VectorN from 'src/particles/VectorN'
 
 /**
@@ -9,7 +9,7 @@ export default class ParticleN {
   public position: VectorN
   public velocity: VectorN
   public acceleration: VectorN
-  public neighbors: Neighbor[]
+  public neighbors: NeighborN[]
 
   constructor(dimensions: number) {
     this.dimensions = dimensions
