@@ -5,8 +5,6 @@ import Controls from 'src/components/Controls'
 import Manager from 'src/Manager'
 import { Options } from 'src/options'
 
-const CONTROL_WIDTH = 165
-
 export default class Frame extends React.Component<{}, {}> {
   private canvas: Canvas | null
   private controls: Controls | null
@@ -14,48 +12,16 @@ export default class Frame extends React.Component<{}, {}> {
 
   public render() {
     return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
-      >
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: CONTROL_WIDTH + 'px',
-            bottom: 0,
-            backgroundColor: '#111',
-          }}
-        >
-          <Canvas
-            ref={canvas => (this.canvas = canvas)}
-            onResize={this.handleResize}
-          />
-        </div>
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: CONTROL_WIDTH + 'px',
-            backgroundColor: '#222',
-            borderLeft: '1px solid #333',
-            overflow: 'auto',
-          }}
-        >
-          <Controls
-            ref={controls => (this.controls = controls)}
-            onOptionsChange={this.handleOptionsChange}
-            onRotatingChange={this.handleRotatingChange}
-          />
-        </div>
+      <div className="frame">
+        <Canvas
+          ref={canvas => (this.canvas = canvas)}
+          onResize={this.handleResize}
+        />
+        <Controls
+          ref={controls => (this.controls = controls)}
+          onOptionsChange={this.handleOptionsChange}
+          onRotatingChange={this.handleRotatingChange}
+        />
       </div>
     )
   }
