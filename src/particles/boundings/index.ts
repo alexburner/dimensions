@@ -1,6 +1,7 @@
 import { binding } from 'src/particles/boundings/binding'
 import { centering } from 'src/particles/boundings/centering'
 import { centerScaling } from 'src/particles/boundings/centerScaling'
+import { none } from 'src/particles/boundings/none'
 import { scaling } from 'src/particles/boundings/scaling'
 import { wrapping } from 'src/particles/boundings/wrapping'
 import System from 'src/particles/System'
@@ -13,6 +14,7 @@ export type BoundingName =
   | 'centerScaling'
   | 'binding'
   | 'wrapping'
+  | 'none'
 
 export const boundings: { [name in BoundingName]: Bounding } = {
   centering,
@@ -20,6 +22,5 @@ export const boundings: { [name in BoundingName]: Bounding } = {
   centerScaling,
   binding,
   wrapping,
+  none,
 }
-
-export const boundingNames = Object.keys(boundings) as BoundingName[]

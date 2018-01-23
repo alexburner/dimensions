@@ -17,7 +17,7 @@ export interface WorkerOptions {
   }
   behavior: BehaviorSpecs
   neighborhood: NeighborhoodSpecs
-  boundings: { [name in BoundingName]: boolean }
+  bounding: BoundingName
 }
 
 export type Options = RenderOptions & WorkerOptions

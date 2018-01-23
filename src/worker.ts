@@ -1,6 +1,6 @@
 import { WorkerOptions, WorkerResponse } from 'src/options'
 import { behaviors } from 'src/particles/behaviors'
-import { boundingNames, boundings } from 'src/particles/boundings'
+import { boundings } from 'src/particles/boundings'
 import ParticleMsg from 'src/particles/ParticleMsg'
 import System from 'src/particles/System'
 
@@ -96,7 +96,7 @@ const tick = () => {
   state.system.particles.forEach(p => p.acceleration.multiply(0))
 
   {
-    // Apply behavior
+    // Apply particle behavior
     const spec = state.options.behavior
     const behavior = behaviors[spec.name]
     behavior(state.system, spec.config)
@@ -110,13 +110,11 @@ const tick = () => {
     p.position.add(p.velocity)
   })
 
-  // Apply boundings
-  boundingNames.forEach(name => {
-    if (!state.options) return
-    const bounding = boundings[name]
-    const boundingVisible = state.options.boundings[name]
-    if (boundingVisible) bounding(state.system)
-  })
+  {
+    // Apply boundary behavior
+    const bounding = boundings[state.options.bounding]
+    bounding(state.system)
+  }
 
   // [TODO] Apply wrapping
 

@@ -65,7 +65,7 @@ export default class Manager {
       max: options.max,
       behavior: options.behavior,
       neighborhood: options.neighborhood,
-      boundings: options.boundings,
+      bounding: options.bounding,
     }
     this.renderOptions = {
       layers: options.layers,

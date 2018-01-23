@@ -80,13 +80,7 @@ export default class Controls extends React.Component<Props, State> {
         },
         behavior: BEHAVIOR_PRESETS.wandering,
         neighborhood: NEIGHBORHOOD_PRESETS.nearest,
-        boundings: {
-          centering: false,
-          scaling: false,
-          centerScaling: true,
-          binding: false,
-          wrapping: false,
-        },
+        bounding: 'centerScaling',
         layers: {
           points: true,
           lines: true,
@@ -184,27 +178,27 @@ export default class Controls extends React.Component<Props, State> {
               Boundary behavior
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="centerScaling"
-                  checked={this.state.options.boundings.centerScaling}
+                  checked={this.state.options.bounding === 'centerScaling'}
                   onChange={this.handleBoundings}
                 />
                 &nbsp; Center-scaling
               </label>
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="binding"
-                  checked={this.state.options.boundings.binding}
+                  checked={this.state.options.bounding === 'binding'}
                   onChange={this.handleBoundings}
                 />
                 &nbsp; Edge-binding
               </label>
               <label>
                 <input
-                  type="checkbox"
-                  name="binding"
-                  checked={this.state.options.boundings.binding}
+                  type="radio"
+                  name="none"
+                  checked={this.state.options.bounding === 'none'}
                   onChange={this.handleBoundings}
                 />
                 &nbsp; None
@@ -344,8 +338,7 @@ export default class Controls extends React.Component<Props, State> {
   private handleBoundings = (e: React.FormEvent<HTMLInputElement>) => {
     const options = { ...this.state.options }
     const name = e.currentTarget.name as BoundingName
-    const value = e.currentTarget.checked
-    options.boundings[name] = value
+    options.bounding = name
     this.props.onOptionsChange(options)
     this.setState({ options })
   }
