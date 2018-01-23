@@ -103,20 +103,28 @@ export default class Controls extends React.Component<Props, State> {
     return (
       <div className={'controls' + (this.state.closed ? ' is-closed' : '')}>
         <div className="toggle" onClick={this.handleToggle}>
-          {this.state.closed ? '\u2039' : '\u203A'}
+          {/* http://graphemica.com/search?q=triangle */}
+          {this.state.closed ? '\u25C0' : '\u25B6'}
         </div>
         <div className="scroll">
           <div className="inner">
-            <header>Dimensions</header>
+            <header>dimensions</header>
+            <hr />
             <label>
               <input
-                type="checkbox"
-                checked={this.state.rotating}
-                onChange={this.handleRotating}
+                type="number"
+                style={{
+                  width: '30px',
+                  textAlign: 'center',
+                }}
+                min="0"
+                step="1"
+                value={this.state.options.particles}
+                onChange={this.handleParticles}
+                onKeyDown={this.handleEnter}
               />
-              &nbsp; Rotating
+              &nbsp; Particles
             </label>
-            <hr />
             <label>
               <input
                 type="number"
@@ -134,22 +142,126 @@ export default class Controls extends React.Component<Props, State> {
             </label>
             <label>
               <input
-                type="number"
-                style={{
-                  width: '30px',
-                  textAlign: 'center',
-                }}
-                min="0"
-                step="1"
-                value={this.state.options.particles}
-                onChange={this.handleParticles}
-                onKeyDown={this.handleEnter}
+                type="checkbox"
+                checked={this.state.rotating}
+                onChange={this.handleRotating}
               />
-              &nbsp; Particles
+              &nbsp; Rotating
             </label>
             <hr />
             <div>
-              Layers
+              Particle behavior
+              <label>
+                <input
+                  type="radio"
+                  name="wandering"
+                  checked={this.state.options.behavior.name === 'wandering'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Wandering
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="diffusion"
+                  checked={this.state.options.behavior.name === 'diffusion'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Diffusion
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="none"
+                  checked={this.state.options.behavior.name === 'none'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; None
+              </label>
+            </div>
+            <hr />
+            <div>
+              Boundary behavior
+              <label>
+                <input
+                  type="checkbox"
+                  name="centerScaling"
+                  checked={this.state.options.boundings.centerScaling}
+                  onChange={this.handleBoundings}
+                />
+                &nbsp; Center-scaling
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="binding"
+                  checked={this.state.options.boundings.binding}
+                  onChange={this.handleBoundings}
+                />
+                &nbsp; Edge-binding
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="binding"
+                  checked={this.state.options.boundings.binding}
+                  onChange={this.handleBoundings}
+                />
+                &nbsp; None
+              </label>
+            </div>
+            <hr />
+            <div>
+              Neighbor relations
+              <label>
+                <input
+                  type="radio"
+                  name="nearest"
+                  checked={this.state.options.neighborhood.name === 'nearest'}
+                  onChange={this.handleNeighborhoods}
+                />
+                &nbsp; Nearest
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="locals"
+                  checked={this.state.options.neighborhood.name === 'locals'}
+                  onChange={this.handleNeighborhoods}
+                />
+                &nbsp; Local
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="all"
+                  checked={this.state.options.neighborhood.name === 'all'}
+                  onChange={this.handleNeighborhoods}
+                />
+                &nbsp; All
+              </label>
+            </div>
+            <hr />
+            <div>
+              Render layers
+              <label>
+                <input
+                  type="checkbox"
+                  name="bounds"
+                  checked={this.state.options.layers.bounds}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; Bounds
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="grid"
+                  checked={this.state.options.layers.grid}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; Grid
+              </label>
               <label>
                 <input
                   type="checkbox"
@@ -185,135 +297,6 @@ export default class Controls extends React.Component<Props, State> {
                   onChange={this.handleLayers}
                 />
                 &nbsp; 3D &mdash; Spheres
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="bounds"
-                  checked={this.state.options.layers.bounds}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Bounds
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="grid"
-                  checked={this.state.options.layers.grid}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Grid
-              </label>
-            </div>
-            <hr />
-            <div>
-              Behavior
-              <label>
-                <input
-                  type="radio"
-                  name="none"
-                  checked={this.state.options.behavior.name === 'none'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; None
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="wandering"
-                  checked={this.state.options.behavior.name === 'wandering'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Wandering
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="diffusion"
-                  checked={this.state.options.behavior.name === 'diffusion'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Diffusion
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="gravity"
-                  checked={this.state.options.behavior.name === 'gravity'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Gravity
-              </label>
-            </div>
-            <hr />
-            <div>
-              Neighbors
-              <label>
-                <input
-                  type="radio"
-                  name="nearest"
-                  checked={this.state.options.neighborhood.name === 'nearest'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; Nearest
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="locals"
-                  checked={this.state.options.neighborhood.name === 'locals'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; Locals
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="all"
-                  checked={this.state.options.neighborhood.name === 'all'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; All
-              </label>
-            </div>
-            <hr />
-            <div>
-              Bounds
-              <label>
-                <input
-                  type="checkbox"
-                  name="centerScaling"
-                  checked={this.state.options.boundings.centerScaling}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Center-Scaling
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="centering"
-                  checked={this.state.options.boundings.centering}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Centering
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="scaling"
-                  checked={this.state.options.boundings.scaling}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Scaling
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="binding"
-                  checked={this.state.options.boundings.binding}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Binding
               </label>
             </div>
           </div>
