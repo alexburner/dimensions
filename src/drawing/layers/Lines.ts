@@ -24,7 +24,7 @@ export default class Lines implements Layer {
         blending: THREE.AdditiveBlending,
         transparent: true,
         color: 0xffffff,
-        opacity: 0.4,
+        opacity: 0.6,
       }),
     )
     this.group.add(this.lineSegments)

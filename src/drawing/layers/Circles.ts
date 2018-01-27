@@ -64,7 +64,12 @@ export default class Circles implements Layer {
     const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
     this.geometry = new THREE.BufferGeometry()
     this.geometry.setFromPoints(points3)
-    this.material = new THREE.LineBasicMaterial({ color: 0xffffff })
+    this.material = new THREE.LineBasicMaterial({
+      blending: THREE.AdditiveBlending,
+      transparent: true,
+      color: 0xffffff,
+      opacity: 0.6,
+    })
   }
 
   public update({ particles, neighborhood }: LayerArgs) {

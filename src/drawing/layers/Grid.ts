@@ -56,7 +56,7 @@ export default class Grid implements Layer {
   }
 }
 
-const SIZE = MAX_RADIUS * 2 // reality is MAX_RADIUS
+const SIZE = MAX_RADIUS * 3 // reality is MAX_RADIUS
 
 const SPECS: ObjectSpec[][] = [
   [],
