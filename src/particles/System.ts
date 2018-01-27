@@ -90,7 +90,7 @@ export default class System {
       particle.neighbors = []
       this.particles.forEach((other, index) => {
         if (particle === other) return
-        const delta = VectorN.subtract(particle.position, other.position)
+        const delta = particle.position.clone().subtract(other.position)
         const distance = delta.getMagnitude()
         particle.neighbors.push({ index, delta, distance })
       })

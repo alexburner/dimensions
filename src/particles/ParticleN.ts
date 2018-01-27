@@ -38,9 +38,9 @@ export default class ParticleN {
    */
   public fill(other: ParticleN): ParticleN {
     // Value falls back to self, if outside other's dimensions
-    this.position.mutate((v, i) => other.position.value(i) || v)
-    this.velocity.mutate((v, i) => other.velocity.value(i) || v)
-    this.acceleration.mutate((v, i) => other.acceleration.value(i) || v)
+    this.position.mutate((v, i) => other.position.getValue(i) || v)
+    this.velocity.mutate((v, i) => other.velocity.getValue(i) || v)
+    this.acceleration.mutate((v, i) => other.acceleration.getValue(i) || v)
     return this
   }
 }

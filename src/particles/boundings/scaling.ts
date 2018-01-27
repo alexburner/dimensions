@@ -13,7 +13,8 @@ export const scaling: Bounding = (system: System) => {
   const positions = system.particles.map(p => p.position)
   const centroid = VectorN.getAverage(positions)
   const longestDistanceSq = positions.reduce((memo, position) => {
-    const distanceSq = VectorN.getDistanceSq(position, centroid)
+    const delta = position.clone().subtract(centroid)
+    const distanceSq = delta.getMagnitudeSq()
     return Math.max(memo, distanceSq)
   }, -1)
 

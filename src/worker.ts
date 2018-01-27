@@ -106,7 +106,7 @@ const tick = () => {
   state.system.particles.forEach(p => {
     if (!state.options) return
     p.velocity.add(p.acceleration)
-    p.velocity.limit(state.options.max.speed)
+    p.velocity.limitMagnitude(state.options.max.speed)
     p.position.add(p.velocity)
   })
 
