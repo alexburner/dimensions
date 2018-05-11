@@ -11,11 +11,11 @@ export default class Manager {
   private isDestroyed: boolean = false
   private renderer: Renderer
   private worker: Worker
-  private rafId: number
+  private rafId?: number
 
-  private workerOptions: WorkerOptions | void
-  private renderOptions: RenderOptions | void
-  private workerResponse: WorkerResponse | void
+  private workerOptions?: WorkerOptions
+  private renderOptions?: RenderOptions
+  private workerResponse?: WorkerResponse
 
   constructor({
     canvas,
@@ -38,7 +38,7 @@ export default class Manager {
           const rafId = (this.rafId = window.requestAnimationFrame(() => {
             if (rafId !== this.rafId) return // out of date
             if (this.isDestroyed) return
-            this.worker.postMessage({ type: 'update.tick' })
+            postMessage(this.worker, { type: 'update.tick' })
           }))
           break
         }
@@ -48,8 +48,8 @@ export default class Manager {
 
   public destroy() {
     this.isDestroyed = true
-    window.cancelAnimationFrame(this.rafId)
-    this.worker.postMessage({ type: 'destroy' })
+    if (this.rafId) window.cancelAnimationFrame(this.rafId)
+    postMessage(this.worker, { type: 'destroy' })
     this.renderer.destroy()
   }
 
@@ -71,7 +71,7 @@ export default class Manager {
       layers: options.layers,
     }
     // Update worker
-    this.worker.postMessage({ type: 'update', options: this.workerOptions })
+    postMessage(this.worker, { type: 'update', options: this.workerOptions })
     // Update renderer IF we have a prior worker response
     if (this.workerResponse) {
       this.renderer.update(this.renderOptions, this.workerResponse)
@@ -81,4 +81,8 @@ export default class Manager {
   public setRotating(rotating: boolean) {
     this.renderer.setRotating(rotating)
   }
+}
+
+const postMessage = (worker: Worker, message: any) => {
+  worker.postMessage(JSON.stringify(message))
 }

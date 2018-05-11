@@ -33,10 +33,11 @@ const state: {
  * Handle messages from main browser thread
  */
 context.addEventListener('message', e => {
-  if (!(e && e.data && e.data.type)) return
-  switch (e.data.type) {
+  const data = JSON.parse(e.data)
+  if (!(data && data.type)) return
+  switch (data.type) {
     case 'update': {
-      state.options = e.data.options as WorkerOptions
+      state.options = data.options as WorkerOptions
       state.system.setPopulation(
         state.options.particles,
         state.options.dimensions,
