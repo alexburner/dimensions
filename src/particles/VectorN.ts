@@ -2,9 +2,23 @@ import { coinFlip, random, shuffle } from 'src/util'
 
 /**
  * VectorN is stateful/in-place
- * it suffers the sin of mutation
- * re-using & returning its self
+ *  it suffers the sin of mutation
+ *  re-using & returning its self
  */
+
+type VectorMath = (other: VectorN | number) => VectorN
+type NumberMath = (a: number, b: number) => number
+type SelfMath = (self: VectorN) => (math: NumberMath) => VectorMath
+const selfMath: SelfMath = self => math => other => {
+  const isOtherNum = typeof other === 'number'
+  for (let i = 0, l = self.dimensions; i < l; i++) {
+    const a = self.getValue(i)
+    const b = isOtherNum ? (other as number) : (other as VectorN).getValue(i)
+    self.setValue(i, math(a, b))
+  }
+  return self
+}
+
 export default class VectorN {
   public static getAverage(vectors: VectorN[]): VectorN {
     if (vectors.length === 0) throw new Error('Cannot average zero vectors')
@@ -13,16 +27,18 @@ export default class VectorN {
     const average = new VectorN(dimensions)
     for (let i = 0; i < count; i++) {
       for (let j = 0; j < dimensions; j++) {
-        average.values[j] = average.values[j] + vectors[i].values[j] / count
+        const current = average.values[j]
+        const next = vectors[i].values[i]
+        average.values[j] = current + next / count
       }
     }
     return average
   }
 
-  public add = currySelfMath(this, (an, bn) => an + bn)
-  public subtract = currySelfMath(this, (an, bn) => an - bn)
-  public multiply = currySelfMath(this, (an, bn) => an * bn)
-  public divide = currySelfMath(this, (an, bn) => an / bn)
+  public add = selfMath(this)((an, bn) => an + bn)
+  public subtract = selfMath(this)((an, bn) => an - bn)
+  public multiply = selfMath(this)((an, bn) => an * bn)
+  public divide = selfMath(this)((an, bn) => an / bn)
 
   public readonly dimensions: number
   private values: Float32Array
@@ -132,17 +148,4 @@ export default class VectorN {
     this.magnitudeSq = undefined
     this.magnitude = undefined
   }
-}
-
-const currySelfMath = (
-  self: VectorN,
-  math: (a: number, b: number) => number,
-): ((other: VectorN | number) => VectorN) => other => {
-  const isNumOther = typeof other === 'number'
-  for (let i = 0, l = self.dimensions; i < l; i++) {
-    const a = self.getValue(i)
-    const b = isNumOther ? (other as number) : (other as VectorN).getValue(i)
-    self.setValue(i, math(a, b))
-  }
-  return self
 }

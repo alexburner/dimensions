@@ -2,14 +2,14 @@
 
 /**
  * nvector is functional/pure
- * it suffers the sin of creation
- * all returned vectors are new
+ *  it suffers the sin of creation
+ *  all returned vectors are new
  */
 
 type Vector = Float32Array
+
 type VectorMath = (a: Vector, b: Vector | number) => Vector
 type NumberMath = (an: number, bn: number) => number
-
 const curryMath = (math: NumberMath): VectorMath => (a, b) => {
   const c: Vector = new Float32Array(a.length)
   const isNumB = typeof b === 'number'
