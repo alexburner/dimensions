@@ -8,6 +8,7 @@ import Grid from 'src/drawing/layers/Grid'
 import Lines from 'src/drawing/layers/Lines'
 import Points from 'src/drawing/layers/Points'
 import Spheres from 'src/drawing/layers/Spheres'
+import Trails from 'src/drawing/layers/Trails'
 import { RenderOptions, WorkerResponse } from 'src/options'
 import Particle3 from 'src/particles/Particle3'
 
@@ -79,6 +80,7 @@ export default class Renderer {
       spheres: new Spheres(this.group),
       bounds: new Bounds(this.group, this.camera),
       grid: new Grid(this.group),
+      trails: new Trails(this.group),
     }
     this.layerNames = Object.keys(this.layers) as LayerName[]
 

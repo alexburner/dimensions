@@ -88,6 +88,7 @@ export default class Controls extends React.Component<Props, State> {
           spheres: true,
           bounds: false,
           grid: true,
+          trails: false,
         },
       },
     }
@@ -198,6 +199,15 @@ export default class Controls extends React.Component<Props, State> {
                   onChange={this.handleLayers}
                 />
                 &nbsp; 3D &mdash; Spheres
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="trails"
+                  checked={this.state.options.layers.trails}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; Trails
               </label>
             </div>
             <hr />

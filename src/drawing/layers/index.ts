@@ -21,6 +21,7 @@ export type LayerName =
   | 'spheres'
   | 'bounds'
   | 'grid'
+  | 'trails'
 
 /**
  * Resize a generic list, creating or destroying elements as needed

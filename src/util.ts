@@ -29,3 +29,24 @@ export const shuffle = (arr: Float32Array): void => {
     arr[j] = x
   }
 }
+
+/**
+ * Keep a list limited to a size, oldest items rolled out first
+ */
+export class RecentQueue<T> {
+  private queue: T[] = []
+  private limit: number
+
+  constructor(limit: number) {
+    this.limit = limit
+  }
+
+  public add(value: T): void {
+    this.queue.unshift(value)
+    if (this.queue.length > this.limit) this.queue.pop()
+  }
+
+  public values(): T[] {
+    return this.queue
+  }
+}
