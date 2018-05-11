@@ -4,6 +4,7 @@ import { Layer, LayerArgs } from 'src/drawing/layers'
 import Particle3 from 'src/particles/Particle3'
 import { RecentQueue } from 'src/util'
 
+const TRAIL_GAP = 1 / 2
 const TRAIL_LENGTH = 2000
 const MAX_COUNT = TRAIL_LENGTH * 1000
 const DOT_SIZE = 1
@@ -25,7 +26,7 @@ const texture = ((): THREE.Texture => {
   return new THREE.CanvasTexture(canvas)
 })()
 
-export default class Trails implements Layer {
+export default class TimeTrails implements Layer {
   private dimensions: number = -1
   private group: THREE.Group
   private positions: Float32Array
@@ -69,6 +70,12 @@ export default class Trails implements Layer {
       this.dimensions = dimensions
     }
 
+    this.particleQueues.forEach(particleQueue => {
+      particleQueue.values().forEach(particle => {
+        particle.position.z -= TRAIL_GAP
+      })
+    })
+
     while (this.particleQueues.length < particles.length) {
       this.particleQueues.push(new RecentQueue<Particle3>(TRAIL_LENGTH))
     }
@@ -77,7 +84,7 @@ export default class Trails implements Layer {
     }
 
     this.particleQueues.forEach((particleQueue, i) => {
-      particleQueue.add(particles[i])
+      particleQueue.add(particles[i].clone())
     })
 
     this.drawCount = 0

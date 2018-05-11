@@ -89,6 +89,7 @@ export default class Controls extends React.Component<Props, State> {
           bounds: false,
           grid: true,
           trails: false,
+          timeTrails: false,
         },
       },
     }
@@ -208,6 +209,15 @@ export default class Controls extends React.Component<Props, State> {
                   onChange={this.handleLayers}
                 />
                 &nbsp; Trails
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="timeTrails"
+                  checked={this.state.options.layers.timeTrails}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; Trails → Time
               </label>
             </div>
             <hr />

@@ -11,11 +11,27 @@ export default class Particle3 {
   public velocity: THREE.Vector3
   public acceleration: THREE.Vector3
 
-  constructor({ dimensions, position, velocity, acceleration }: ParticleMsg) {
-    this.dimensions = dimensions
-    this.position = toVector3(position)
-    this.velocity = toVector3(velocity)
-    this.acceleration = toVector3(acceleration)
+  constructor(msg?: ParticleMsg) {
+    if (msg) {
+      this.dimensions = msg.dimensions
+      this.position = toVector3(msg.position)
+      this.velocity = toVector3(msg.velocity)
+      this.acceleration = toVector3(msg.acceleration)
+    } else {
+      this.dimensions = 0
+      this.position = new THREE.Vector3()
+      this.velocity = new THREE.Vector3()
+      this.acceleration = new THREE.Vector3()
+    }
+  }
+
+  public clone(): Particle3 {
+    const clone = new Particle3()
+    clone.dimensions = this.dimensions
+    clone.position = this.position.clone()
+    clone.velocity = this.velocity.clone()
+    clone.acceleration = this.acceleration.clone()
+    return clone
   }
 }
 
