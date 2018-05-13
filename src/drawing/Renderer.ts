@@ -63,9 +63,10 @@ export default class Renderer {
       NEAR,
       FAR,
     )
+    const ZOOM = 6
     this.camera.position.x = 0
-    this.camera.position.y = 49 // 7*7
-    this.camera.position.z = 280 // 7*40
+    this.camera.position.y = 7 * ZOOM
+    this.camera.position.z = 40 * ZOOM
 
     // Set up camera controls
     this.controls = new TrackballControls(this.camera, this.canvas)

@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { MAX_PARTICLES } from 'src/constants'
 import { Layer, LayerArgs } from 'src/drawing/layers'
 
-const SIZE = 6
+const SIZE = 4
 
 const texture = ((): THREE.Texture => {
   const size = 256
