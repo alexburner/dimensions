@@ -29,6 +29,15 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
       charge: 50,
     },
   },
+  flocking: {
+    name: 'flocking',
+    config: {
+      awareness: 10000,
+      separation: 0.000001,
+      alignment: 0.01,
+      cohesion: 0.0001,
+    },
+  },
   gravity: {
     name: 'gravity',
     config: {
@@ -241,6 +250,24 @@ export default class Controls extends React.Component<Props, State> {
                 />
                 &nbsp; Diffusion
               </label>
+              {/* <label>
+                <input
+                  type="radio"
+                  name="flocking"
+                  checked={this.state.options.behavior.name === 'flocking'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Flocking
+              </label> */}
+              {/* <label>
+                <input
+                  type="radio"
+                  name="gravity"
+                  checked={this.state.options.behavior.name === 'gravity'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Gravity
+              </label> */}
               <label>
                 <input
                   type="radio"
