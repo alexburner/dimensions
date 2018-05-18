@@ -159,15 +159,6 @@ export default class Controls extends React.Component<Props, State> {
               <label>
                 <input
                   type="checkbox"
-                  name="bounds"
-                  checked={this.state.options.layers.bounds}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Bounds
-              </label>
-              <label>
-                <input
-                  type="checkbox"
                   name="grid"
                   checked={this.state.options.layers.grid}
                   onChange={this.handleLayers}
@@ -177,38 +168,11 @@ export default class Controls extends React.Component<Props, State> {
               <label>
                 <input
                   type="checkbox"
-                  name="points"
-                  checked={this.state.options.layers.points}
+                  name="bounds"
+                  checked={this.state.options.layers.bounds}
                   onChange={this.handleLayers}
                 />
-                &nbsp; 0D &mdash; Points
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="lines"
-                  checked={this.state.options.layers.lines}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 1D &mdash; Lines
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="circles"
-                  checked={this.state.options.layers.circles}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 2D &mdash; Circles
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="spheres"
-                  checked={this.state.options.layers.spheres}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 3D &mdash; Spheres
+                &nbsp; Bounds
               </label>
               <label>
                 <input
@@ -226,7 +190,43 @@ export default class Controls extends React.Component<Props, State> {
                   checked={this.state.options.layers.timeTrails}
                   onChange={this.handleLayers}
                 />
-                &nbsp; Trails → Time
+                &nbsp; Trails &#8594; Time
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="points"
+                  checked={this.state.options.layers.points}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; 0D&mdash;Points
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="lines"
+                  checked={this.state.options.layers.lines}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; 1D&mdash;Lines
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="circles"
+                  checked={this.state.options.layers.circles}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; 2D&mdash;Circles
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="spheres"
+                  checked={this.state.options.layers.spheres}
+                  onChange={this.handleLayers}
+                />
+                &nbsp; 3D&mdash;Spheres
               </label>
             </div>
             <hr />
@@ -378,6 +378,14 @@ export default class Controls extends React.Component<Props, State> {
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
     options.layers[name] = value
+
+    // lol hacks (trails are expensive)
+    if (value && name === 'trails') {
+      options.layers.timeTrails = false
+    } else if (value && name === 'timeTrails') {
+      options.layers.trails = false
+    }
+
     this.props.onOptionsChange(options)
     this.setState({ options })
   }
