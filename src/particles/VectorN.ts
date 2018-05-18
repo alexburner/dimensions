@@ -91,6 +91,7 @@ export default class VectorN {
   }
 
   public radialRandomize(radius: number = 1): this {
+    // Algorithm via Colin Ballast
     let radiusSq = radius * radius
     for (let i = 0, l = this.dimensions; i < l; i++) {
       const value = Math.random() * Math.sqrt(radiusSq)
