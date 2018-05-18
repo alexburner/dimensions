@@ -45,6 +45,20 @@ const BEHAVIOR_PRESETS: { [name in BehaviorSpecs['name']]: BehaviorSpecs } = {
       mass: 5,
     },
   },
+  orbits: {
+    name: 'orbits',
+    config: {
+      mass: {
+        g: 1,
+        orbiter: 10,
+        attractor: 30,
+      },
+      distance: {
+        min: 50,
+        max: 250,
+      },
+    },
+  },
   wandering: {
     name: 'wandering',
     config: {
@@ -268,6 +282,15 @@ export default class Controls extends React.Component<Props, State> {
                 />
                 &nbsp; Gravity
               </label> */}
+              <label>
+                <input
+                  type="radio"
+                  name="orbits"
+                  checked={this.state.options.behavior.name === 'orbits'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Orbits
+              </label>
               <label>
                 <input
                   type="radio"

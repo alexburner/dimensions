@@ -27,7 +27,6 @@ const texture = ((): THREE.Texture => {
 })()
 
 export default class TimeTrails implements Layer {
-  private dimensions: number = -1
   private group: THREE.Group
   private positions: Float32Array
   private posAttr: THREE.BufferAttribute
@@ -58,18 +57,9 @@ export default class TimeTrails implements Layer {
     this.group.add(this.pointCloud)
     this.particleQueues = []
     this.drawCount = 0
-    this.dimensions = 0
   }
 
-  public update({ particles, dimensions }: LayerArgs) {
-    if (this.dimensions !== dimensions) {
-      if (this.dimensions > dimensions) {
-        this.particleQueues = []
-        this.drawCount = 0
-      }
-      this.dimensions = dimensions
-    }
-
+  public update({ particles }: LayerArgs) {
     this.particleQueues.forEach(particleQueue => {
       particleQueue.values().forEach(particle => {
         particle.position.z -= TRAIL_GAP

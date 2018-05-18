@@ -1,3 +1,4 @@
+import { MAX_RADIUS } from 'src/constants'
 import { WorkerOptions, WorkerResponse } from 'src/options'
 import { behaviors } from 'src/particles/behaviors'
 import { boundings } from 'src/particles/boundings'
@@ -24,9 +25,19 @@ const context = (self as any) as DedicatedWorkerGlobalScope
 const state: {
   options: WorkerOptions | undefined
   system: System
+
+  // hacks for orbits
+  prev: {
+    orbits: boolean
+    dimensions: number | undefined
+  }
 } = {
   options: undefined,
   system: new System(),
+  prev: {
+    orbits: false,
+    dimensions: undefined,
+  },
 }
 
 /**
@@ -91,10 +102,47 @@ const sendUpdate = () => {
  *     c. sort all of each particle's neighbors by distance (asc)
  */
 const tick = () => {
-  if (!state.options) return
+  if (!state.options) return // TS will lose this in nested functions
 
   // Reset accelerations
   state.system.particles.forEach(p => p.acceleration.multiply(0))
+
+  /**
+   * BEGIN ORBIT HACKS
+   */
+
+  const isOrbits = state.options.behavior.name === 'orbits'
+  if (isOrbits) {
+    // Init particle velocities if noorbits->orbits
+    if (!state.prev.orbits) {
+      state.system.particles.forEach(p => {
+        if (!state.options) return
+        p.velocity.randomize(state.options.max.speed)
+      })
+    }
+    // Init particle positions if dimension increased
+    if (
+      state.prev.dimensions !== undefined &&
+      state.prev.dimensions < state.options.dimensions
+    ) {
+      state.system.particles.forEach(p => {
+        if (!state.options) return
+        const curr = p.position.clone()
+        p.position.radialRandomize(MAX_RADIUS)
+        p.position.mutate((v, i) => {
+          if (!state.options) return v
+          // Rescue existing values
+          return i + 1 < state.options.dimensions ? curr.getValue(i) : v
+        })
+      })
+    }
+  }
+  // Update prev state
+  state.prev.orbits = isOrbits
+  state.prev.dimensions = state.options.dimensions
+  /**
+   * END ORBIT HACKS
+   */
 
   {
     // Apply particle behavior

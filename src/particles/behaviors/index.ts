@@ -8,6 +8,7 @@ import {
 } from 'src/particles/behaviors/flocking'
 import { gravity, Spec as GravitySpec } from 'src/particles/behaviors/gravity'
 import { none, Spec as NoneSpec } from 'src/particles/behaviors/none'
+import { orbits, Spec as OrbitsSpec } from 'src/particles/behaviors/orbits'
 import {
   Spec as WanderingSpec,
   wandering,
@@ -21,6 +22,7 @@ export type BehaviorSpecs =
   | DiffusionSpec
   | FlockingSpec
   | GravitySpec
+  | OrbitsSpec
   | NoneSpec
 
 export const behaviors: { [name in BehaviorSpecs['name']]: Behavior<any> } = {
@@ -28,5 +30,6 @@ export const behaviors: { [name in BehaviorSpecs['name']]: Behavior<any> } = {
   diffusion,
   flocking,
   gravity,
+  orbits,
   none,
 }
