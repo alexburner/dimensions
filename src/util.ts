@@ -34,8 +34,8 @@ export const shuffle = (arr: Float32Array): void => {
  * Keep a list limited to a size, oldest items rolled out first
  */
 export class RecentQueue<T> {
-  private queue: T[] = []
-  private limit: number
+  private readonly queue: T[] = []
+  private readonly limit: number
 
   constructor(limit: number) {
     this.limit = limit

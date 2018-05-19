@@ -2,6 +2,7 @@ import THREE from 'three'
 
 import { RenderOptions, WorkerResponse } from 'src/options'
 import Particle3 from 'src/particles/Particle3'
+import ParticleMsg from 'src/particles/ParticleMsg'
 import { NeighborhoodMsg } from 'src/particles/System'
 import Bounds from 'src/view/layers/Bounds'
 import Circles from 'src/view/layers/Circles'
@@ -19,8 +20,8 @@ export interface LayerArgs {
 }
 
 export interface Layer {
-  update: (args: LayerArgs) => void
-  clear: () => void
+  update(args: LayerArgs): void
+  clear(): void
 }
 
 export type LayerName =
@@ -34,8 +35,8 @@ export type LayerName =
   | 'timeTrails'
 
 export default class Layers {
-  private layers: { [name in LayerName]: Layer }
-  private layerNames: LayerName[]
+  private readonly layers: { [name in LayerName]: Layer }
+  private readonly layerNames: LayerName[]
 
   constructor(group: THREE.Group, camera: THREE.Camera) {
     this.layers = {
@@ -54,9 +55,9 @@ export default class Layers {
   public update(
     { layers }: RenderOptions,
     { dimensions, neighborhood, particles }: WorkerResponse,
-  ) {
-    const particles3 = particles.map(p => new Particle3(p))
-    this.layerNames.forEach(layerName => {
+  ): void {
+    const particles3 = particles.map((p: ParticleMsg) => new Particle3(p))
+    this.layerNames.forEach((layerName: LayerName) => {
       const layer = this.layers[layerName]
       const layerVisible = layers[layerName]
       layerVisible
@@ -77,8 +78,8 @@ const resizeList = <T>({
 }: {
   currList: T[]
   newSize: number
-  createEl: () => T
-  destroyEl: (el: T) => void
+  createEl(): T
+  destroyEl(el: T): void
 }): T[] => {
   const newList = [...currList]
   const currSize = currList.length
@@ -111,7 +112,7 @@ export const resizeObjList = <T extends THREE.Object3D>({
   group: THREE.Group
   currList: T[]
   newSize: number
-  createObj: () => T
+  createObj(): T
 }): T[] =>
   resizeList({
     currList,
@@ -121,7 +122,7 @@ export const resizeObjList = <T extends THREE.Object3D>({
       group.add(obj)
       return obj
     },
-    destroyEl: (obj: T) => group.remove(obj),
+    destroyEl: (obj: T): void => group.remove(obj),
   })
 
 /**
@@ -131,6 +132,6 @@ export const clearObjList = <T extends THREE.Object3D>(
   group: THREE.Group,
   list: T[],
 ): T[] => {
-  list.forEach(object => group.remove(object))
+  list.forEach((object: T) => group.remove(object))
   return []
 }

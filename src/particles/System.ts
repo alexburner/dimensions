@@ -14,7 +14,7 @@ export interface NeighborN {
 /**
  * Neighborhood for worker/browser transport
  */
-interface NeighborMsg {
+export interface NeighborMsg {
   index: number
   delta: Float32Array
   distance: number
@@ -67,15 +67,17 @@ export default class System {
    * Update particle count & dimensions
    * (attempts to preserve any existing particle data)
    */
-  public setPopulation(count: number, dimensions: number) {
+  public setPopulation(count: number, dimensions: number): void {
     const oldParticles = this.particles
-    const newParticles = new Array(count).fill(null).map((_, i): ParticleN => {
-      const newParticle = new ParticleN(dimensions)
-      oldParticles[i]
-        ? newParticle.fill(oldParticles[i])
-        : newParticle.randomize(MAX_RADIUS)
-      return newParticle
-    })
+    const newParticles = new Array(count)
+      .fill(undefined)
+      .map((_: undefined, i: number) => {
+        const newParticle = new ParticleN(dimensions)
+        oldParticles[i]
+          ? newParticle.fill(oldParticles[i])
+          : newParticle.randomize(MAX_RADIUS)
+        return newParticle
+      })
     this.particles = newParticles
     this.recalculate()
   }
@@ -84,11 +86,11 @@ export default class System {
    * Recaculate particle neighbors
    * (must be run after applying forces to particle positions)
    */
-  public recalculate() {
+  public recalculate(): void {
     // Find relationships between all particle positions
-    this.particles.forEach(particle => {
+    this.particles.forEach((particle: ParticleN) => {
       particle.neighbors = []
-      this.particles.forEach((other, index) => {
+      this.particles.forEach((other: ParticleN, index: number) => {
         if (particle === other) return
         const delta = particle.position.clone().subtract(other.position)
         const distance = delta.getMagnitude()
@@ -96,7 +98,9 @@ export default class System {
       })
 
       // Sort each particle's neighbors by nearest -> furthest
-      particle.neighbors.sort((a, b) => a.distance - b.distance)
+      particle.neighbors.sort(
+        (a: NeighborN, b: NeighborN) => a.distance - b.distance,
+      )
     })
   }
 
@@ -106,20 +110,22 @@ export default class System {
   public getNeighborhoodMsg(spec: NeighborhoodSpecs): NeighborhoodMsg {
     switch (spec.name) {
       case 'all':
-        return this.particles.map(particle =>
-          particle.neighbors.map(neighbor => toNeighborMsg(neighbor)),
+        return this.particles.map((particle: ParticleN) =>
+          particle.neighbors.map((neighbor: NeighborN) =>
+            toNeighborMsg(neighbor),
+          ),
         )
       case 'locals':
-        return this.particles.map(particle =>
+        return this.particles.map((particle: ParticleN) =>
           particle.neighbors
             .slice(0, particle.dimensions)
-            .map(neighbor => toNeighborMsg(neighbor)),
+            .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
         )
       case 'nearest':
-        return this.particles.map(particle =>
+        return this.particles.map((particle: ParticleN) =>
           particle.neighbors
             .slice(0, 1)
-            .map(neighbor => toNeighborMsg(neighbor)),
+            .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
         )
       case 'proximity':
         throw new Error('TODO: proximity neighborhood')

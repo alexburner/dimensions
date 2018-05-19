@@ -7,9 +7,9 @@ type ObjectSpec = [number, number, number] // [x, y, z]
 
 export default class Grid implements Layer {
   private dimensions: number
-  private group: THREE.Group
+  private readonly group: THREE.Group
   private objects: THREE.Object3D[]
-  private material: THREE.LineDashedMaterial
+  private readonly material: THREE.LineDashedMaterial
 
   constructor(group: THREE.Group) {
     this.dimensions = -1
@@ -26,9 +26,9 @@ export default class Grid implements Layer {
     })
   }
 
-  public update({ dimensions }: LayerArgs) {
+  public update({ dimensions }: LayerArgs): void {
     if (this.dimensions === dimensions) return
-    else this.dimensions = dimensions
+    this.dimensions = dimensions
 
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(dimensions)
@@ -38,14 +38,15 @@ export default class Grid implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: () => new THREE.Line(new THREE.Geometry(), this.material),
+      createObj: (): THREE.Line =>
+        new THREE.Line(new THREE.Geometry(), this.material),
     })
 
     // 3. Update objects to match specs
     updateObjects(specs, this.objects)
   }
 
-  public clear() {
+  public clear(): void {
     this.objects = clearObjList(this.group, this.objects)
     this.dimensions = -1
   }
@@ -150,8 +151,8 @@ const makeObjectSpecs = (dimensions: number): ObjectSpec[] => {
   return SPECS[dimensions]
 }
 
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  specs.forEach((spec, i) => {
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]): void =>
+  specs.forEach((spec: ObjectSpec, i: number) => {
     if (i % 2) return // only do evens, each pair
     const source = new THREE.Vector3(...specs[i])
     const target = new THREE.Vector3(...specs[i + 1])

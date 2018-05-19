@@ -8,8 +8,8 @@ import { NeighborhoodSpecs } from 'src/particles/System'
 import { LayerName } from 'src/view/Layers'
 
 interface Props {
-  onRotatingChange: (rotating: boolean) => void
-  onOptionsChange: (options: Options) => void
+  onRotatingChange(rotating: boolean): void
+  onOptionsChange(options: Options): void
 }
 
 interface State {
@@ -118,7 +118,7 @@ export default class Controls extends React.Component<Props, State> {
     }
   }
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div className={'controls' + (this.state.closed ? ' is-closed' : '')}>
         <div className="toggle" onClick={this.handleToggle}>
@@ -377,18 +377,22 @@ export default class Controls extends React.Component<Props, State> {
     return this.state.rotating
   }
 
-  private handleToggle = () => {
+  private readonly handleToggle = (): void => {
     this.setState({ closed: !this.state.closed })
   }
 
-  private handleDimensions = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleDimensions = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     options.dimensions = Number(e.currentTarget.value)
     this.props.onOptionsChange(options)
     this.setState({ options })
   }
 
-  private handleParticles = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleParticles = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     const particles = Number(e.currentTarget.value)
     options.particles = Math.min(particles, MAX_PARTICLES)
@@ -396,7 +400,9 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ options })
   }
 
-  private handleLayers = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleLayers = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
@@ -413,7 +419,9 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ options })
   }
 
-  private handleBoundings = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleBoundings = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     const name = e.currentTarget.name as BoundingName
     options.bounding = name
@@ -421,7 +429,9 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ options })
   }
 
-  private handleBehaviors = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleBehaviors = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const spec = BEHAVIOR_PRESETS[name as BehaviorSpecs['name']]
@@ -430,7 +440,9 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ options })
   }
 
-  private handleNeighborhoods = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleNeighborhoods = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const options = { ...this.state.options }
     const name = e.currentTarget.name as LayerName
     const spec = NEIGHBORHOOD_PRESETS[name as NeighborhoodSpecs['name']]
@@ -439,13 +451,17 @@ export default class Controls extends React.Component<Props, State> {
     this.setState({ options })
   }
 
-  private handleRotating = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly handleRotating = (
+    e: React.FormEvent<HTMLInputElement>,
+  ): void => {
     const rotating = e.currentTarget.checked
     this.props.onRotatingChange(rotating)
     this.setState({ rotating })
   }
 
-  private handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  private readonly handleEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ): void => {
     // For mobile devices, easier dismissing of keyboards
     if (e.key === 'Enter') e.currentTarget.blur()
   }

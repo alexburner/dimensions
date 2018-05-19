@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 
 import { MAX_PARTICLES } from 'src/constants'
+import Particle3 from 'src/particles/Particle3'
 import { Layer, LayerArgs } from 'src/view/Layers'
 
 const SIZE = 4
@@ -23,11 +24,11 @@ const texture = ((): THREE.Texture => {
 })()
 
 export default class Points implements Layer {
-  private group: THREE.Group
-  private positions: Float32Array
-  private posAttr: THREE.BufferAttribute
-  private geometry: THREE.BufferGeometry
-  private pointCloud: THREE.Points
+  private readonly group: THREE.Group
+  private readonly positions: Float32Array
+  private readonly posAttr: THREE.BufferAttribute
+  private readonly geometry: THREE.BufferGeometry
+  private readonly pointCloud: THREE.Points
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -51,8 +52,8 @@ export default class Points implements Layer {
     this.group.add(this.pointCloud)
   }
 
-  public update({ particles }: LayerArgs) {
-    particles.forEach((particle, i) => {
+  public update({ particles }: LayerArgs): void {
+    particles.forEach((particle: Particle3, i: number) => {
       this.positions[i * 3 + 0] = particle.position.x
       this.positions[i * 3 + 1] = particle.position.y
       this.positions[i * 3 + 2] = particle.position.z
@@ -62,7 +63,7 @@ export default class Points implements Layer {
     this.posAttr.needsUpdate = true
   }
 
-  public clear() {
+  public clear(): void {
     this.geometry.setDrawRange(0, 0)
   }
 }

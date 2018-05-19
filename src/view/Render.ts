@@ -62,23 +62,23 @@ export default class Render {
     this.loop()
   }
 
-  public destroy() {
+  public destroy(): void {
     this.isDestroyed = true
     if (this.rafId) window.cancelAnimationFrame(this.rafId)
   }
 
-  public resize(bounds: ClientRect) {
+  public resize(bounds: ClientRect): void {
     this.renderer.setSize(bounds.width, bounds.height)
     this.camera.aspect = bounds.width / bounds.height
     this.camera.updateProjectionMatrix()
     this.controls.handleResize()
   }
 
-  public setRotating(rotating: boolean) {
+  public setRotating(rotating: boolean): void {
     this.isRotating = rotating
   }
 
-  private loop() {
+  private loop(): void {
     if (this.isDestroyed) return
     if (this.isRotating) this.rotateCamera()
     this.renderer.render(this.scene, this.camera)
@@ -86,7 +86,7 @@ export default class Render {
     this.rafId = window.requestAnimationFrame(() => this.loop())
   }
 
-  private rotateCamera() {
+  private rotateCamera(): void {
     const speed = 0.001
     const speedSin = Math.sin(speed)
     const speedCos = Math.cos(speed)

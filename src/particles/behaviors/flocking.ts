@@ -1,5 +1,6 @@
 import { Behavior } from 'src/particles/behaviors'
-import System from 'src/particles/System'
+import ParticleN from 'src/particles/ParticleN'
+import System, { NeighborN } from 'src/particles/System'
 import VectorN from 'src/particles/VectorN'
 
 export interface Config {
@@ -14,17 +15,20 @@ export interface Spec {
   config: Config
 }
 
-export const flocking: Behavior<Config> = (system: System, config: Config) => {
+export const flocking: Behavior<Config> = (
+  system: System,
+  config: Config,
+): void => {
   // Only works if more than 1 particle
   if (system.particles.length < 2) return
 
   // Apply force to each particle
-  system.particles.forEach(particle => {
+  system.particles.forEach((particle: ParticleN) => {
     const force = new VectorN(particle.dimensions)
-    let neighborsCenter: VectorN | null = null
+    let neighborsCenter: VectorN | false = false
 
     // Compare particle to every neighbor
-    particle.neighbors.forEach(({ delta, distance, index }) => {
+    particle.neighbors.forEach(({ delta, distance, index }: NeighborN) => {
       // Limit behavior to w/in awareness
       if (distance > config.awareness) return
       const neighbor = system.particles[index]

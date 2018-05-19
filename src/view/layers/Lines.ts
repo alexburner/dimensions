@@ -1,14 +1,16 @@
 import * as THREE from 'three'
 
 import { MAX_NEIGHBORS } from 'src/constants'
+import Particle3 from 'src/particles/Particle3'
+import { NeighborMsg } from 'src/particles/System'
 import { Layer, LayerArgs } from 'src/view/Layers'
 
 export default class Lines implements Layer {
-  private group: THREE.Group
-  private positions: Float32Array
-  private posAttr: THREE.BufferAttribute
-  private geometry: THREE.BufferGeometry
-  private lineSegments: THREE.LineSegments
+  private readonly group: THREE.Group
+  private readonly positions: Float32Array
+  private readonly posAttr: THREE.BufferAttribute
+  private readonly geometry: THREE.BufferGeometry
+  private readonly lineSegments: THREE.LineSegments
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -30,11 +32,11 @@ export default class Lines implements Layer {
     this.group.add(this.lineSegments)
   }
 
-  public update({ particles, neighborhood }: LayerArgs) {
+  public update({ particles, neighborhood }: LayerArgs): void {
     let posIndex = 0
     let numConnected = 0
-    particles.forEach((particle, i) => {
-      neighborhood[i].forEach(neighbor => {
+    particles.forEach((particle: Particle3, i: number) => {
+      neighborhood[i].forEach((neighbor: NeighborMsg) => {
         const other = particles[neighbor.index]
         this.positions[posIndex++] = particle.position.x
         this.positions[posIndex++] = particle.position.y
@@ -50,7 +52,7 @@ export default class Lines implements Layer {
     this.posAttr.needsUpdate = true
   }
 
-  public clear() {
+  public clear(): void {
     this.geometry.setDrawRange(0, 0)
   }
 }

@@ -1,4 +1,5 @@
 import { Behavior } from 'src/particles/behaviors'
+import ParticleN from 'src/particles/ParticleN'
 import System from 'src/particles/System'
 
 export interface Config {
@@ -10,7 +11,10 @@ export interface Spec {
   config: Config
 }
 
-export const diffusion: Behavior<Config> = (system: System, config: Config) => {
+export const diffusion: Behavior<Config> = (
+  system: System,
+  config: Config,
+): void => {
   // Only works if more than 1 particle
   if (system.particles.length < 2) return
 
@@ -18,7 +22,7 @@ export const diffusion: Behavior<Config> = (system: System, config: Config) => {
   const count = system.particles.length
   const countSq = count * count
   const chargeSq = config.charge * config.charge
-  system.particles.forEach(particle => {
+  system.particles.forEach((particle: ParticleN) => {
     // Grab nearest neighbor delta vector & distance
     const { delta, distance } = particle.neighbors[0]
     const force = delta.clone()

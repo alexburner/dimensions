@@ -8,8 +8,15 @@ import { coinFlip, random, shuffle } from 'src/util'
 
 type VectorMath = (other: VectorN | number) => VectorN
 type NumberMath = (a: number, b: number) => number
-type SelfMath = (self: VectorN) => (math: NumberMath) => VectorMath
-const selfMath: SelfMath = self => math => other => {
+
+const add: NumberMath = (an: number, bn: number): number => an + bn
+const sub: NumberMath = (an: number, bn: number): number => an - bn
+const mul: NumberMath = (an: number, bn: number): number => an * bn
+const div: NumberMath = (an: number, bn: number): number => an / bn
+
+const selfMath = (self: VectorN, math: NumberMath): VectorMath => (
+  other: VectorN | number,
+): VectorN => {
   const isOtherNum = typeof other === 'number'
   for (let i = 0, l = self.dimensions; i < l; i++) {
     const a = self.getValue(i)
@@ -35,13 +42,13 @@ export default class VectorN {
     return average
   }
 
-  public add = selfMath(this)((an, bn) => an + bn)
-  public subtract = selfMath(this)((an, bn) => an - bn)
-  public multiply = selfMath(this)((an, bn) => an * bn)
-  public divide = selfMath(this)((an, bn) => an / bn)
+  public add: VectorMath = selfMath(this, add)
+  public subtract: VectorMath = selfMath(this, sub)
+  public multiply: VectorMath = selfMath(this, mul)
+  public divide: VectorMath = selfMath(this, div)
 
   public readonly dimensions: number
-  private values: Float32Array
+  private readonly values: Float32Array
   private magnitude: number | undefined
   private magnitudeSq: number | undefined
 

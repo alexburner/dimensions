@@ -3,8 +3,8 @@ import Layers from 'src/view/Layers'
 import Render from 'src/view/Render'
 
 export default class View {
-  private render: Render
-  private layers: Layers
+  private readonly render: Render
+  private readonly layers: Layers
 
   constructor({
     canvas,
@@ -17,18 +17,18 @@ export default class View {
     this.layers = new Layers(this.render.group, this.render.camera)
   }
 
-  public update(ro: RenderOptions, wr: WorkerResponse) {
+  public update(ro: RenderOptions, wr: WorkerResponse): void {
     this.layers.update(ro, wr)
   }
 
-  public resize(bounds: ClientRect) {
+  public resize(bounds: ClientRect): void {
     this.render.resize(bounds)
   }
-  public setRotating(rotating: boolean) {
+  public setRotating(rotating: boolean): void {
     this.render.setRotating(rotating)
   }
 
-  public destroy() {
+  public destroy(): void {
     this.render.destroy()
   }
 }

@@ -9,8 +9,8 @@ import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
   private isDestroyed: boolean = false
-  private view: View
-  private worker: Worker
+  private readonly view: View
+  private readonly worker: Worker
   private rafId?: number
 
   private workerOptions?: WorkerOptions
@@ -26,7 +26,7 @@ export default class Manager {
   }) {
     this.view = new View({ canvas, bounds })
     this.worker = new WorkerLoader()
-    this.worker.addEventListener('message', e => {
+    this.worker.addEventListener('message', (e: MessageEvent) => {
       if (this.isDestroyed) return
       if (!(e && e.data && e.data.type)) return
       switch (e.data.type) {
@@ -46,18 +46,18 @@ export default class Manager {
     })
   }
 
-  public destroy() {
+  public destroy(): void {
     this.isDestroyed = true
     if (this.rafId) window.cancelAnimationFrame(this.rafId)
     postMessage(this.worker, { type: 'destroy' })
     this.view.destroy()
   }
 
-  public resize(bounds: ClientRect) {
+  public resize(bounds: ClientRect): void {
     this.view.resize(bounds)
   }
 
-  public draw(options: Options) {
+  public draw(options: Options): void {
     // Split options for worker & renderer
     this.workerOptions = {
       dimensions: options.dimensions,
@@ -78,11 +78,11 @@ export default class Manager {
     }
   }
 
-  public setRotating(rotating: boolean) {
+  public setRotating(rotating: boolean): void {
     this.view.setRotating(rotating)
   }
 }
 
-const postMessage = (worker: Worker, message: any) => {
+const postMessage = (worker: Worker, message: any): void => {
   worker.postMessage(JSON.stringify(message))
 }

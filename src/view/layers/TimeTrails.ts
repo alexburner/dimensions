@@ -4,6 +4,8 @@ import Particle3 from 'src/particles/Particle3'
 import { RecentQueue } from 'src/util'
 import { Layer, LayerArgs } from 'src/view/Layers'
 
+type ParticleQueue = RecentQueue<Particle3>
+
 const TRAIL_GAP = 1 / 2
 const TRAIL_LENGTH = 2000
 const MAX_COUNT = TRAIL_LENGTH * 1000
@@ -27,13 +29,13 @@ const texture = ((): THREE.Texture => {
 })()
 
 export default class TimeTrails implements Layer {
-  private group: THREE.Group
-  private positions: Float32Array
-  private posAttr: THREE.BufferAttribute
-  private geometry: THREE.BufferGeometry
-  private pointCloud: THREE.Points
-  private particleQueues: RecentQueue<Particle3>[]
-  private drawCount = 0
+  private readonly group: THREE.Group
+  private readonly positions: Float32Array
+  private readonly posAttr: THREE.BufferAttribute
+  private readonly geometry: THREE.BufferGeometry
+  private readonly pointCloud: THREE.Points
+  private particleQueues: ParticleQueue[] = []
+  private drawCount: number = 0
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -55,13 +57,11 @@ export default class TimeTrails implements Layer {
       }),
     )
     this.group.add(this.pointCloud)
-    this.particleQueues = []
-    this.drawCount = 0
   }
 
-  public update({ particles }: LayerArgs) {
-    this.particleQueues.forEach(particleQueue => {
-      particleQueue.values().forEach(particle => {
+  public update({ particles }: LayerArgs): void {
+    this.particleQueues.forEach((particleQueue: ParticleQueue) => {
+      particleQueue.values().forEach((particle: Particle3) => {
         particle.position.z -= TRAIL_GAP
       })
     })
@@ -73,13 +73,13 @@ export default class TimeTrails implements Layer {
       this.particleQueues.pop()
     }
 
-    this.particleQueues.forEach((particleQueue, i) => {
+    this.particleQueues.forEach((particleQueue: ParticleQueue, i: number) => {
       particleQueue.add(particles[i].clone())
     })
 
     this.drawCount = 0
-    this.particleQueues.forEach(particleQueue => {
-      particleQueue.values().forEach(particle => {
+    this.particleQueues.forEach((particleQueue: ParticleQueue) => {
+      particleQueue.values().forEach((particle: Particle3) => {
         this.positions[this.drawCount * 3 + 0] = particle.position.x
         this.positions[this.drawCount * 3 + 1] = particle.position.y
         this.positions[this.drawCount * 3 + 2] = particle.position.z
@@ -91,7 +91,7 @@ export default class TimeTrails implements Layer {
     this.posAttr.needsUpdate = true
   }
 
-  public clear() {
+  public clear(): void {
     this.geometry.setDrawRange(0, 0)
     this.particleQueues = []
     this.drawCount = 0

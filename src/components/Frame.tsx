@@ -6,19 +6,19 @@ import Manager from 'src/Manager'
 import { Options } from 'src/options'
 
 export default class Frame extends React.Component<{}, {}> {
-  private canvas: Canvas | null
-  private controls: Controls | null
-  private manager: Manager
+  private canvas?: Canvas
+  private controls?: Controls
+  private manager?: Manager
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div className="frame">
         <Canvas
-          ref={canvas => (this.canvas = canvas)}
+          ref={(el: Canvas): Canvas => (this.canvas = el)}
           onResize={this.handleResize}
         />
         <Controls
-          ref={controls => (this.controls = controls)}
+          ref={(el: Controls): Controls => (this.controls = el)}
           onOptionsChange={this.handleOptionsChange}
           onRotatingChange={this.handleRotatingChange}
         />
@@ -26,7 +26,7 @@ export default class Frame extends React.Component<{}, {}> {
     )
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     if (!this.canvas) throw new Error('Canvas failed to mount')
     if (!this.controls) throw new Error('Controls failed to mount')
     const bounds = this.canvas.getBounds()
@@ -39,21 +39,21 @@ export default class Frame extends React.Component<{}, {}> {
     this.manager.setRotating(rotating)
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     if (this.manager) this.manager.destroy()
   }
 
-  private handleResize = (bounds: ClientRect) => {
+  private readonly handleResize = (bounds: ClientRect): void => {
     if (!this.manager) return
     this.manager.resize(bounds)
   }
 
-  private handleOptionsChange = (options: Options) => {
+  private readonly handleOptionsChange = (options: Options): void => {
     if (!this.manager) return
     this.manager.draw(options)
   }
 
-  private handleRotatingChange = (rotating: boolean) => {
+  private readonly handleRotatingChange = (rotating: boolean): void => {
     if (!this.manager) return
     this.manager.setRotating(rotating)
   }

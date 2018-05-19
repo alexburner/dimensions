@@ -8,10 +8,10 @@ const OPACITY = 0.5
 
 export default class Bounds implements Layer {
   private dimensions: number
-  private group: THREE.Group
-  private line: THREE.Object3D
-  private circle: THREE.Object3D
-  private sphere: THREE.Object3D
+  private readonly group: THREE.Group
+  private readonly line: THREE.Object3D
+  private readonly circle: THREE.Object3D
+  private readonly sphere: THREE.Object3D
 
   constructor(group: THREE.Group, camera: THREE.Camera) {
     this.dimensions = -1
@@ -21,17 +21,17 @@ export default class Bounds implements Layer {
     this.sphere = makeSphere(camera)
   }
 
-  public update({ dimensions }: LayerArgs) {
+  public update({ dimensions }: LayerArgs): void {
     if (this.dimensions === dimensions) return
-    else this.dimensions = dimensions
+    this.dimensions = dimensions
     this.clear()
     if (dimensions === 0) return
-    else if (dimensions === 1) this.group.add(this.line)
+    if (dimensions === 1) this.group.add(this.line)
     else if (dimensions === 2) this.group.add(this.circle)
     else this.group.add(this.sphere)
   }
 
-  public clear() {
+  public clear(): void {
     this.group.remove(this.line)
     this.group.remove(this.circle)
     this.group.remove(this.sphere)
@@ -63,7 +63,9 @@ const makeCircle = (): THREE.Object3D => {
   shape.arc(0, 0, MAX_RADIUS, 0, 2 * Math.PI, false)
   shape.autoClose = true
   const points2 = shape.getSpacedPoints(DIVISIONS)
-  const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
+  const points3 = points2.map(
+    (p: THREE.Vector2): THREE.Vector3 => new THREE.Vector3(p.x, p.y, 0),
+  )
   const geometry = new THREE.BufferGeometry()
   geometry.setFromPoints(points3)
   const material = new THREE.LineBasicMaterial({
@@ -77,8 +79,8 @@ const makeCircle = (): THREE.Object3D => {
 
 const SEGMENTS = 32
 const RINGS = 32
-const makeSphere = (camera: THREE.Camera): THREE.Object3D => {
-  return new THREE.Mesh(
+const makeSphere = (camera: THREE.Camera): THREE.Object3D =>
+  new THREE.Mesh(
     new THREE.SphereBufferGeometry(MAX_RADIUS, SEGMENTS, RINGS),
     new THREE.ShaderMaterial({
       uniforms: {
@@ -106,7 +108,6 @@ const makeSphere = (camera: THREE.Camera): THREE.Object3D => {
       transparent: true,
     }),
   )
-}
 
 const bubbleShaders = {
   vertex: `

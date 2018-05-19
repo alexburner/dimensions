@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import Particle3 from 'src/particles/Particle3'
-import { NeighborhoodMsg } from 'src/particles/System'
+import { NeighborhoodMsg, NeighborMsg } from 'src/particles/System'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
 interface ObjectSpec {
@@ -21,22 +21,22 @@ const makeObjectSpecs = (
   particles: Particle3[],
   neighborhood: NeighborhoodMsg,
 ): ObjectSpec[] =>
-  particles.reduce(
-    (memo, particle, i) => {
-      neighborhood[i].forEach(neighbor => {
-        memo.push({
-          position: particle.position,
-          radius: neighbor.distance,
-        })
+  particles.reduce((memo: ObjectSpec[], particle: Particle3, i: number) => {
+    neighborhood[i].forEach((neighbor: NeighborMsg) => {
+      memo.push({
+        position: particle.position,
+        radius: neighbor.distance,
       })
-      return memo
-    },
-    [] as ObjectSpec[],
-  )
+    })
+    return memo
+  }, [])
 
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) => {
+const updateObjects = (
+  specs: ObjectSpec[],
+  objects: THREE.Object3D[],
+): void => {
   const opacity = getOpacity(specs.length)
-  specs.forEach((spec, i) => {
+  specs.forEach((spec: ObjectSpec, i: number) => {
     const object = objects[i] as THREE.Mesh
     object.position.x = spec.position.x
     object.position.y = spec.position.y
@@ -48,10 +48,10 @@ const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) => {
 }
 
 export default class Spheres implements Layer {
-  private group: THREE.Group
+  private readonly group: THREE.Group
   private objects: THREE.Object3D[]
-  private geometry: THREE.SphereBufferGeometry
-  private material: THREE.MeshNormalMaterial
+  private readonly geometry: THREE.SphereBufferGeometry
+  private readonly material: THREE.MeshNormalMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -65,7 +65,7 @@ export default class Spheres implements Layer {
     })
   }
 
-  public update({ particles, neighborhood }: LayerArgs) {
+  public update({ particles, neighborhood }: LayerArgs): void {
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(particles, neighborhood)
 
@@ -74,14 +74,14 @@ export default class Spheres implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: () => new THREE.Mesh(this.geometry, this.material),
+      createObj: (): THREE.Mesh => new THREE.Mesh(this.geometry, this.material),
     })
 
     // 3. Update objects to match specs
     updateObjects(specs, this.objects)
   }
 
-  public clear() {
+  public clear(): void {
     this.objects = clearObjList(this.group, this.objects)
   }
 }

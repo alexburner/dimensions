@@ -3,6 +3,7 @@ import { WorkerOptions, WorkerResponse } from 'src/options'
 import { behaviors } from 'src/particles/behaviors'
 import { boundings } from 'src/particles/boundings'
 import ParticleMsg from 'src/particles/ParticleMsg'
+import ParticleN from 'src/particles/ParticleN'
 import System from 'src/particles/System'
 import VectorN from 'src/particles/VectorN'
 
@@ -44,7 +45,7 @@ const state: {
 /**
  * Handle messages from main browser thread
  */
-context.addEventListener('message', e => {
+context.addEventListener('message', (e: MessageEvent) => {
   const data = JSON.parse(e.data)
   if (!(data && data.type)) return
   switch (data.type) {
@@ -71,7 +72,7 @@ context.addEventListener('message', e => {
 /**
  * Send WorkerResponse back to main browser thread
  */
-const sendUpdate = () => {
+const sendUpdate = (): void => {
   if (!state.options) return
   context.postMessage<{
     type: 'update'
@@ -80,7 +81,9 @@ const sendUpdate = () => {
     type: 'update',
     response: {
       dimensions: state.options.dimensions,
-      particles: state.system.particles.map(p => new ParticleMsg(p)),
+      particles: state.system.particles.map(
+        (p: ParticleN) => new ParticleMsg(p),
+      ),
       neighborhood: state.system.getNeighborhoodMsg(state.options.neighborhood),
     },
   })
@@ -102,11 +105,11 @@ const sendUpdate = () => {
  *     b. find all of each particle's neighbors { index, distance }
  *     c. sort all of each particle's neighbors by distance (asc)
  */
-const tick = () => {
+const tick = (): void => {
   if (!state.options) return // TS will lose this in nested functions
 
   // Reset accelerations
-  state.system.particles.forEach(p => p.acceleration.multiply(0))
+  state.system.particles.forEach((p: ParticleN) => p.acceleration.multiply(0))
 
   {
     /**
@@ -118,14 +121,16 @@ const tick = () => {
     if (isOrbits) {
       // Randomize particle velocities if noorbits->orbits
       if (!state.prev.orbits) {
-        state.system.particles.forEach(p => p.velocity.randomize(maxSpeed))
+        state.system.particles.forEach((p: ParticleN) =>
+          p.velocity.randomize(maxSpeed),
+        )
       }
       // Randomize particle positions & velocity if dimensions have increased
       if (
         state.prev.dimensions !== undefined &&
         state.prev.dimensions < dimensions
       ) {
-        state.system.particles.forEach(p => {
+        state.system.particles.forEach((p: ParticleN) => {
           randomizeHigherDimensions(dimensions, p.position, MAX_RADIUS)
           randomizeHigherDimensions(dimensions, p.velocity, maxSpeed)
         })
@@ -147,7 +152,7 @@ const tick = () => {
   }
 
   // Update positions
-  state.system.particles.forEach(p => {
+  state.system.particles.forEach((p: ParticleN) => {
     if (!state.options) return
     p.velocity.add(p.acceleration)
     p.velocity.limitMagnitude(state.options.max.speed)
@@ -182,5 +187,7 @@ const randomizeHigherDimensions = (
   // Randomize vector
   vector.radialRandomize(k)
   // Restore any original values
-  vector.mutate((v, i) => (i + 1 < dimensions ? copy.getValue(i) : v))
+  vector.mutate(
+    (v: number, i: number) => (i + 1 < dimensions ? copy.getValue(i) : v),
+  )
 }

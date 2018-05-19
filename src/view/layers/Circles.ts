@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import Particle3, { toVector3 } from 'src/particles/Particle3'
-import { NeighborhoodMsg } from 'src/particles/System'
+import { NeighborhoodMsg, NeighborMsg } from 'src/particles/System'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
 interface ObjectSpec {
@@ -18,8 +18,8 @@ const makeObjectSpecs = (
   neighborhood: NeighborhoodMsg,
 ): ObjectSpec[] =>
   particles.reduce(
-    (memo, particle, i) => {
-      neighborhood[i].forEach(neighbor => {
+    (memo: ObjectSpec[], particle: Particle3, i: number) => {
+      neighborhood[i].forEach((neighbor: NeighborMsg) => {
         memo.push({
           delta: toVector3(neighbor.delta),
           position: particle.position,
@@ -31,8 +31,8 @@ const makeObjectSpecs = (
     [] as ObjectSpec[],
   )
 
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
-  specs.forEach((spec, i) => {
+const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]): void =>
+  specs.forEach((spec: ObjectSpec, i: number) => {
     const object = objects[i]
     object.position.x = spec.position.x
     object.position.y = spec.position.y
@@ -44,10 +44,10 @@ const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]) =>
   })
 
 export default class Circles implements Layer {
-  private group: THREE.Group
+  private readonly group: THREE.Group
   private objects: THREE.Object3D[]
-  private geometry: THREE.BufferGeometry
-  private material: THREE.LineBasicMaterial
+  private readonly geometry: THREE.BufferGeometry
+  private readonly material: THREE.LineBasicMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -56,7 +56,9 @@ export default class Circles implements Layer {
     shape.arc(0, 0, 1, 0, 2 * Math.PI, false)
     shape.autoClose = true
     const points2 = shape.getSpacedPoints(DIVISIONS)
-    const points3 = points2.map(p => new THREE.Vector3(p.x, p.y, 0))
+    const points3 = points2.map(
+      (p: THREE.Vector2) => new THREE.Vector3(p.x, p.y, 0),
+    )
     this.geometry = new THREE.BufferGeometry()
     this.geometry.setFromPoints(points3)
     this.material = new THREE.LineBasicMaterial({
@@ -67,7 +69,7 @@ export default class Circles implements Layer {
     })
   }
 
-  public update({ particles, neighborhood }: LayerArgs) {
+  public update({ particles, neighborhood }: LayerArgs): void {
     // 1. Generate fresh list of specs
     const specs = makeObjectSpecs(particles, neighborhood)
 
@@ -76,14 +78,14 @@ export default class Circles implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: () => new THREE.Line(this.geometry, this.material),
+      createObj: (): THREE.Line => new THREE.Line(this.geometry, this.material),
     })
 
     // 3. Update objects to match specs
     updateObjects(specs, this.objects)
   }
 
-  public clear() {
+  public clear(): void {
     this.objects = clearObjList(this.group, this.objects)
   }
 }
