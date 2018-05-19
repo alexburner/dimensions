@@ -26,8 +26,8 @@ export default class ParticleN {
    */
   public randomize(k: number = 1): ParticleN {
     this.position.radialRandomize(k)
-    this.velocity.randomize(k)
-    this.acceleration.randomize(k)
+    this.velocity.radialRandomize(k)
+    this.acceleration.radialRandomize(k)
     return this
   }
 
