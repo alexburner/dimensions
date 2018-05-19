@@ -4,6 +4,7 @@ import { behaviors } from 'src/particles/behaviors'
 import { boundings } from 'src/particles/boundings'
 import ParticleMsg from 'src/particles/ParticleMsg'
 import System from 'src/particles/System'
+import VectorN from 'src/particles/VectorN'
 
 /**
  * TypeScript currently does not support loading both "DOM" and "WebWorker"
@@ -107,42 +108,36 @@ const tick = () => {
   // Reset accelerations
   state.system.particles.forEach(p => p.acceleration.multiply(0))
 
-  /**
-   * BEGIN ORBIT HACKS
-   */
-
-  const isOrbits = state.options.behavior.name === 'orbits'
-  if (isOrbits) {
-    // Init particle velocities if noorbits->orbits
-    if (!state.prev.orbits) {
-      state.system.particles.forEach(p => {
-        if (!state.options) return
-        p.velocity.randomize(state.options.max.speed)
-      })
-    }
-    // Init particle positions if dimension increased
-    if (
-      state.prev.dimensions !== undefined &&
-      state.prev.dimensions < state.options.dimensions
-    ) {
-      state.system.particles.forEach(p => {
-        if (!state.options) return
-        const curr = p.position.clone()
-        p.position.radialRandomize(MAX_RADIUS)
-        p.position.mutate((v, i) => {
-          if (!state.options) return v
-          // Rescue existing values
-          return i + 1 < state.options.dimensions ? curr.getValue(i) : v
+  {
+    /**
+     * BEGIN ORBIT HACKS
+     */
+    const isOrbits = state.options.behavior.name === 'orbits'
+    const dimensions = state.options.dimensions
+    const maxSpeed = state.options.max.speed
+    if (isOrbits) {
+      // Randomize particle velocities if noorbits->orbits
+      if (!state.prev.orbits) {
+        state.system.particles.forEach(p => p.velocity.randomize(maxSpeed))
+      }
+      // Randomize particle positions & velocity if dimensions have increased
+      if (
+        state.prev.dimensions !== undefined &&
+        state.prev.dimensions < dimensions
+      ) {
+        state.system.particles.forEach(p => {
+          randomizeHigherDimensions(dimensions, p.position, MAX_RADIUS)
+          randomizeHigherDimensions(dimensions, p.velocity, maxSpeed)
         })
-      })
+      }
     }
+    // Update prev state
+    state.prev.orbits = isOrbits
+    state.prev.dimensions = dimensions
+    /**
+     * END ORBIT HACKS
+     */
   }
-  // Update prev state
-  state.prev.orbits = isOrbits
-  state.prev.dimensions = state.options.dimensions
-  /**
-   * END ORBIT HACKS
-   */
 
   {
     // Apply particle behavior
@@ -172,4 +167,20 @@ const tick = () => {
 
   // Update host thread
   sendUpdate()
+}
+
+// For use when a vector is being moved to a higher dimension
+// and you want those higher-D values to be randomized (instead of zero)
+// while still maintaining any original values from lower dimensions
+const randomizeHigherDimensions = (
+  dimensions: number,
+  vector: VectorN,
+  k?: number,
+): void => {
+  // Duplicate vector
+  const copy = vector.clone()
+  // Randomize vector
+  vector.radialRandomize(k)
+  // Restore any original values
+  vector.mutate((v, i) => (i + 1 < dimensions ? copy.getValue(i) : v))
 }
