@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import { MAX_NEIGHBORS } from 'src/constants'
-import { Layer, LayerArgs } from 'src/drawing/layers'
+import { Layer, LayerArgs } from 'src/view/Layers'
 
 export default class Lines implements Layer {
   private group: THREE.Group

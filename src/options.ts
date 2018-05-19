@@ -1,8 +1,8 @@
-import { LayerName } from 'src/drawing/layers'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
 import ParticleMsg from 'src/particles/ParticleMsg'
 import { NeighborhoodMsg, NeighborhoodSpecs } from 'src/particles/System'
+import { LayerName } from 'src/view/Layers'
 
 export interface RenderOptions {
   layers: { [name in LayerName]: boolean }

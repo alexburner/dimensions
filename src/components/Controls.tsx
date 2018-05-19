@@ -1,11 +1,11 @@
 import * as React from 'react'
 
 import { MAX_PARTICLES } from 'src/constants'
-import { LayerName } from 'src/drawing/layers'
 import { Options } from 'src/options'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
 import { NeighborhoodSpecs } from 'src/particles/System'
+import { LayerName } from 'src/view/Layers'
 
 interface Props {
   onRotatingChange: (rotating: boolean) => void

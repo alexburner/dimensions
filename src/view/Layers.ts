@@ -1,7 +1,16 @@
 import THREE from 'three'
 
+import { RenderOptions, WorkerResponse } from 'src/options'
 import Particle3 from 'src/particles/Particle3'
 import { NeighborhoodMsg } from 'src/particles/System'
+import Bounds from 'src/view/layers/Bounds'
+import Circles from 'src/view/layers/Circles'
+import Grid from 'src/view/layers/Grid'
+import Lines from 'src/view/layers/Lines'
+import Points from 'src/view/layers/Points'
+import Spheres from 'src/view/layers/Spheres'
+import TimeTrails from 'src/view/layers/TimeTrails'
+import Trails from 'src/view/layers/Trails'
 
 export interface LayerArgs {
   dimensions: number
@@ -23,6 +32,39 @@ export type LayerName =
   | 'grid'
   | 'trails'
   | 'timeTrails'
+
+export default class Layers {
+  private layers: { [name in LayerName]: Layer }
+  private layerNames: LayerName[]
+
+  constructor(group: THREE.Group, camera: THREE.Camera) {
+    this.layers = {
+      points: new Points(group),
+      lines: new Lines(group),
+      circles: new Circles(group),
+      spheres: new Spheres(group),
+      bounds: new Bounds(group, camera),
+      grid: new Grid(group),
+      trails: new Trails(group),
+      timeTrails: new TimeTrails(group),
+    }
+    this.layerNames = Object.keys(this.layers) as LayerName[]
+  }
+
+  public update(
+    { layers }: RenderOptions,
+    { dimensions, neighborhood, particles }: WorkerResponse,
+  ) {
+    const particles3 = particles.map(p => new Particle3(p))
+    this.layerNames.forEach(layerName => {
+      const layer = this.layers[layerName]
+      const layerVisible = layers[layerName]
+      layerVisible
+        ? layer.update({ particles: particles3, dimensions, neighborhood })
+        : layer.clear()
+    })
+  }
+}
 
 /**
  * Resize a generic list, creating or destroying elements as needed

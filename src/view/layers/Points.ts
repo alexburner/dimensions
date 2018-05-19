@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import { MAX_PARTICLES } from 'src/constants'
-import { Layer, LayerArgs } from 'src/drawing/layers'
+import { Layer, LayerArgs } from 'src/view/Layers'
 
 const SIZE = 4
 

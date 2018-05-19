@@ -1,15 +1,15 @@
-import Renderer from 'src/drawing/Renderer'
 import {
   Options,
   RenderOptions,
   WorkerOptions,
   WorkerResponse,
 } from 'src/options'
+import View from 'src/view/View'
 import WorkerLoader from 'worker-loader!src/worker'
 
 export default class Manager {
   private isDestroyed: boolean = false
-  private renderer: Renderer
+  private view: View
   private worker: Worker
   private rafId?: number
 
@@ -24,7 +24,7 @@ export default class Manager {
     canvas: HTMLCanvasElement
     bounds: ClientRect
   }) {
-    this.renderer = new Renderer({ canvas, bounds })
+    this.view = new View({ canvas, bounds })
     this.worker = new WorkerLoader()
     this.worker.addEventListener('message', e => {
       if (this.isDestroyed) return
@@ -33,7 +33,7 @@ export default class Manager {
         case 'update': {
           if (!this.renderOptions) return // XXX theoretically unreachable
           this.workerResponse = e.data.response as WorkerResponse
-          this.renderer.update(this.renderOptions, this.workerResponse)
+          this.view.update(this.renderOptions, this.workerResponse)
           // Sync worker tick with browser frame rate
           const rafId = (this.rafId = window.requestAnimationFrame(() => {
             if (rafId !== this.rafId) return // out of date
@@ -50,11 +50,11 @@ export default class Manager {
     this.isDestroyed = true
     if (this.rafId) window.cancelAnimationFrame(this.rafId)
     postMessage(this.worker, { type: 'destroy' })
-    this.renderer.destroy()
+    this.view.destroy()
   }
 
   public resize(bounds: ClientRect) {
-    this.renderer.resize(bounds)
+    this.view.resize(bounds)
   }
 
   public draw(options: Options) {
@@ -74,12 +74,12 @@ export default class Manager {
     postMessage(this.worker, { type: 'update', options: this.workerOptions })
     // Update renderer IF we have a prior worker response
     if (this.workerResponse) {
-      this.renderer.update(this.renderOptions, this.workerResponse)
+      this.view.update(this.renderOptions, this.workerResponse)
     }
   }
 
   public setRotating(rotating: boolean) {
-    this.renderer.setRotating(rotating)
+    this.view.setRotating(rotating)
   }
 }
 

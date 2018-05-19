@@ -1,12 +1,7 @@
 import * as THREE from 'three'
 
 import { MAX_RADIUS } from 'src/constants'
-import {
-  clearObjList,
-  Layer,
-  LayerArgs,
-  resizeObjList,
-} from 'src/drawing/layers'
+import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
 type ObjectSpec = [number, number, number] // [x, y, z]
 

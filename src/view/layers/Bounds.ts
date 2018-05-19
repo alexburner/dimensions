@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import { MAX_RADIUS } from 'src/constants'
-import { Layer, LayerArgs } from 'src/drawing/layers'
+import { Layer, LayerArgs } from 'src/view/Layers'
 
 const COLOR = 0xffffff
 const OPACITY = 0.5

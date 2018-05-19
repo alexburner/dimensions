@@ -1,37 +1,21 @@
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols'
 
-import { Layer, LayerName } from 'src/drawing/layers'
-import Bounds from 'src/drawing/layers/Bounds'
-import Circles from 'src/drawing/layers/Circles'
-import Grid from 'src/drawing/layers/Grid'
-import Lines from 'src/drawing/layers/Lines'
-import Points from 'src/drawing/layers/Points'
-import Spheres from 'src/drawing/layers/Spheres'
-import TimeTrails from 'src/drawing/layers/TimeTrails'
-import Trails from 'src/drawing/layers/Trails'
-import { RenderOptions, WorkerResponse } from 'src/options'
-import Particle3 from 'src/particles/Particle3'
-
 const NEAR = 1
 const FAR = 5000
 const VIEWANGLE = 45
 
-export default class Renderer {
+export default class Render {
+  public canvas: HTMLCanvasElement
+  public renderer: THREE.WebGLRenderer
+  public scene: THREE.Scene
+  public group: THREE.Group
+  public camera: THREE.PerspectiveCamera
+  public controls: TrackballControls
+
   private isDestroyed: boolean = false
   private isRotating: boolean = false
-
-  private canvas: HTMLCanvasElement
-  private renderer: THREE.WebGLRenderer
-  private scene: THREE.Scene
-  private group: THREE.Group
-  private camera: THREE.PerspectiveCamera
-  private controls: TrackballControls
-
-  private layers: { [name in LayerName]: Layer }
-  private layerNames: LayerName[]
-
-  private rafId: number
+  private rafId?: number
 
   constructor({
     canvas,
@@ -74,26 +58,13 @@ export default class Renderer {
     this.controls.minDistance = NEAR
     this.controls.maxDistance = FAR * 0.9
 
-    // Set up layers
-    this.layers = {
-      points: new Points(this.group),
-      lines: new Lines(this.group),
-      circles: new Circles(this.group),
-      spheres: new Spheres(this.group),
-      bounds: new Bounds(this.group, this.camera),
-      grid: new Grid(this.group),
-      trails: new Trails(this.group),
-      timeTrails: new TimeTrails(this.group),
-    }
-    this.layerNames = Object.keys(this.layers) as LayerName[]
-
     // Start render loop
     this.loop()
   }
 
   public destroy() {
     this.isDestroyed = true
-    window.cancelAnimationFrame(this.rafId)
+    if (this.rafId) window.cancelAnimationFrame(this.rafId)
   }
 
   public resize(bounds: ClientRect) {
@@ -105,20 +76,6 @@ export default class Renderer {
 
   public setRotating(rotating: boolean) {
     this.isRotating = rotating
-  }
-
-  public update(
-    { layers }: RenderOptions,
-    { dimensions, neighborhood, particles }: WorkerResponse,
-  ) {
-    const particles3 = particles.map(p => new Particle3(p))
-    this.layerNames.forEach(layerName => {
-      const layer = this.layers[layerName]
-      const layerVisible = layers[layerName]
-      layerVisible
-        ? layer.update({ particles: particles3, dimensions, neighborhood })
-        : layer.clear()
-    })
   }
 
   private loop() {

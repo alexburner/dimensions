@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 
-import { Layer, LayerArgs } from 'src/drawing/layers'
 import Particle3 from 'src/particles/Particle3'
 import { RecentQueue } from 'src/util'
+import { Layer, LayerArgs } from 'src/view/Layers'
 
 const TRAIL_LENGTH = 2000
 const MAX_COUNT = TRAIL_LENGTH * 1000
