@@ -24,7 +24,7 @@ export type NeighborhoodMsg = NeighborMsg[][]
 
 interface NeighborhoodSpec {
   name: string
-  config?: { [prop: string]: any }
+  config?: any // XXX todo what do here
 }
 
 interface AllSpec extends NeighborhoodSpec {
@@ -128,7 +128,16 @@ export default class System {
             .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
         )
       case 'proximity':
-        throw new Error('TODO: proximity neighborhood')
+        return this.particles.map((particle: ParticleN) => {
+          const neighbors: NeighborN[] = []
+          for (let i = 0, l = particle.neighbors.length; i < l; i++) {
+            const neighbor = particle.neighbors[i]
+            if (neighbor.distance < spec.config.min) continue
+            if (neighbor.distance > spec.config.max) break
+            neighbors.push(neighbor)
+          }
+          return neighbors.map((neighbor: NeighborN) => toNeighborMsg(neighbor))
+        })
     }
   }
 }

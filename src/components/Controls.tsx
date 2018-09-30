@@ -80,10 +80,10 @@ const NEIGHBORHOOD_PRESETS: {
     name: 'nearest',
   },
   proximity: {
-    name: 'nearest',
+    name: 'proximity',
     config: {
       min: 1,
-      max: 10,
+      max: 20,
     },
   },
 }
@@ -335,6 +335,68 @@ export default class Controls extends React.Component<Props, State> {
             <hr />
             <div>
               Neighbor relations
+              <label>
+                <input
+                  type="radio"
+                  name="proximity"
+                  checked={this.state.options.neighborhood.name === 'proximity'}
+                  onChange={this.handleNeighborhoods}
+                />
+                &nbsp; Proximity
+              </label>
+              {this.state.options.neighborhood.name === 'proximity' && (
+                <div>
+                  <input
+                    style={{
+                      width: '40%',
+                      display: 'inline-block',
+                      marginRight: '5px',
+                    }}
+                    type="number"
+                    name="min"
+                    placeholder="min"
+                    value={
+                      NEIGHBORHOOD_PRESETS.proximity.config
+                        ? NEIGHBORHOOD_PRESETS.proximity.config.min
+                        : 0
+                    }
+                    onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+                      if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                      NEIGHBORHOOD_PRESETS.proximity.config.min = Number(
+                        e.currentTarget.value,
+                      )
+                      const options = { ...this.state.options }
+                      options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                      this.props.onOptionsChange(options)
+                      this.setState({ options })
+                    }}
+                  />
+                  <input
+                    style={{
+                      width: '40%',
+                      display: 'inline-block',
+                    }}
+                    type="number"
+                    name="max"
+                    placeholder="max"
+                    value={
+                      NEIGHBORHOOD_PRESETS.proximity.config
+                        ? NEIGHBORHOOD_PRESETS.proximity.config.max
+                        : 0
+                    }
+                    onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+                      if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                      NEIGHBORHOOD_PRESETS.proximity.config.max = Number(
+                        e.currentTarget.value,
+                      )
+                      const options = { ...this.state.options }
+                      options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                      this.props.onOptionsChange(options)
+                      this.setState({ options })
+                    }}
+                  />
+                </div>
+              )}
               <label>
                 <input
                   type="radio"
