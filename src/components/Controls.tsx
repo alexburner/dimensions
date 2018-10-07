@@ -132,10 +132,6 @@ export default class Controls extends React.Component<Props, State> {
             <label>
               <input
                 type="number"
-                style={{
-                  width: '30px',
-                  textAlign: 'center',
-                }}
                 min="0"
                 step="1"
                 value={this.state.options.particles}
@@ -147,10 +143,6 @@ export default class Controls extends React.Component<Props, State> {
             <label>
               <input
                 type="number"
-                style={{
-                  width: '30px',
-                  textAlign: 'center',
-                }}
                 min="0"
                 step="1"
                 value={this.state.options.dimensions}
@@ -348,7 +340,6 @@ export default class Controls extends React.Component<Props, State> {
                 <div>
                   <input
                     style={{
-                      width: '40%',
                       display: 'inline-block',
                       marginRight: '5px',
                     }}
@@ -372,10 +363,7 @@ export default class Controls extends React.Component<Props, State> {
                     }}
                   />
                   <input
-                    style={{
-                      width: '40%',
-                      display: 'inline-block',
-                    }}
+                    style={{ display: 'inline-block' }}
                     type="number"
                     name="max"
                     placeholder="max"

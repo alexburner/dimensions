@@ -28,6 +28,11 @@ body,
   color: #EEE;
 }
 
+input[type=number] {
+  width: 30px;
+  text-align: center;
+}
+
 .frame {
   position: fixed;
   top: 0;
