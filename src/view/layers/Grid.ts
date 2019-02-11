@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { MAX_RADIUS } from 'src/constants'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
-type ObjectSpec = [number, number, number] // [x, y, z]
+type Vector3 = [number, number, number] // [x, y, z]
 
 export default class Grid implements Layer {
   private dimensions: number
@@ -30,20 +30,20 @@ export default class Grid implements Layer {
     if (this.dimensions === dimensions) return
     this.dimensions = dimensions
 
-    // 1. Generate fresh list of specs
-    const specs = makeObjectSpecs(dimensions)
+    // 1. Generate fresh list of vectors
+    const vectors = getDimensionVectors(dimensions)
 
-    // 2. Resize object list for new spec count
+    // 2. Resize object list for new vector count
     this.objects = resizeObjList({
       group: this.group,
       currList: this.objects,
-      newSize: specs.length,
+      newSize: vectors.length,
       createObj: (): THREE.Line =>
         new THREE.Line(new THREE.Geometry(), this.material),
     })
 
-    // 3. Update objects to match specs
-    updateObjects(specs, this.objects)
+    // 3. Update objects to match vectors
+    updateObjects(vectors, this.objects)
   }
 
   public clear(): void {
@@ -54,7 +54,7 @@ export default class Grid implements Layer {
 
 const SIZE = MAX_RADIUS * 3 // reality is MAX_RADIUS
 
-const SPECS: ObjectSpec[][] = [
+const VECTORS_BY_DIMENSION: Vector3[][] = [
   [],
   [
     // x axis
@@ -146,16 +146,16 @@ const SPECS: ObjectSpec[][] = [
   ],
 ]
 
-const makeObjectSpecs = (dimensions: number): ObjectSpec[] => {
-  if (dimensions > 3) dimensions = 3 // XXX human limits
-  return SPECS[dimensions]
+const getDimensionVectors = (dimension: number): Vector3[] => {
+  if (dimension > 3) dimension = 3 // XXX human limits
+  return VECTORS_BY_DIMENSION[dimension]
 }
 
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]): void =>
-  specs.forEach((spec: ObjectSpec, i: number) => {
+const updateObjects = (vectors: Vector3[], objects: THREE.Object3D[]): void =>
+  vectors.forEach((vector: Vector3, i: number) => {
     if (i % 2) return // only do evens, each pair
-    const source = new THREE.Vector3(...specs[i])
-    const target = new THREE.Vector3(...specs[i + 1])
+    const source = new THREE.Vector3(...vectors[i])
+    const target = new THREE.Vector3(...vectors[i + 1])
     const object = objects[i] as THREE.Line
     const geometry = object.geometry as THREE.Geometry
     geometry.vertices = [source, target]
