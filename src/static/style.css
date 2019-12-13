@@ -42,24 +42,25 @@ input[type=number] {
 }
 
 .controls {
+  --width: 180px;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 165px;
+  width: var(--width);
   background-color: rgba(51, 51, 51, 0.5);
   z-index: 10;
   transition: right 300ms;
 }
 
 .controls.is-closed {
-  right: -165px;
+  right: calc(-1 * var(--width));
 }
 
 .controls .toggle {
   position: fixed;
-  top: 1px;
-  right: 1px;
+  bottom: 0;
+  right: 0;
   width: 32px;
   height: 32px;
   line-height: 32px;
@@ -71,10 +72,6 @@ input[type=number] {
 }
 
 .controls .toggle:hover {
-  top: 0;
-  right: 0;
-  width: 34px;
-  height: 34px;
   line-height: 34px;
   opacity: 0.9;
   font-weight: bold;
@@ -88,29 +85,20 @@ input[type=number] {
 }
 
 .controls .inner {
-  padding: 0 16px 24px;
+  padding: 1em 1.5em 3em;
 }
 
-.controls .inner header {
-  font-size: 14px;
-  font-weight: bold;
-  margin: 12px 2px 12px;
-}
-
-.controls .inner div,
-.controls .inner label {
-  margin: 8px 4px;
-}
-
-.controls .inner div label:first-of-type {
-  margin-top: 10px;
-}
-
-.controls .inner label {
-  display: block;
-}
-
-.controls .inner hr {
+.controls fieldset {
+  margin: 0.5em 0;
   border: none;
-  margin: 12px 0;
 }
+
+.controls fieldset legend {
+  margin-left: -1em;
+}
+
+.controls label {
+  display: block;
+  margin-bottom: 0.33em;
+}
+
