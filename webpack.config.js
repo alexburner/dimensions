@@ -60,7 +60,7 @@ module.exports = {
       template: 'src/static/index.html',
     }),
     new HtmlWebpackIncludeAssetsPlugin({
-      assets: ['style.css'],
+      assets: ['style.css?v=2'],
       append: false, // prepend
       // hash: true, // cache busting // doesn't work with gh-pages ???
     }),
