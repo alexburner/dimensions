@@ -127,136 +127,156 @@ export default class Controls extends React.Component<Props, State> {
         </div>
         <div className="scroll">
           <div className="inner">
-            <header>dimensions</header>
-            <hr />
-            <label>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                value={this.state.options.particles}
-                onChange={this.handleParticles}
-                onKeyDown={this.handleEnter}
-              />
-              &nbsp; Particles
-            </label>
-            <label>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                value={this.state.options.dimensions}
-                onChange={this.handleDimensions}
-                onKeyDown={this.handleEnter}
-              />
-              &nbsp; Dimensions
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={this.state.rotating}
-                onChange={this.handleRotating}
-              />
-              &nbsp; Rotating
-            </label>
-            <hr />
-            <div>
-              Render layers
-              <label>
-                <input
-                  type="checkbox"
-                  name="grid"
-                  checked={this.state.options.layers.grid}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Grid
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="bounds"
-                  checked={this.state.options.layers.bounds}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Bounds
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="trails"
-                  checked={this.state.options.layers.trails}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Trails
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="timeTrails"
-                  checked={this.state.options.layers.timeTrails}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; Trails &#8594; Time
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="points"
-                  checked={this.state.options.layers.points}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 0D&mdash;Points
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="lines"
-                  checked={this.state.options.layers.lines}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 1D&mdash;Lines
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="circles"
-                  checked={this.state.options.layers.circles}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 2D&mdash;Circles
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="spheres"
-                  checked={this.state.options.layers.spheres}
-                  onChange={this.handleLayers}
-                />
-                &nbsp; 3D&mdash;Spheres
-              </label>
-            </div>
-            <hr />
-            <div>
-              Particle behavior
-              <label>
-                <input
-                  type="radio"
-                  name="wandering"
-                  checked={this.state.options.behavior.name === 'wandering'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Wandering
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="diffusion"
-                  checked={this.state.options.behavior.name === 'diffusion'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Diffusion
-              </label>
-              {/* <label>
+            <fieldset>
+              <legend>Environment</legend>
+              <fieldset>
+                <label>
+                  <input
+                    type="number"
+                    style={{
+                      width: '30px',
+                      textAlign: 'center',
+                    }}
+                    min="0"
+                    step="1"
+                    value={this.state.options.particles}
+                    onChange={this.handleParticles}
+                    onKeyDown={this.handleEnter}
+                  />
+                  &nbsp; Particles
+                </label>
+                <label>
+                  <input
+                    type="number"
+                    style={{
+                      width: '30px',
+                      textAlign: 'center',
+                    }}
+                    min="0"
+                    step="1"
+                    value={this.state.options.dimensions}
+                    onChange={this.handleDimensions}
+                    onKeyDown={this.handleEnter}
+                  />
+                  &nbsp; Dimensions
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.rotating}
+                    onChange={this.handleRotating}
+                  />
+                  &nbsp; Rotating
+                </label>
+              </fieldset>
+            </fieldset>
+            <fieldset>
+              <legend>Render layers</legend>
+              <fieldset>
+                <legend>Scene</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="grid"
+                    checked={this.state.options.layers.grid}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Grid
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="bounds"
+                    checked={this.state.options.layers.bounds}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Bounds
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Trails</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="trails"
+                    checked={this.state.options.layers.trails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="timeTrails"
+                    checked={this.state.options.layers.timeTrails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space + Time
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Relations</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="points"
+                    checked={this.state.options.layers.points}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; 0D&mdash;Points
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="lines"
+                    checked={this.state.options.layers.lines}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; 1D&mdash;Lines
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="circles"
+                    checked={this.state.options.layers.circles}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; 2D&mdash;Circles
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="spheres"
+                    checked={this.state.options.layers.spheres}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; 3D&mdash;Spheres
+                </label>
+              </fieldset>
+            </fieldset>
+            <fieldset>
+              <legend>Particle behaviors</legend>
+              <fieldset>
+                <legend>Motion</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="wandering"
+                    checked={this.state.options.behavior.name === 'wandering'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; Wandering
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="diffusion"
+                    checked={this.state.options.behavior.name === 'diffusion'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; Diffusion
+                </label>
+                {/* <label>
                 <input
                   type="radio"
                   name="flocking"
@@ -265,7 +285,7 @@ export default class Controls extends React.Component<Props, State> {
                 />
                 &nbsp; Flocking
               </label> */}
-              {/* <label>
+                {/* <label>
                 <input
                   type="radio"
                   name="gravity"
@@ -274,145 +294,154 @@ export default class Controls extends React.Component<Props, State> {
                 />
                 &nbsp; Gravity
               </label> */}
-              <label>
-                <input
-                  type="radio"
-                  name="orbits"
-                  checked={this.state.options.behavior.name === 'orbits'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Orbits
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="none"
-                  checked={this.state.options.behavior.name === 'none'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; None
-              </label>
-            </div>
-            <hr />
-            <div>
-              Boundary behavior
-              <label>
-                <input
-                  type="radio"
-                  name="centerScaling"
-                  checked={this.state.options.bounding === 'centerScaling'}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Center-scaling
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="binding"
-                  checked={this.state.options.bounding === 'binding'}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; Edge-binding
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="none"
-                  checked={this.state.options.bounding === 'none'}
-                  onChange={this.handleBoundings}
-                />
-                &nbsp; None
-              </label>
-            </div>
-            <hr />
-            <div>
-              Neighbor relations
-              <label>
-                <input
-                  type="radio"
-                  name="proximity"
-                  checked={this.state.options.neighborhood.name === 'proximity'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; Proximity
-              </label>
-              {this.state.options.neighborhood.name === 'proximity' && (
-                <div>
+                <label>
                   <input
-                    style={{
-                      display: 'inline-block',
-                      marginRight: '5px',
-                    }}
-                    type="number"
-                    name="min"
-                    placeholder="min"
-                    value={
-                      NEIGHBORHOOD_PRESETS.proximity.config
-                        ? NEIGHBORHOOD_PRESETS.proximity.config.min
-                        : 0
-                    }
-                    onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-                      if (!NEIGHBORHOOD_PRESETS.proximity.config) return
-                      NEIGHBORHOOD_PRESETS.proximity.config.min = Number(
-                        e.currentTarget.value,
-                      )
-                      const options = { ...this.state.options }
-                      options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
-                      this.props.onOptionsChange(options)
-                      this.setState({ options })
-                    }}
+                    type="radio"
+                    name="orbits"
+                    checked={this.state.options.behavior.name === 'orbits'}
+                    onChange={this.handleBehaviors}
                   />
+                  &nbsp; Orbits
+                </label>
+                <label>
                   <input
-                    style={{ display: 'inline-block' }}
-                    type="number"
-                    name="max"
-                    placeholder="max"
-                    value={
-                      NEIGHBORHOOD_PRESETS.proximity.config
-                        ? NEIGHBORHOOD_PRESETS.proximity.config.max
-                        : 0
-                    }
-                    onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-                      if (!NEIGHBORHOOD_PRESETS.proximity.config) return
-                      NEIGHBORHOOD_PRESETS.proximity.config.max = Number(
-                        e.currentTarget.value,
-                      )
-                      const options = { ...this.state.options }
-                      options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
-                      this.props.onOptionsChange(options)
-                      this.setState({ options })
-                    }}
+                    type="radio"
+                    name="none"
+                    checked={this.state.options.behavior.name === 'none'}
+                    onChange={this.handleBehaviors}
                   />
-                </div>
-              )}
-              <label>
-                <input
-                  type="radio"
-                  name="nearest"
-                  checked={this.state.options.neighborhood.name === 'nearest'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; Nearest
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="locals"
-                  checked={this.state.options.neighborhood.name === 'locals'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; Local
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="all"
-                  checked={this.state.options.neighborhood.name === 'all'}
-                  onChange={this.handleNeighborhoods}
-                />
-                &nbsp; All
-              </label>
-            </div>
+                  &nbsp; None
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Relations</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="proximity"
+                    checked={
+                      this.state.options.neighborhood.name === 'proximity'
+                    }
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Proximity
+                </label>
+                {this.state.options.neighborhood.name === 'proximity' && (
+                  <div>
+                    <input
+                      style={{
+                        width: '40%',
+                        display: 'inline-block',
+                        marginRight: '5px',
+                      }}
+                      type="number"
+                      name="min"
+                      placeholder="min"
+                      value={
+                        NEIGHBORHOOD_PRESETS.proximity.config
+                          ? NEIGHBORHOOD_PRESETS.proximity.config.min
+                          : 0
+                      }
+                      onChange={(
+                        e: React.FormEvent<HTMLInputElement>,
+                      ): void => {
+                        if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                        NEIGHBORHOOD_PRESETS.proximity.config.min = Number(
+                          e.currentTarget.value,
+                        )
+                        const options = { ...this.state.options }
+                        options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                        this.props.onOptionsChange(options)
+                        this.setState({ options })
+                      }}
+                    />
+                    <input
+                      style={{
+                        width: '40%',
+                        display: 'inline-block',
+                      }}
+                      type="number"
+                      name="max"
+                      placeholder="max"
+                      value={
+                        NEIGHBORHOOD_PRESETS.proximity.config
+                          ? NEIGHBORHOOD_PRESETS.proximity.config.max
+                          : 0
+                      }
+                      onChange={(
+                        e: React.FormEvent<HTMLInputElement>,
+                      ): void => {
+                        if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                        NEIGHBORHOOD_PRESETS.proximity.config.max = Number(
+                          e.currentTarget.value,
+                        )
+                        const options = { ...this.state.options }
+                        options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                        this.props.onOptionsChange(options)
+                        this.setState({ options })
+                      }}
+                    />
+                  </div>
+                )}
+                <label>
+                  <input
+                    type="radio"
+                    name="nearest"
+                    checked={this.state.options.neighborhood.name === 'nearest'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Nearest
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="locals"
+                    checked={this.state.options.neighborhood.name === 'locals'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Local
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="all"
+                    checked={this.state.options.neighborhood.name === 'all'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; All
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Bounding</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="centerScaling"
+                    checked={this.state.options.bounding === 'centerScaling'}
+                    onChange={this.handleBoundings}
+                  />
+                  &nbsp; Center-scaling
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="binding"
+                    checked={this.state.options.bounding === 'binding'}
+                    onChange={this.handleBoundings}
+                  />
+                  &nbsp; Edge-binding
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="none"
+                    checked={this.state.options.bounding === 'none'}
+                    onChange={this.handleBoundings}
+                  />
+                  &nbsp; None
+                </label>
+              </fieldset>
+            </fieldset>
           </div>
         </div>
       </div>
