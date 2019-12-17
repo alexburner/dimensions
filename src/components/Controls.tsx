@@ -171,64 +171,92 @@ export default class Controls extends React.Component<Props, State> {
               </fieldset>
             </fieldset>
             <fieldset>
-              <legend>Particle behaviors</legend>
+              <legend>Render layers</legend>
               <fieldset>
-                <legend>Motion</legend>
+                <legend>Relation</legend>
                 <label>
                   <input
-                    type="radio"
-                    name="wandering"
-                    checked={this.state.options.behavior.name === 'wandering'}
-                    onChange={this.handleBehaviors}
+                    type="checkbox"
+                    name="points"
+                    checked={this.state.options.layers.points}
+                    onChange={this.handleLayers}
                   />
-                  &nbsp; Wandering
+                  &nbsp; Points&mdash;0D
                 </label>
                 <label>
                   <input
-                    type="radio"
-                    name="diffusion"
-                    checked={this.state.options.behavior.name === 'diffusion'}
-                    onChange={this.handleBehaviors}
+                    type="checkbox"
+                    name="lines"
+                    checked={this.state.options.layers.lines}
+                    onChange={this.handleLayers}
                   />
-                  &nbsp; Diffusion
-                </label>
-                {/* <label>
-                <input
-                  type="radio"
-                  name="flocking"
-                  checked={this.state.options.behavior.name === 'flocking'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Flocking
-              </label> */}
-                {/* <label>
-                <input
-                  type="radio"
-                  name="gravity"
-                  checked={this.state.options.behavior.name === 'gravity'}
-                  onChange={this.handleBehaviors}
-                />
-                &nbsp; Gravity
-              </label> */}
-                <label>
-                  <input
-                    type="radio"
-                    name="orbits"
-                    checked={this.state.options.behavior.name === 'orbits'}
-                    onChange={this.handleBehaviors}
-                  />
-                  &nbsp; Orbits
+                  &nbsp; Lines&mdash;1D
                 </label>
                 <label>
                   <input
-                    type="radio"
-                    name="none"
-                    checked={this.state.options.behavior.name === 'none'}
-                    onChange={this.handleBehaviors}
+                    type="checkbox"
+                    name="circles"
+                    checked={this.state.options.layers.circles}
+                    onChange={this.handleLayers}
                   />
-                  &nbsp; None
+                  &nbsp; Circles&mdash;2D
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="spheres"
+                    checked={this.state.options.layers.spheres}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Spheres&mdash;3D
                 </label>
               </fieldset>
+              <fieldset>
+                <legend>Trails</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="trails"
+                    checked={this.state.options.layers.trails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="timeTrails"
+                    checked={this.state.options.layers.timeTrails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space + Time
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Scene</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="grid"
+                    checked={this.state.options.layers.grid}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Grid
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="bounds"
+                    checked={this.state.options.layers.bounds}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Bounds
+                </label>
+              </fieldset>
+            </fieldset>
+
+            <fieldset>
+              <legend>Particle behavior</legend>
               <fieldset>
                 <legend>Relation</legend>
                 <label>
@@ -327,6 +355,64 @@ export default class Controls extends React.Component<Props, State> {
                   &nbsp; All
                 </label>
               </fieldset>
+
+              <fieldset>
+                <legend>Motion</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="wandering"
+                    checked={this.state.options.behavior.name === 'wandering'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; Wandering
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="diffusion"
+                    checked={this.state.options.behavior.name === 'diffusion'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; Diffusion
+                </label>
+                {/* <label>
+                <input
+                  type="radio"
+                  name="flocking"
+                  checked={this.state.options.behavior.name === 'flocking'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Flocking
+              </label> */}
+                {/* <label>
+                <input
+                  type="radio"
+                  name="gravity"
+                  checked={this.state.options.behavior.name === 'gravity'}
+                  onChange={this.handleBehaviors}
+                />
+                &nbsp; Gravity
+              </label> */}
+                <label>
+                  <input
+                    type="radio"
+                    name="orbits"
+                    checked={this.state.options.behavior.name === 'orbits'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; Orbits
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="none"
+                    checked={this.state.options.behavior.name === 'none'}
+                    onChange={this.handleBehaviors}
+                  />
+                  &nbsp; None
+                </label>
+              </fieldset>
               <fieldset>
                 <legend>Bounding</legend>
                 <label>
@@ -355,90 +441,6 @@ export default class Controls extends React.Component<Props, State> {
                     onChange={this.handleBoundings}
                   />
                   &nbsp; None
-                </label>
-              </fieldset>
-            </fieldset>
-            <fieldset>
-              <legend>Render layers</legend>
-              <fieldset>
-                <legend>Scene</legend>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="grid"
-                    checked={this.state.options.layers.grid}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Grid
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="bounds"
-                    checked={this.state.options.layers.bounds}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Bounds
-                </label>
-              </fieldset>
-              <fieldset>
-                <legend>Relation</legend>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="points"
-                    checked={this.state.options.layers.points}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; 0D&mdash;Points
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="lines"
-                    checked={this.state.options.layers.lines}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; 1D&mdash;Lines
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="circles"
-                    checked={this.state.options.layers.circles}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; 2D&mdash;Circles
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="spheres"
-                    checked={this.state.options.layers.spheres}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; 3D&mdash;Spheres
-                </label>
-              </fieldset>
-              <fieldset>
-                <legend>Trail</legend>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="trails"
-                    checked={this.state.options.layers.trails}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Space
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="timeTrails"
-                    checked={this.state.options.layers.timeTrails}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Space + Time
                 </label>
               </fieldset>
             </fieldset>
