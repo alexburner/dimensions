@@ -230,7 +230,7 @@ export default class Controls extends React.Component<Props, State> {
                 </label>
               </fieldset>
               <fieldset>
-                <legend>Relations</legend>
+                <legend>Relation</legend>
                 <label>
                   <input
                     type="radio"
@@ -382,7 +382,7 @@ export default class Controls extends React.Component<Props, State> {
                 </label>
               </fieldset>
               <fieldset>
-                <legend>Trails</legend>
+                <legend>Trail</legend>
                 <label>
                   <input
                     type="checkbox"
@@ -403,7 +403,7 @@ export default class Controls extends React.Component<Props, State> {
                 </label>
               </fieldset>
               <fieldset>
-                <legend>Relations</legend>
+                <legend>Relation</legend>
                 <label>
                   <input
                     type="checkbox"
