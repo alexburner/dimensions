@@ -382,27 +382,6 @@ export default class Controls extends React.Component<Props, State> {
                 </label>
               </fieldset>
               <fieldset>
-                <legend>Trail</legend>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="trails"
-                    checked={this.state.options.layers.trails}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Space
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="timeTrails"
-                    checked={this.state.options.layers.timeTrails}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Space + Time
-                </label>
-              </fieldset>
-              <fieldset>
                 <legend>Relation</legend>
                 <label>
                   <input
@@ -439,6 +418,27 @@ export default class Controls extends React.Component<Props, State> {
                     onChange={this.handleLayers}
                   />
                   &nbsp; 3D&mdash;Spheres
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Trail</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="trails"
+                    checked={this.state.options.layers.trails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="timeTrails"
+                    checked={this.state.options.layers.timeTrails}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Space + Time
                 </label>
               </fieldset>
             </fieldset>
