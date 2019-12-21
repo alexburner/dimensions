@@ -102,3 +102,20 @@ input[type=number] {
   margin-bottom: 0.33em;
 }
 
+.controls input[type=number] {
+  width: 30px;
+  text-align: center;
+}
+
+.controls .proximity-controls {
+  margin: 0 -0.67em;
+  color: #999;
+}
+
+.controls .proximity-controls > * {
+  display: inline-block;
+}
+
+.controls .proximity-controls input {
+  margin: 0 0.125em;
+}
