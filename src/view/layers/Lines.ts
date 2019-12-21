@@ -36,7 +36,7 @@ export default class Lines implements Layer {
     let posIndex = 0
     let numConnected = 0
     particles.forEach((particle: Particle3, i: number) => {
-      neighborhood[i].forEach((neighbor: NeighborMsg) => {
+      neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
         const other = particles[neighbor.index]
         this.positions[posIndex++] = particle.position.x
         this.positions[posIndex++] = particle.position.y

@@ -12,7 +12,7 @@ export interface NeighborN {
 }
 
 /**
- * Neighborhood for worker/browser transport
+ * Neighbor for worker/browser transport
  */
 export interface NeighborMsg {
   index: number
@@ -20,11 +20,22 @@ export interface NeighborMsg {
   distance: number
 }
 
-export type NeighborhoodMsg = NeighborMsg[][]
+type NeighborhoodType = 'all' | 'locals' | 'nearest' | 'proximity'
+
+/**
+ * Neighbor objects, sorted nearest -> furthest
+ */
+export interface NeighborhoodMsg {
+  type: NeighborhoodType
+  /**
+   * NeighborMsg[] for each particle
+   */
+  neighbors: NeighborMsg[][]
+}
 
 interface NeighborhoodSpec {
-  name: string
-  config?: any // XXX todo what do here
+  name: NeighborhoodType
+  config?: any // TODO - what do here
 }
 
 interface AllSpec extends NeighborhoodSpec {
@@ -110,34 +121,48 @@ export default class System {
   public getNeighborhoodMsg(spec: NeighborhoodSpecs): NeighborhoodMsg {
     switch (spec.name) {
       case 'all':
-        return this.particles.map((particle: ParticleN) =>
-          particle.neighbors.map((neighbor: NeighborN) =>
-            toNeighborMsg(neighbor),
+        return {
+          type: 'all',
+          neighbors: this.particles.map((particle: ParticleN) =>
+            particle.neighbors.map((neighbor: NeighborN) =>
+              toNeighborMsg(neighbor),
+            ),
           ),
-        )
+        }
       case 'locals':
-        return this.particles.map((particle: ParticleN) =>
-          particle.neighbors
-            .slice(0, particle.dimensions)
-            .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
-        )
+        return {
+          type: 'locals',
+          neighbors: this.particles.map((particle: ParticleN) =>
+            particle.neighbors
+              .slice(0, particle.dimensions)
+              .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
+          ),
+        }
       case 'nearest':
-        return this.particles.map((particle: ParticleN) =>
-          particle.neighbors
-            .slice(0, 1)
-            .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
-        )
+        return {
+          type: 'nearest',
+          neighbors: this.particles.map((particle: ParticleN) =>
+            particle.neighbors
+              .slice(0, 1)
+              .map((neighbor: NeighborN) => toNeighborMsg(neighbor)),
+          ),
+        }
       case 'proximity':
-        return this.particles.map((particle: ParticleN) => {
-          const neighbors: NeighborN[] = []
-          for (let i = 0, l = particle.neighbors.length; i < l; i++) {
-            const neighbor = particle.neighbors[i]
-            if (neighbor.distance < spec.config.min) continue
-            if (neighbor.distance > spec.config.max) break
-            neighbors.push(neighbor)
-          }
-          return neighbors.map((neighbor: NeighborN) => toNeighborMsg(neighbor))
-        })
+        return {
+          type: 'proximity',
+          neighbors: this.particles.map((particle: ParticleN) => {
+            const neighbors: NeighborN[] = []
+            for (let i = 0, l = particle.neighbors.length; i < l; i++) {
+              const neighbor = particle.neighbors[i]
+              if (neighbor.distance < spec.config.min) continue
+              if (neighbor.distance > spec.config.max) break
+              neighbors.push(neighbor)
+            }
+            return neighbors.map((neighbor: NeighborN) =>
+              toNeighborMsg(neighbor),
+            )
+          }),
+        }
     }
   }
 }

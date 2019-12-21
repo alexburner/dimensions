@@ -4,44 +4,9 @@ import Particle3, { toVector3 } from 'src/particles/Particle3'
 import { NeighborhoodMsg, NeighborMsg } from 'src/particles/System'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
-interface ObjectSpec {
-  delta: THREE.Vector3
-  position: THREE.Vector3
-  radius: number
-}
-
 const DIVISIONS = 64
 const AXIS = new THREE.Vector3(0, 1, 0)
-
-const makeObjectSpecs = (
-  particles: Particle3[],
-  neighborhood: NeighborhoodMsg,
-): ObjectSpec[] =>
-  particles.reduce(
-    (memo: ObjectSpec[], particle: Particle3, i: number) => {
-      neighborhood[i].forEach((neighbor: NeighborMsg) => {
-        memo.push({
-          delta: toVector3(neighbor.delta),
-          position: particle.position,
-          radius: neighbor.distance,
-        })
-      })
-      return memo
-    },
-    [] as ObjectSpec[],
-  )
-
-const updateObjects = (specs: ObjectSpec[], objects: THREE.Object3D[]): void =>
-  specs.forEach((spec: ObjectSpec, i: number) => {
-    const object = objects[i]
-    object.position.x = spec.position.x
-    object.position.y = spec.position.y
-    object.position.z = spec.position.z
-    object.scale.set(spec.radius, spec.radius, spec.radius)
-    // Rotate circle to align with delta vector
-    // via https://stackoverflow.com/a/31987883/3717556
-    object.quaternion.setFromUnitVectors(AXIS, spec.delta.clone().normalize())
-  })
+const OPACITY = 0.6
 
 export default class Circles implements Layer {
   private readonly group: THREE.Group
@@ -65,13 +30,13 @@ export default class Circles implements Layer {
       blending: THREE.AdditiveBlending,
       transparent: true,
       color: 0xffffff,
-      opacity: 0.6,
+      opacity: OPACITY,
     })
   }
 
   public update({ particles, neighborhood }: LayerArgs): void {
     // 1. Generate fresh list of specs
-    const specs = makeObjectSpecs(particles, neighborhood)
+    const specs = makeCircleSpecs(particles, neighborhood)
 
     // 2. Resize object list for new spec count
     this.objects = resizeObjList({
@@ -82,10 +47,43 @@ export default class Circles implements Layer {
     })
 
     // 3. Update objects to match specs
-    updateObjects(specs, this.objects)
+    updateCircles(specs, this.objects)
   }
 
   public clear(): void {
     this.objects = clearObjList(this.group, this.objects)
   }
 }
+
+interface CircleSpec {
+  delta: THREE.Vector3
+  position: THREE.Vector3
+  radius: number
+}
+
+const makeCircleSpecs = (
+  particles: Particle3[],
+  neighborhood: NeighborhoodMsg,
+): CircleSpec[] =>
+  particles.reduce((memo: CircleSpec[], particle: Particle3, i: number) => {
+    neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
+      memo.push({
+        delta: toVector3(neighbor.delta),
+        position: particle.position,
+        radius: neighbor.distance,
+      })
+    })
+    return memo
+  }, [] as CircleSpec[])
+
+const updateCircles = (specs: CircleSpec[], objects: THREE.Object3D[]): void =>
+  specs.forEach((spec: CircleSpec, i: number) => {
+    const object = objects[i]
+    object.position.x = spec.position.x
+    object.position.y = spec.position.y
+    object.position.z = spec.position.z
+    object.scale.set(spec.radius, spec.radius, spec.radius)
+    // Rotate circle to align with delta vector
+    // via https://stackoverflow.com/a/31987883/3717556
+    object.quaternion.setFromUnitVectors(AXIS, spec.delta.clone().normalize())
+  })

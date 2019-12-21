@@ -4,48 +4,10 @@ import Particle3 from 'src/particles/Particle3'
 import { NeighborhoodMsg, NeighborMsg } from 'src/particles/System'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
-interface ObjectSpec {
-  position: THREE.Vector3
-  radius: number
-}
-
 const OPACITY_MAX = 0.5
 const OPACITY_MIN = 0.1
 const SEGMENTS = 40
 const RINGS = 40
-
-const getOpacity = (count: number): number =>
-  Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
-
-const makeObjectSpecs = (
-  particles: Particle3[],
-  neighborhood: NeighborhoodMsg,
-): ObjectSpec[] =>
-  particles.reduce((memo: ObjectSpec[], particle: Particle3, i: number) => {
-    neighborhood[i].forEach((neighbor: NeighborMsg) => {
-      memo.push({
-        position: particle.position,
-        radius: neighbor.distance,
-      })
-    })
-    return memo
-  }, [])
-
-const updateObjects = (
-  specs: ObjectSpec[],
-  objects: THREE.Object3D[],
-): void => {
-  const opacity = getOpacity(specs.length)
-  specs.forEach((spec: ObjectSpec, i: number) => {
-    const object = objects[i] as THREE.Mesh
-    object.position.x = spec.position.x
-    object.position.y = spec.position.y
-    object.position.z = spec.position.z
-    object.scale.set(spec.radius, spec.radius, spec.radius)
-    const material = object.material as THREE.MeshNormalMaterial
-    material.opacity = opacity
-  })
-}
 
 export default class Spheres implements Layer {
   private readonly group: THREE.Group
@@ -67,7 +29,7 @@ export default class Spheres implements Layer {
 
   public update({ particles, neighborhood }: LayerArgs): void {
     // 1. Generate fresh list of specs
-    const specs = makeObjectSpecs(particles, neighborhood)
+    const specs = makeSphereSpecs(particles, neighborhood)
 
     // 2. Resize object list for new spec count
     this.objects = resizeObjList({
@@ -78,10 +40,48 @@ export default class Spheres implements Layer {
     })
 
     // 3. Update objects to match specs
-    updateObjects(specs, this.objects)
+    updateSpheres(specs, this.objects)
   }
 
   public clear(): void {
     this.objects = clearObjList(this.group, this.objects)
   }
 }
+
+interface SphereSpec {
+  position: THREE.Vector3
+  radius: number
+}
+
+const makeSphereSpecs = (
+  particles: Particle3[],
+  neighborhood: NeighborhoodMsg,
+): SphereSpec[] =>
+  particles.reduce((memo: SphereSpec[], particle: Particle3, i: number) => {
+    neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
+      memo.push({
+        position: particle.position,
+        radius: neighbor.distance,
+      })
+    })
+    return memo
+  }, [])
+
+const updateSpheres = (
+  specs: SphereSpec[],
+  objects: THREE.Object3D[],
+): void => {
+  const opacity = getOpacity(specs.length)
+  specs.forEach((spec: SphereSpec, i: number) => {
+    const object = objects[i] as THREE.Mesh
+    object.position.x = spec.position.x
+    object.position.y = spec.position.y
+    object.position.z = spec.position.z
+    object.scale.set(spec.radius, spec.radius, spec.radius)
+    const material = object.material as THREE.MeshNormalMaterial
+    material.opacity = opacity
+  })
+}
+
+const getOpacity = (count: number): number =>
+  Math.max(OPACITY_MIN, Math.min(OPACITY_MAX, 3 / count)) // magic
