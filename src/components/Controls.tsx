@@ -246,7 +246,6 @@ export default class Controls extends React.Component<Props, State> {
                 </label>
               </fieldset>
             </fieldset>
-
             <fieldset>
               <legend>Particle behavior</legend>
               <fieldset>
@@ -476,14 +475,6 @@ export default class Controls extends React.Component<Props, State> {
     const name = e.currentTarget.name as LayerName
     const value = e.currentTarget.checked
     options.layers[name] = value
-
-    // lol hacks (trails are expensive)
-    if (value && name === 'trails') {
-      options.layers.timeTrails = false
-    } else if (value && name === 'timeTrails') {
-      options.layers.trails = false
-    }
-
     this.props.onOptionsChange(options)
     this.setState({ options })
   }
