@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { MAX_PARTICLES } from 'src/constants'
+import { MAX_PARTICLES, MAX_RADIUS } from 'src/constants'
 import { Options } from 'src/options'
 import { BehaviorSpecs } from 'src/particles/behaviors'
 import { BoundingName } from 'src/particles/boundings'
@@ -133,10 +133,6 @@ export default class Controls extends React.Component<Props, State> {
                 <label>
                   <input
                     type="number"
-                    style={{
-                      width: '30px',
-                      textAlign: 'center',
-                    }}
                     min="0"
                     step="1"
                     value={this.state.options.particles}
@@ -148,10 +144,6 @@ export default class Controls extends React.Component<Props, State> {
                 <label>
                   <input
                     type="number"
-                    style={{
-                      width: '30px',
-                      textAlign: 'center',
-                    }}
                     min="0"
                     step="1"
                     value={this.state.options.dimensions}
@@ -173,7 +165,28 @@ export default class Controls extends React.Component<Props, State> {
             <fieldset>
               <legend>Render layers</legend>
               <fieldset>
-                <legend>Relation</legend>
+                <legend>Scene</legend>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="grid"
+                    checked={this.state.options.layers.grid}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Grid
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="bounds"
+                    checked={this.state.options.layers.bounds}
+                    onChange={this.handleLayers}
+                  />
+                  &nbsp; Bounds
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Neighbors</legend>
                 <label>
                   <input
                     type="checkbox"
@@ -232,130 +245,10 @@ export default class Controls extends React.Component<Props, State> {
                   &nbsp; Space + Time
                 </label>
               </fieldset>
-              <fieldset>
-                <legend>Scene</legend>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="grid"
-                    checked={this.state.options.layers.grid}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Grid
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="bounds"
-                    checked={this.state.options.layers.bounds}
-                    onChange={this.handleLayers}
-                  />
-                  &nbsp; Bounds
-                </label>
-              </fieldset>
             </fieldset>
 
             <fieldset>
               <legend>Particle behavior</legend>
-              <fieldset>
-                <legend>Relation</legend>
-                <label>
-                  <input
-                    type="radio"
-                    name="proximity"
-                    checked={
-                      this.state.options.neighborhood.name === 'proximity'
-                    }
-                    onChange={this.handleNeighborhoods}
-                  />
-                  &nbsp; Proximity
-                </label>
-                {this.state.options.neighborhood.name === 'proximity' && (
-                  <div>
-                    <input
-                      style={{
-                        width: '40%',
-                        display: 'inline-block',
-                        marginRight: '5px',
-                      }}
-                      type="number"
-                      name="min"
-                      placeholder="min"
-                      value={
-                        NEIGHBORHOOD_PRESETS.proximity.config
-                          ? NEIGHBORHOOD_PRESETS.proximity.config.min
-                          : 0
-                      }
-                      onChange={(
-                        e: React.FormEvent<HTMLInputElement>,
-                      ): void => {
-                        if (!NEIGHBORHOOD_PRESETS.proximity.config) return
-                        NEIGHBORHOOD_PRESETS.proximity.config.min = Number(
-                          e.currentTarget.value,
-                        )
-                        const options = { ...this.state.options }
-                        options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
-                        this.props.onOptionsChange(options)
-                        this.setState({ options })
-                      }}
-                    />
-                    <input
-                      style={{
-                        width: '40%',
-                        display: 'inline-block',
-                      }}
-                      type="number"
-                      name="max"
-                      placeholder="max"
-                      value={
-                        NEIGHBORHOOD_PRESETS.proximity.config
-                          ? NEIGHBORHOOD_PRESETS.proximity.config.max
-                          : 0
-                      }
-                      onChange={(
-                        e: React.FormEvent<HTMLInputElement>,
-                      ): void => {
-                        if (!NEIGHBORHOOD_PRESETS.proximity.config) return
-                        NEIGHBORHOOD_PRESETS.proximity.config.max = Number(
-                          e.currentTarget.value,
-                        )
-                        const options = { ...this.state.options }
-                        options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
-                        this.props.onOptionsChange(options)
-                        this.setState({ options })
-                      }}
-                    />
-                  </div>
-                )}
-                <label>
-                  <input
-                    type="radio"
-                    name="nearest"
-                    checked={this.state.options.neighborhood.name === 'nearest'}
-                    onChange={this.handleNeighborhoods}
-                  />
-                  &nbsp; Nearest
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="locals"
-                    checked={this.state.options.neighborhood.name === 'locals'}
-                    onChange={this.handleNeighborhoods}
-                  />
-                  &nbsp; Local
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="all"
-                    checked={this.state.options.neighborhood.name === 'all'}
-                    onChange={this.handleNeighborhoods}
-                  />
-                  &nbsp; All
-                </label>
-              </fieldset>
-
               <fieldset>
                 <legend>Motion</legend>
                 <label>
@@ -411,6 +304,101 @@ export default class Controls extends React.Component<Props, State> {
                     onChange={this.handleBehaviors}
                   />
                   &nbsp; None
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend>Neighbors</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="proximity"
+                    checked={
+                      this.state.options.neighborhood.name === 'proximity'
+                    }
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Proximity
+                </label>
+                {this.state.options.neighborhood.name === 'proximity' && (
+                  <div className="proximity-controls">
+                    <label>
+                      0&nbsp;
+                      <input
+                        type="number"
+                        name="min"
+                        placeholder="min"
+                        value={
+                          NEIGHBORHOOD_PRESETS.proximity.config
+                            ? NEIGHBORHOOD_PRESETS.proximity.config.min
+                            : 0
+                        }
+                        onChange={(
+                          e: React.FormEvent<HTMLInputElement>,
+                        ): void => {
+                          if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                          NEIGHBORHOOD_PRESETS.proximity.config.min = Number(
+                            e.currentTarget.value,
+                          )
+                          const options = { ...this.state.options }
+                          options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                          this.props.onOptionsChange(options)
+                          this.setState({ options })
+                        }}
+                      />
+                    </label>
+                    <label>
+                      <input
+                        type="number"
+                        name="max"
+                        placeholder="max"
+                        value={
+                          NEIGHBORHOOD_PRESETS.proximity.config
+                            ? NEIGHBORHOOD_PRESETS.proximity.config.max
+                            : 0
+                        }
+                        onChange={(
+                          e: React.FormEvent<HTMLInputElement>,
+                        ): void => {
+                          if (!NEIGHBORHOOD_PRESETS.proximity.config) return
+                          NEIGHBORHOOD_PRESETS.proximity.config.max = Number(
+                            e.currentTarget.value,
+                          )
+                          const options = { ...this.state.options }
+                          options.neighborhood = NEIGHBORHOOD_PRESETS.proximity
+                          this.props.onOptionsChange(options)
+                          this.setState({ options })
+                        }}
+                      />
+                      &nbsp;{MAX_RADIUS * 2}
+                    </label>
+                  </div>
+                )}
+                <label>
+                  <input
+                    type="radio"
+                    name="nearest"
+                    checked={this.state.options.neighborhood.name === 'nearest'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Nearest
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="locals"
+                    checked={this.state.options.neighborhood.name === 'locals'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; Local
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="all"
+                    checked={this.state.options.neighborhood.name === 'all'}
+                    onChange={this.handleNeighborhoods}
+                  />
+                  &nbsp; All
                 </label>
               </fieldset>
               <fieldset>
