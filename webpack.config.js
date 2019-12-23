@@ -1,7 +1,8 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
+const now = Date.now()
 module.exports = {
   devtool: 'cheap-module-source-map',
   entry: './src/index.tsx',
@@ -11,58 +12,54 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
-    modules: [
-      path.resolve(__dirname),
-      'node_modules',
-    ],
+    modules: [path.resolve(__dirname), 'node_modules'],
   },
   module: {
     rules: [
       {
         enforce: 'pre',
         test: /\.js$/,
-        loader: 'source-map-loader'
+        loader: 'source-map-loader',
       },
       {
-          test: /\.tsx?$/,
-          exclude: /node_modules/,
-          use: [
-              {
-                  loader: 'babel-loader',
-                  options: {
-                      cacheDirectory: true,
-                      presets: ['env'],
-                      plugins: [[
-                          require('babel-plugin-transform-runtime'),
-                          { regenerator: true, polyfill: false },
-                      ]],
-                  },
-              },
-              {
-                  loader: 'awesome-typescript-loader',
-                  options: {
-                      transpileOnly: false,
-                      logLevel: 'info',
-                      useBabel: true,
-                      useCache: true,
-                  },
-              },
-          ],
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: ['env'],
+              plugins: [
+                [
+                  require('babel-plugin-transform-runtime'),
+                  { regenerator: true, polyfill: false },
+                ],
+              ],
+            },
+          },
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              transpileOnly: false,
+              logLevel: 'info',
+              useBabel: true,
+              useCache: true,
+            },
+          },
+        ],
       },
     ],
   },
   plugins: [
-    new CopyWebpackPlugin([
-      { from: 'src/static/', to: '' },
-    ]),
+    new CopyWebpackPlugin([{ from: 'src/static/', to: '' }]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/static/index.html',
     }),
     new HtmlWebpackIncludeAssetsPlugin({
-      assets: ['style.css?v=2'],
+      assets: ['style.css?v=' + now],
       append: false, // prepend
-      // hash: true, // cache busting // doesn't work with gh-pages ???
     }),
   ],
-};
+}
