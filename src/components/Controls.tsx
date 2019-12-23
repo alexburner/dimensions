@@ -158,7 +158,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.rotating}
                     onChange={this.handleRotating}
                   />
-                  &nbsp; Rotating
+                  <span>&nbsp; Rotating</span>
                 </label>
               </fieldset>
             </fieldset>
@@ -173,7 +173,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.grid}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Grid
+                  <span>&nbsp; Grid</span>
                 </label>
                 <label>
                   <input
@@ -182,7 +182,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.bounds}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Bounds
+                  <span>&nbsp; Bounds</span>
                 </label>
               </fieldset>
               <fieldset>
@@ -194,7 +194,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.points}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Points&mdash;0D
+                  <span>&nbsp; Points&mdash;0D</span>
                 </label>
                 <label>
                   <input
@@ -203,7 +203,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.lines}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Lines&mdash;1D
+                  <span>&nbsp; Lines&mdash;1D</span>
                 </label>
                 <label>
                   <input
@@ -212,7 +212,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.circles}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Circles&mdash;2D
+                  <span>&nbsp; Circles&mdash;2D</span>
                 </label>
                 <label>
                   <input
@@ -221,7 +221,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.spheres}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Spheres&mdash;3D
+                  <span>&nbsp; Spheres&mdash;3D</span>
                 </label>
               </fieldset>
               <fieldset>
@@ -233,7 +233,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.trails}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Space
+                  <span>&nbsp; Space</span>
                 </label>
                 <label>
                   <input
@@ -242,7 +242,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.layers.timeTrails}
                     onChange={this.handleLayers}
                   />
-                  &nbsp; Space + Time
+                  <span>&nbsp; Space + Time</span>
                 </label>
               </fieldset>
             </fieldset>
@@ -257,7 +257,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.behavior.name === 'wandering'}
                     onChange={this.handleBehaviors}
                   />
-                  &nbsp; Wandering
+                  <span>&nbsp; Wandering</span>
                 </label>
                 <label>
                   <input
@@ -266,7 +266,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.behavior.name === 'diffusion'}
                     onChange={this.handleBehaviors}
                   />
-                  &nbsp; Diffusion
+                  <span>&nbsp; Diffusion</span>
                 </label>
                 {/* <label>
                 <input
@@ -275,7 +275,7 @@ export default class Controls extends React.Component<Props, State> {
                   checked={this.state.options.behavior.name === 'flocking'}
                   onChange={this.handleBehaviors}
                 />
-                &nbsp; Flocking
+                <span>&nbsp; Flocking</span>
               </label> */}
                 {/* <label>
                 <input
@@ -284,7 +284,7 @@ export default class Controls extends React.Component<Props, State> {
                   checked={this.state.options.behavior.name === 'gravity'}
                   onChange={this.handleBehaviors}
                 />
-                &nbsp; Gravity
+                <span>&nbsp; Gravity</span>
               </label> */}
                 <label>
                   <input
@@ -293,7 +293,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.behavior.name === 'orbits'}
                     onChange={this.handleBehaviors}
                   />
-                  &nbsp; Orbits
+                  <span>&nbsp; Orbits</span>
                 </label>
                 <label>
                   <input
@@ -302,7 +302,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.behavior.name === 'none'}
                     onChange={this.handleBehaviors}
                   />
-                  &nbsp; None
+                  <span>&nbsp; None</span>
                 </label>
               </fieldset>
               <fieldset>
@@ -316,7 +316,7 @@ export default class Controls extends React.Component<Props, State> {
                     }
                     onChange={this.handleNeighborhoods}
                   />
-                  &nbsp; Proximity
+                  <span>&nbsp; Proximity</span>
                 </label>
                 {this.state.options.neighborhood.name === 'proximity' && (
                   <div className="proximity-controls">
@@ -379,7 +379,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.neighborhood.name === 'nearest'}
                     onChange={this.handleNeighborhoods}
                   />
-                  &nbsp; Nearest
+                  <span>&nbsp; Nearest</span>
                 </label>
                 <label>
                   <input
@@ -388,7 +388,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.neighborhood.name === 'locals'}
                     onChange={this.handleNeighborhoods}
                   />
-                  &nbsp; Local
+                  <span>&nbsp; Local</span>
                 </label>
                 <label>
                   <input
@@ -397,7 +397,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.neighborhood.name === 'all'}
                     onChange={this.handleNeighborhoods}
                   />
-                  &nbsp; All
+                  <span>&nbsp; All</span>
                 </label>
               </fieldset>
               <fieldset>
@@ -409,7 +409,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.bounding === 'centerScaling'}
                     onChange={this.handleBoundings}
                   />
-                  &nbsp; Center-scaling
+                  <span>&nbsp; Center-scaling</span>
                 </label>
                 <label>
                   <input
@@ -418,7 +418,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.bounding === 'binding'}
                     onChange={this.handleBoundings}
                   />
-                  &nbsp; Edge-binding
+                  <span>&nbsp; Edge-binding</span>
                 </label>
                 <label>
                   <input
@@ -427,7 +427,7 @@ export default class Controls extends React.Component<Props, State> {
                     checked={this.state.options.bounding === 'none'}
                     onChange={this.handleBoundings}
                   />
-                  &nbsp; None
+                  <span>&nbsp; None</span>
                 </label>
               </fieldset>
             </fieldset>

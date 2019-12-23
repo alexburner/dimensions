@@ -1,9 +1,7 @@
 # newer
 
 - react-three-fiber for render (would it work w layer optimizations?)
-- font-awesome for form input controls
 - shader fading layers (for proximity neighborhood)
-- radio input for trails
 
 
 # older
