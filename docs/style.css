@@ -32,7 +32,7 @@ input[type=number] {
   width: 30px;
   line-height: 1.5em;
   text-align: center;
-  background: #333;
+  background: rgb(99,99,99,0.33);
   border: 1px solid transparent;
   color: #EEE;
 }

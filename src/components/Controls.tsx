@@ -82,7 +82,7 @@ const NEIGHBORHOOD_PRESETS: {
   proximity: {
     name: 'proximity',
     config: {
-      min: 1,
+      min: 0,
       max: 20,
     },
   },
@@ -269,14 +269,14 @@ export default class Controls extends React.Component<Props, State> {
                   <span>&nbsp; Diffusion</span>
                 </label>
                 {/* <label>
-                <input
-                  type="radio"
-                  name="flocking"
-                  checked={this.state.options.behavior.name === 'flocking'}
-                  onChange={this.handleBehaviors}
-                />
-                <span>&nbsp; Flocking</span>
-              </label> */}
+                  <input
+                    type="radio"
+                    name="flocking"
+                    checked={this.state.options.behavior.name === 'flocking'}
+                    onChange={this.handleBehaviors}
+                  />
+                  <span>&nbsp; Flocking</span>
+                </label> */}
                 {/* <label>
                 <input
                   type="radio"
