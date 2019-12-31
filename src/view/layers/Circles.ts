@@ -2,6 +2,7 @@ import * as THREE from 'three'
 
 import Particle3, { toVector3 } from 'src/particles/Particle3'
 import { NeighborhoodMsg, NeighborMsg } from 'src/particles/System'
+import { createFaderFn } from 'src/util'
 import { clearObjList, Layer, LayerArgs, resizeObjList } from 'src/view/Layers'
 
 const DIVISIONS = 64
@@ -12,7 +13,6 @@ export default class Circles implements Layer {
   private readonly group: THREE.Group
   private objects: THREE.Object3D[]
   private readonly geometry: THREE.BufferGeometry
-  private readonly material: THREE.LineBasicMaterial
 
   constructor(group: THREE.Group) {
     this.group = group
@@ -26,12 +26,6 @@ export default class Circles implements Layer {
     )
     this.geometry = new THREE.BufferGeometry()
     this.geometry.setFromPoints(points3)
-    this.material = new THREE.LineBasicMaterial({
-      blending: THREE.AdditiveBlending,
-      transparent: true,
-      color: 0xffffff,
-      opacity: OPACITY,
-    })
   }
 
   public update({ particles, neighborhood }: LayerArgs): void {
@@ -43,7 +37,16 @@ export default class Circles implements Layer {
       group: this.group,
       currList: this.objects,
       newSize: specs.length,
-      createObj: (): THREE.Line => new THREE.Line(this.geometry, this.material),
+      createObj: (): THREE.Line =>
+        new THREE.Line(
+          this.geometry,
+          new THREE.LineBasicMaterial({
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            color: 0xffffff,
+            opacity: OPACITY,
+          }),
+        ),
     })
 
     // 3. Update objects to match specs
@@ -59,26 +62,36 @@ interface CircleSpec {
   delta: THREE.Vector3
   position: THREE.Vector3
   radius: number
+  opacity: number
 }
 
 const makeCircleSpecs = (
   particles: Particle3[],
   neighborhood: NeighborhoodMsg,
-): CircleSpec[] =>
-  particles.reduce((memo: CircleSpec[], particle: Particle3, i: number) => {
-    neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
-      memo.push({
-        delta: toVector3(neighbor.delta),
-        position: particle.position,
-        radius: neighbor.distance,
+): CircleSpec[] => {
+  const fader =
+    neighborhood.type === 'proximity'
+      ? createFaderFn(neighborhood.config.min, neighborhood.config.max)
+      : undefined
+  return particles.reduce(
+    (memo: CircleSpec[], particle: Particle3, i: number) => {
+      neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
+        memo.push({
+          delta: toVector3(neighbor.delta),
+          position: particle.position,
+          radius: neighbor.distance,
+          opacity: fader ? fader(neighbor.distance, OPACITY) : OPACITY,
+        })
       })
-    })
-    return memo
-  }, [] as CircleSpec[])
+      return memo
+    },
+    [] as CircleSpec[],
+  )
+}
 
 const updateCircles = (specs: CircleSpec[], objects: THREE.Object3D[]): void =>
   specs.forEach((spec: CircleSpec, i: number) => {
-    const object = objects[i]
+    const object = objects[i] as THREE.Line
     object.position.x = spec.position.x
     object.position.y = spec.position.y
     object.position.z = spec.position.z
@@ -86,4 +99,6 @@ const updateCircles = (specs: CircleSpec[], objects: THREE.Object3D[]): void =>
     // Rotate circle to align with delta vector
     // via https://stackoverflow.com/a/31987883/3717556
     object.quaternion.setFromUnitVectors(AXIS, spec.delta.clone().normalize())
+    const material = object.material as THREE.LineBasicMaterial
+    material.opacity = spec.opacity
   })

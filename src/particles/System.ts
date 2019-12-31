@@ -20,13 +20,14 @@ export interface NeighborMsg {
   distance: number
 }
 
-type NeighborhoodType = 'all' | 'locals' | 'nearest' | 'proximity'
+export type NeighborhoodType = 'all' | 'locals' | 'nearest' | 'proximity'
 
 /**
  * Neighbor objects
  */
 export interface NeighborhoodMsg {
   type: NeighborhoodType
+  config?: any // TODO make this better
   /**
    * NeighborMsg[] for each particle
    * sorted nearest -> furthest
@@ -36,7 +37,7 @@ export interface NeighborhoodMsg {
 
 interface NeighborhoodSpec {
   name: NeighborhoodType
-  config?: any // TODO - what do here
+  config?: any // TODO make this better
 }
 
 interface AllSpec extends NeighborhoodSpec {
@@ -151,6 +152,7 @@ export default class System {
       case 'proximity':
         return {
           type: 'proximity',
+          config: spec.config,
           neighbors: this.particles.map((particle: ParticleN) => {
             const neighbors: NeighborN[] = []
             for (let i = 0, l = particle.neighbors.length; i < l; i++) {

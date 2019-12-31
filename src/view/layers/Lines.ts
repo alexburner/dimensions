@@ -2,7 +2,8 @@ import * as THREE from 'three'
 
 import { MAX_NEIGHBORS } from 'src/constants'
 import Particle3 from 'src/particles/Particle3'
-import { NeighborMsg } from 'src/particles/System'
+import { NeighborhoodType, NeighborMsg } from 'src/particles/System'
+import { createFaderFn } from 'src/util'
 import { Layer, LayerArgs } from 'src/view/Layers'
 
 const POINT_COUNT = MAX_NEIGHBORS * 3
@@ -17,6 +18,8 @@ export default class Lines implements Layer {
 
   private readonly alphas: Float32Array
   private readonly alphaAttr: THREE.BufferAttribute
+
+  private prevNeighborType?: NeighborhoodType
 
   constructor(group: THREE.Group) {
     this.geometry = new THREE.BufferGeometry()
@@ -44,12 +47,13 @@ export default class Lines implements Layer {
         depthTest: false,
       }),
     )
+
     group.add(this.lineSegments)
   }
 
   public update({ particles, neighborhood }: LayerArgs): void {
     let posIndex = 0
-    let numConnected = 0
+    const neighbors: NeighborMsg[] = []
     particles.forEach((particle: Particle3, i: number) => {
       neighborhood.neighbors[i].forEach((neighbor: NeighborMsg) => {
         const other = particles[neighbor.index]
@@ -59,23 +63,33 @@ export default class Lines implements Layer {
         this.positions[posIndex++] = other.position.x
         this.positions[posIndex++] = other.position.y
         this.positions[posIndex++] = other.position.z
-        numConnected++
+        neighbors.push(neighbor)
       })
     })
+    this.posAttr.needsUpdate = true
 
-    const drawRange = numConnected * 2
+    const drawRange = neighbors.length * 2
+
     this.geometry.setDrawRange(0, drawRange)
 
     if (neighborhood.type === 'proximity') {
       // set each line to fade based on length
-      // TODO
-    } else {
-      // set all lines to default opacity
+      const fader = createFaderFn(
+        neighborhood.config.min,
+        neighborhood.config.max,
+      )
+      for (let i = 0; i < drawRange; i++) {
+        const neighbor = neighbors[Math.floor(i / 2)]
+        this.alphas[i] = fader(neighbor.distance, OPACITY)
+        this.alphaAttr.needsUpdate = true
+      }
+    } else if (this.prevNeighborType === 'proximity') {
+      // reset all lines to default opacity
       this.alphas.fill(OPACITY, 0, drawRange)
+      this.alphaAttr.needsUpdate = true
     }
 
-    this.posAttr.needsUpdate = true
-    this.alphaAttr.needsUpdate = true
+    this.prevNeighborType = neighborhood.type
   }
 
   public clear(): void {

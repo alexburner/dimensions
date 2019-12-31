@@ -50,3 +50,34 @@ export class RecentQueue<T> {
     return this.queue
   }
 }
+
+/**
+ * Create a fader function for proximity render
+ */
+const FADE_EDGE_SCALE = 0.2
+export const createFaderFn = (
+  min: number,
+  max: number,
+): ((distance: number, value: number) => number) => {
+  const proximity = max - min
+  const edge = FADE_EDGE_SCALE * proximity
+  const minEdgeMin = min
+  const minEdgeMax = min + edge
+  const maxEdgeMin = max - edge
+  const maxEdgeMax = max
+  return (distance: number, value: number): number => {
+    if (distance >= minEdgeMin && distance <= minEdgeMax) {
+      const magnitude = distance - minEdgeMin
+      const scale = magnitude / edge
+      const scaled = value * scale
+      return scaled
+    }
+    if (distance >= maxEdgeMin && length <= maxEdgeMax) {
+      const magnitude = edge - (distance - maxEdgeMin)
+      const scale = magnitude / edge
+      const scaled = value * scale
+      return scaled
+    }
+    return value
+  }
+}
