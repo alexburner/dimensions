@@ -23,12 +23,13 @@ export interface NeighborMsg {
 type NeighborhoodType = 'all' | 'locals' | 'nearest' | 'proximity'
 
 /**
- * Neighbor objects, sorted nearest -> furthest
+ * Neighbor objects
  */
 export interface NeighborhoodMsg {
   type: NeighborhoodType
   /**
    * NeighborMsg[] for each particle
+   * sorted nearest -> furthest
    */
   neighbors: NeighborMsg[][]
 }
