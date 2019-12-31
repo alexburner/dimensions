@@ -28,7 +28,7 @@ export default class Lines implements Layer {
     this.alphas = new Float32Array(POINT_COUNT * 2) // 2 for each segment's points
     this.alphas.fill(OPACITY) // begin at default opacity
     this.alphaAttr = new THREE.BufferAttribute(this.alphas, 1).setDynamic(true)
-    this.geometry.addAttribute('alphas', this.alphaAttr)
+    this.geometry.addAttribute('alpha', this.alphaAttr)
 
     this.geometry.computeBoundingSphere()
     this.geometry.setDrawRange(0, 0)
@@ -98,6 +98,6 @@ const fragmentShader = `
   varying float vAlpha;
 
   void main() {
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4( color, vAlpha );
   }
 `
